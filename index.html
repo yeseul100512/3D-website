@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BENCH — 3D 프린팅 도구 모음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grid-bg" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="wordmark">BENCH<span class="wordmark-dot">_</span></div>
+  <p class="tagline">3D 프린팅 도구 모음 — 필요한 도구를 골라 쓰세요</p>
+</header>
+
+<main>
+  <section class="tool-grid" id="toolGrid">
+
+    <a class="tool-card" href="tools/gcode-merger/index.html" data-status="building">
+      <div class="tool-card-top">
+        <span class="status-dot"></span>
+        <span class="status-label">제작 중</span>
+      </div>
+      <h2>G-code 병합기</h2>
+      <p>여러 부품의 G-code를 하나로 합치고, 베드 위 배치를 자동으로 최적화합니다.</p>
+      <span class="tool-meta">SINDOZ 3DWOX / Voron 대응</span>
+    </a>
+
+    <div class="tool-card tool-card--empty" tabindex="0">
+      <div class="tool-card-top">
+        <span class="status-dot status-dot--empty"></span>
+        <span class="status-label">비어 있음</span>
+      </div>
+      <h2>+ 새 도구 추가</h2>
+      <p>tools 폴더에 폴더를 하나 추가하고, 이 카드를 복사해서 채우면 됩니다.</p>
+      <span class="tool-meta">README.md 참고</span>
+    </div>
+
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>마지막 업데이트: <span id="lastUpdated">—</span></p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
