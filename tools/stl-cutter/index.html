@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>STL 분할 프로그램 (프린터 크기 자동 절단)</title>
+<style>
+  html, body { margin: 0; height: 100%; font-family: "Segoe UI", sans-serif; background: #1e1e1e; color: #eee; }
+  #viewer { position: absolute; top: 0; left: 0; right: 360px; bottom: 0; }
+  #panel { position: absolute; top: 0; right: 0; width: 360px; bottom: 0; background: #2a2a2a; padding: 16px; box-sizing: border-box; overflow-y: auto; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  h3 { font-size: 13px; margin: 18px 0 8px; color: #9ec1ff; border-top: 1px solid #444; padding-top: 12px; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .row label { width: 110px; font-size: 12px; flex-shrink: 0; }
+  .row input[type=number] { flex: 1; padding: 4px; background: #1e1e1e; color: #eee; border: 1px solid #555; border-radius: 4px; width: 0; }
+  .hint { font-size: 11px; color: #888; margin: -4px 0 10px; line-height: 1.4; }
+  button { width: 100%; padding: 10px; margin-top: 8px; background: #3a7afe; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+  button:disabled { background: #555; cursor: not-allowed; }
+  button.secondary { background: #444; }
+  button.small { width: auto; padding: 4px 10px; font-size: 12px; margin: 0; }
+  #status { font-size: 12px; color: #ffd479; margin-top: 10px; min-height: 16px; white-space: pre-wrap; }
+  #summary { font-size: 12px; color: #ccc; margin-top: 10px; line-height: 1.6; white-space: pre-wrap; }
+  input[type=file] { width: 100%; margin-bottom: 12px; color: #eee; }
+  .piece-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; padding: 6px 0; border-bottom: 1px solid #383838; }
+  .piece-row span { color: #aaa; }
+  .checkrow { display: flex; align-items: center; gap: 6px; font-size: 12px; margin: 8px 0; }
+  .radiorow { display: flex; align-items: center; gap: 6px; font-size: 12px; margin: 6px 0; }
+</style>
+</head>
+<body>
+<div id="viewer"></div>
+<div id="panel">
+  <h2>STL 분할 (프린터 출력범위에 맞춰 자동 절단)</h2>
+  <input type="file" id="fileInput" accept=".stl">
+  <div id="origInfo" class="hint">STL 파일을 선택하면 원본 치수가 표시됩니다.</div>
+
+  <h3>3D 프린터 출력 가능 크기 (mm)</h3>
+  <div class="row"><label>X (가로)</label><input type="number" id="pX" value="200" min="1"></div>
+  <div class="row"><label>Y (세로)</label><input type="number" id="pY" value="200" min="1"></div>
+  <div class="row"><label>Z (높이)</label><input type="number" id="pZ" value="200" min="1"></div>
+  <div class="row"><label>안전 여백</label><input type="number" id="margin" value="2" min="0"></div>
+  <div class="hint">베드 가장자리 여유. 실제 사용 크기 = 입력값 − 여백×2</div>
+
+  <h3>절단면 방식</h3>
+  <div class="radiorow"><input type="radio" name="jointMode" id="modeTeeth" value="teeth" checked><label for="modeTeeth">톱니 (핑거 조인트) — 서로 맞물려 조립 시 정렬됨</label></div>
+  <div class="radiorow"><input type="radio" name="jointMode" id="modeFlat" value="flat"><label for="modeFlat">직선 단면 — 평평하게만 자름 (접착 전제)</label></div>
+
+  <div id="toothParams">
+    <div class="row"><label>이빨 폭</label><input type="number" id="toothWidth" value="15" min="2" step="0.5"></div>
+    <div class="row"><label>이빨 깊이</label><input type="number" id="toothDepth" value="4" min="0.5" step="0.5"></div>
+    <div class="row"><label>조립 여유</label><input type="number" id="clearance" value="0.3" min="0" step="0.05"></div>
+    <div class="hint">절단면 자체를 톱니(핑거 조인트) 모양으로 잘라 서로 맞물리게 합니다. 레이저 커터의 박스 조인트와 같은 방식이라 속이 빈 얇은 벽에도 그대로 적용됩니다.</div>
+  </div>
+
+  <button id="runBtn" disabled>분석 후 절단 실행</button>
+  <div id="status"></div>
+  <div id="summary"></div>
+
+  <div class="checkrow" id="explodeRow" style="display:none">
+    <input type="checkbox" id="explodeChk">
+    <label for="explodeChk">분해 보기 (조각 간격 벌려서 미리보기, 실제 파일엔 영향 없음)</label>
+  </div>
+
+  <h3 id="piecesHeader" style="display:none">조각 목록</h3>
+  <button id="zipBtn" class="secondary" style="display:none">전체 ZIP으로 다운로드</button>
+  <div id="pieceList"></div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.179.0/build/three.module.js",
+    "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.179.0/examples/jsm/",
+    "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.9.7/build/index.module.js",
+    "three-bvh-csg": "https://cdn.jsdelivr.net/npm/three-bvh-csg@0.0.18/src/index.js"
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
+import { Brush, Evaluator, ADDITION, SUBTRACTION, INTERSECTION } from 'three-bvh-csg';
+import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh';
+
+THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
+THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
+THREE.Mesh.prototype.raycast = acceleratedRaycast;
+
+// ---------- viewer setup ----------
+const viewerEl = document.getElementById('viewer');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1e1e1e);
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1e6);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+viewerEl.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.2));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(1, 1, 1);
+scene.add(dirLight);
+const orbit = new OrbitControls(camera, renderer.domElement);
+
+function resize() {
+  const w = viewerEl.clientWidth, h = viewerEl.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+resize();
+(function animate() {
+  requestAnimationFrame(animate);
+  orbit.update();
+  renderer.render(scene, camera);
+})();
+
+let displayGroup = new THREE.Group();
+scene.add(displayGroup);
+
+function frameCameraToBox(box) {
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const dist = maxDim * 2.2;
+  camera.position.set(center.x + dist, center.y + dist, center.z + dist);
+  orbit.target.copy(center);
+  camera.near = maxDim / 100;
+  camera.far = maxDim * 100;
+  camera.updateProjectionMatrix();
+  orbit.update();
+}
+
+// ---------- state ----------
+let rawGeometry = null;   // as loaded, untouched
+let baseName = 'model';
+let pieces = null;        // Map key "i,j,k" -> { geometry, box:{minX..}, index:[i,j,k] }
+let gridN = [1, 1, 1];
+
+const els = {
+  fileInput: document.getElementById('fileInput'),
+  origInfo: document.getElementById('origInfo'),
+  pX: document.getElementById('pX'), pY: document.getElementById('pY'), pZ: document.getElementById('pZ'),
+  margin: document.getElementById('margin'),
+  toothWidth: document.getElementById('toothWidth'), toothDepth: document.getElementById('toothDepth'),
+  clearance: document.getElementById('clearance'), toothParams: document.getElementById('toothParams'),
+  runBtn: document.getElementById('runBtn'),
+  status: document.getElementById('status'),
+  summary: document.getElementById('summary'),
+  explodeRow: document.getElementById('explodeRow'), explodeChk: document.getElementById('explodeChk'),
+  piecesHeader: document.getElementById('piecesHeader'),
+  zipBtn: document.getElementById('zipBtn'),
+  pieceList: document.getElementById('pieceList'),
+};
+
+els.fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  baseName = file.name.replace(/\.stl$/i, '');
+  const reader = new FileReader();
+  reader.onload = (ev) => loadSTL(ev.target.result);
+  reader.readAsArrayBuffer(file);
+});
+
+function loadSTL(arrayBuffer) {
+  rawGeometry = new STLLoader().parse(arrayBuffer);
+  rawGeometry.computeBoundingBox();
+  const bb = rawGeometry.boundingBox;
+  const size = [bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z];
+  els.origInfo.textContent = `원본 크기 (mm): 가로 ${size[0].toFixed(1)} x 세로 ${size[1].toFixed(1)} x 높이 ${size[2].toFixed(1)}`;
+
+  displayGroup.clear();
+  const mesh = new THREE.Mesh(rawGeometry, new THREE.MeshStandardMaterial({ color: 0x3a7afe, metalness: 0.1, roughness: 0.6 }));
+  displayGroup.add(mesh);
+  frameCameraToBox(new THREE.Box3().setFromObject(mesh));
+
+  els.runBtn.disabled = false;
+  els.summary.textContent = '';
+  els.piecesHeader.style.display = 'none';
+  els.zipBtn.style.display = 'none';
+  els.explodeRow.style.display = 'none';
+  els.pieceList.innerHTML = '';
+  pieces = null;
+}
+
+document.querySelectorAll('input[name=jointMode]').forEach(r => r.addEventListener('change', () => {
+  els.toothParams.style.display = document.querySelector('input[name=jointMode]:checked').value === 'teeth' ? 'block' : 'none';
+}));
+
+els.runBtn.addEventListener('click', () => {
+  els.runBtn.disabled = true;
+  els.status.textContent = '처리 중... (모델이 복잡하면 시간이 걸릴 수 있습니다)';
+  requestAnimationFrame(() => requestAnimationFrame(runCut));
+});
+
+// ---------- orientation search ----------
+const PERMS = [
+  { p: [0, 1, 2], sign: 1 },
+  { p: [0, 2, 1], sign: -1 },
+  { p: [1, 0, 2], sign: -1 },
+  { p: [1, 2, 0], sign: 1 },
+  { p: [2, 0, 1], sign: 1 },
+  { p: [2, 1, 0], sign: -1 },
+];
+const AXIS_NAME = ['가로(X)', '세로(Y)', '높이(Z)'];
+
+function pickBestOrientation(size, effX, effY, effZ) {
+  let best = null;
+  for (const { p, sign } of PERMS) {
+    const rDim = [size[p[0]], size[p[1]], size[p[2]]];
+    const eff = [effX, effY, effZ];
+    const n = rDim.map((d, i) => Math.max(1, Math.ceil(d / eff[i] - 1e-9)));
+    const total = n[0] * n[1] * n[2];
+    const cutAxes = n.filter(v => v > 1).length;
+    const isIdentity = p[0] === 0 && p[1] === 1 && p[2] === 2;
+    const key = { total, cutAxes, isIdentity: isIdentity ? 0 : 1 };
+    if (!best || key.total < best.key.total ||
+        (key.total === best.key.total && key.cutAxes < best.key.cutAxes) ||
+        (key.total === best.key.total && key.cutAxes === best.key.cutAxes && key.isIdentity < best.key.isIdentity)) {
+      best = { p, sign, rDim, n, key };
+    }
+  }
+  return best;
+}
+
+function buildRotationMatrix(p, sign) {
+  const m = new Array(9).fill(0);
+  for (let row = 0; row < 3; row++) m[row * 3 + p[row]] = 1;
+  if (sign === -1) { m[6] *= -1; m[7] *= -1; m[8] *= -1; } // flip row 2 (z)
+  return new THREE.Matrix4().set(
+    m[0], m[1], m[2], 0,
+    m[3], m[4], m[5], 0,
+    m[6], m[7], m[8], 0,
+    0, 0, 0, 1
+  );
+}
+
+// ---------- CSG helpers ----------
+const evaluator = new Evaluator();
+evaluator.attributes = ['position', 'normal']; // STL geometry has no uv attribute
+function brushOf(geom) {
+  const b = new Brush(geom);
+  b.updateMatrixWorld();
+  return b;
+}
+function runCut() {
+  try {
+    rawGeometry.computeBoundingBox();
+    const bb0 = rawGeometry.boundingBox;
+    const size = [bb0.max.x - bb0.min.x, bb0.max.y - bb0.min.y, bb0.max.z - bb0.min.z];
+
+    const margin = parseFloat(els.margin.value) || 0;
+    const printer = [parseFloat(els.pX.value), parseFloat(els.pY.value), parseFloat(els.pZ.value)];
+    const eff = printer.map(v => v - 2 * margin);
+    if (eff.some(v => v <= 0)) { alert('안전 여백을 뺀 실제 사용 크기가 0 이하입니다. 값을 확인하세요.'); els.runBtn.disabled = false; els.status.textContent = ''; return; }
+
+    const best = pickBestOrientation(size, eff[0], eff[1], eff[2]);
+    gridN = best.n;
+
+    // bake rotation into a fresh geometry, then move min corner to origin
+    const geom = rawGeometry.clone();
+    geom.applyMatrix4(buildRotationMatrix(best.p, best.sign));
+    geom.computeBoundingBox();
+    const bb = geom.boundingBox;
+    geom.applyMatrix4(new THREE.Matrix4().makeTranslation(-bb.min.x, -bb.min.y, -bb.min.z));
+    geom.computeBoundingBox();
+    const dims = [geom.boundingBox.max.x, geom.boundingBox.max.y, geom.boundingBox.max.z];
+    geom.computeBoundsTree();
+
+    const mapLines = [0, 1, 2].map(k => `  원본 ${AXIS_NAME[best.p[k]]} (${size[best.p[k]].toFixed(1)}mm) → 프린터 ${AXIS_NAME[k]}`).join('\n');
+
+    if (gridN[0] === 1 && gridN[1] === 1 && gridN[2] === 1) {
+      pieces = new Map();
+      pieces.set('0,0,0', { geometry: geom, index: [0, 0, 0], box: { cx: dims[0] / 2, cy: dims[1] / 2, cz: dims[2] / 2 } });
+      els.summary.textContent = `회전만으로 프린터 크기에 맞습니다. 절단 불필요.\n${mapLines}`;
+    } else {
+      const cellSize = [dims[0] / gridN[0], dims[1] / gridN[1], dims[2] / gridN[2]];
+      const jointMode = document.querySelector('input[name=jointMode]:checked').value;
+      const toothWidth = parseFloat(els.toothWidth.value);
+      const toothDepth = parseFloat(els.toothDepth.value);
+      const clearance = parseFloat(els.clearance.value);
+      pieces = cutIntoGrid(geom, gridN, cellSize, jointMode, toothWidth, toothDepth, clearance);
+      const modeLabel = jointMode === 'teeth' ? '톱니(핑거 조인트)' : '직선 단면';
+      els.summary.textContent =
+        `총 ${pieces.size}개 조각 (X:${gridN[0]}분할 x Y:${gridN[1]}분할 x Z:${gridN[2]}분할, ${modeLabel})\n${mapLines}`;
+    }
+
+    showPieces();
+    els.status.textContent = '완료';
+  } catch (err) {
+    console.error(err);
+    els.status.textContent = '오류: ' + err.message + ' (모델이 완전히 닫힌 solid(watertight)가 아닐 수 있습니다)';
+  } finally {
+    els.runBtn.disabled = false;
+  }
+}
+
+// Builds an axis-aligned box geometry from per-axis [min,max] ranges given as (axis, combAxis, keepAxis) triples.
+function buildAxisBox(axis, combAxis, keepAxis, aMin, aMax, uMin, uMax, vMin, vMax) {
+  const min = [0, 0, 0], max = [0, 0, 0];
+  min[axis] = aMin; max[axis] = aMax;
+  min[combAxis] = uMin; max[combAxis] = uMax;
+  min[keepAxis] = vMin; max[keepAxis] = vMax;
+  const w = max[0] - min[0], h = max[1] - min[1], d = max[2] - min[2];
+  const cx = (min[0] + max[0]) / 2, cy = (min[1] + max[1]) / 2, cz = (min[2] + max[2]) / 2;
+  return new THREE.BoxGeometry(w, h, d).translate(cx, cy, cz);
+}
+
+// One internal face of a cell: alternating tabs (added) / notches (subtracted) along combAxis, full-span along keepAxis.
+// role 'max' = this cell is the lower side of the interface (its box normally ends at `plane`).
+// role 'min' = this cell is the upper side of the interface (its box normally starts at `plane`).
+function addFaceTeeth(ops, axis, combAxis, keepAxis, plane, uMin, uMax, vMin, vMax, toothWidth, toothDepth, clearance, role) {
+  const segStart = Math.floor(uMin / toothWidth);
+  const segEnd = Math.ceil(uMax / toothWidth);
+  for (let s = segStart; s < segEnd; s++) {
+    const su0 = Math.max(uMin, s * toothWidth), su1 = Math.min(uMax, (s + 1) * toothWidth);
+    if (su1 - su0 < 0.5) continue;
+    const even = (((s % 2) + 2) % 2) === 0;
+    let type, aMin, aMax, shrink;
+    if (role === 'max') {
+      if (even) { type = 'add'; aMin = plane; aMax = plane + toothDepth - clearance / 2; shrink = clearance / 2; }
+      else { type = 'sub'; aMin = plane - toothDepth; aMax = plane; shrink = 0; }
+    } else {
+      if (even) { type = 'sub'; aMin = plane; aMax = plane + toothDepth; shrink = 0; }
+      else { type = 'add'; aMin = plane - toothDepth + clearance / 2; aMax = plane; shrink = clearance / 2; }
+    }
+    if (aMax - aMin < 0.2 || su1 - shrink - (su0 + shrink) < 0.2) continue;
+    ops.push({ type, geom: buildAxisBox(axis, combAxis, keepAxis, aMin, aMax, su0 + shrink, su1 - shrink, vMin, vMax) });
+  }
+}
+
+function buildCombOpsForCell(idxArr, n, cellSize, toothWidth, toothDepth, clearance) {
+  const ops = [];
+  for (let axis = 0; axis < 3; axis++) {
+    if (n[axis] < 2) continue;
+    const oa = [0, 1, 2].filter(a => a !== axis);
+    const combLocal = cellSize[oa[0]] >= cellSize[oa[1]] ? 0 : 1; // comb along the wider of the two, for more/sturdier teeth
+    const combAxis = oa[combLocal], keepAxis = oa[1 - combLocal];
+    const uMin = idxArr[combAxis] * cellSize[combAxis], uMax = uMin + cellSize[combAxis];
+    const vMin = idxArr[keepAxis] * cellSize[keepAxis], vMax = vMin + cellSize[keepAxis];
+
+    if (idxArr[axis] > 0) {
+      addFaceTeeth(ops, axis, combAxis, keepAxis, idxArr[axis] * cellSize[axis], uMin, uMax, vMin, vMax, toothWidth, toothDepth, clearance, 'min');
+    }
+    if (idxArr[axis] < n[axis] - 1) {
+      addFaceTeeth(ops, axis, combAxis, keepAxis, (idxArr[axis] + 1) * cellSize[axis], uMin, uMax, vMin, vMax, toothWidth, toothDepth, clearance, 'max');
+    }
+  }
+  return ops;
+}
+
+function cutIntoGrid(geom, n, cellSize, jointMode, toothWidth, toothDepth, clearance) {
+  const meshBrush = brushOf(geom);
+  const out = new Map();
+  const EPS = 0.05;
+  for (let i = 0; i < n[0]; i++) for (let j = 0; j < n[1]; j++) for (let k = 0; k < n[2]; k++) {
+    const idxArr = [i, j, k];
+    const min = [i * cellSize[0], j * cellSize[1], k * cellSize[2]];
+    const max = [(i + 1) * cellSize[0], (j + 1) * cellSize[1], (k + 1) * cellSize[2]];
+    for (let a = 0; a < 3; a++) {
+      if (idxArr[a] === 0) min[a] -= EPS; // outer faces always get a hair of overlap padding
+      if (idxArr[a] === n[a] - 1) max[a] += EPS;
+      if (jointMode === 'flat') { // no teeth to interlock the pieces, so pad internal faces too
+        if (idxArr[a] > 0) min[a] -= EPS;
+        if (idxArr[a] < n[a] - 1) max[a] += EPS;
+      }
+    }
+    const w = max[0] - min[0], h = max[1] - min[1], d = max[2] - min[2];
+    const cx = (min[0] + max[0]) / 2, cy = (min[1] + max[1]) / 2, cz = (min[2] + max[2]) / 2;
+    let cutGeom = new THREE.BoxGeometry(w, h, d).translate(cx, cy, cz);
+
+    const teethOps = jointMode === 'teeth' ? buildCombOpsForCell(idxArr, n, cellSize, toothWidth, toothDepth, clearance) : [];
+    if (teethOps.length) {
+      let current = brushOf(cutGeom);
+      for (const op of teethOps) {
+        const result = evaluator.evaluate(current, brushOf(op.geom), op.type === 'add' ? ADDITION : SUBTRACTION);
+        current = brushOf(result.geometry);
+      }
+      cutGeom = current.geometry;
+    }
+
+    const result = evaluator.evaluate(meshBrush, brushOf(cutGeom), INTERSECTION);
+    const posAttr = result.geometry.attributes.position;
+    if (!posAttr || posAttr.count < 9) continue; // empty cell, skip
+    result.geometry.computeVertexNormals();
+    out.set(`${i},${j},${k}`, { geometry: result.geometry, index: [i, j, k] });
+  }
+  return out;
+}
+
+// ---------- display + export ----------
+const colorCycle = [0x3a7afe, 0xff8a3a, 0x4ade80, 0xf472b6, 0xfacc15, 0x38bdf8, 0xa78bfa, 0xfb7185];
+
+function showPieces() {
+  displayGroup.clear();
+  const overallBox = new THREE.Box3();
+  const centers = [];
+  for (const { geometry, index } of pieces.values()) {
+    geometry.computeBoundingBox();
+    const b = geometry.boundingBox;
+    const c = new THREE.Vector3(); b.getCenter(c);
+    centers.push({ c, index });
+  }
+  const gridCenter = new THREE.Vector3();
+  centers.forEach(e => gridCenter.add(e.c));
+  gridCenter.divideScalar(Math.max(1, centers.length));
+
+  let ci = 0;
+  const meshByKey = new Map();
+  for (const [key, { geometry }] of pieces) {
+    const mat = new THREE.MeshStandardMaterial({ color: colorCycle[ci++ % colorCycle.length], metalness: 0.1, roughness: 0.6 });
+    const mesh = new THREE.Mesh(geometry, mat);
+    displayGroup.add(mesh);
+    meshByKey.set(key, mesh);
+    overallBox.expandByObject(mesh);
+  }
+  frameCameraToBox(overallBox);
+
+  els.explodeRow.style.display = pieces.size > 1 ? 'flex' : 'none';
+  els.explodeChk.onchange = () => {
+    const factor = els.explodeChk.checked ? 1.6 : 0;
+    for (const [key, mesh] of meshByKey) {
+      const [i, j, k] = key.split(',').map(Number);
+      const c = centers.find(e => e.index[0] === i && e.index[1] === j && e.index[2] === k).c;
+      const dir = c.clone().sub(gridCenter);
+      mesh.position.copy(dir.multiplyScalar(factor));
+    }
+  };
+  els.explodeChk.checked = false;
+
+  renderPieceList();
+}
+
+function exportPieceSTL(geometry) {
+  const mesh = new THREE.Mesh(geometry);
+  const result = new STLExporter().parse(mesh, { binary: true });
+  return result.buffer;
+}
+
+function renderPieceList() {
+  els.piecesHeader.style.display = 'block';
+  els.zipBtn.style.display = pieces.size > 1 ? 'block' : 'none';
+  els.pieceList.innerHTML = '';
+  for (const [key, { geometry, index }] of pieces) {
+    geometry.computeBoundingBox();
+    const s = geometry.boundingBox.getSize(new THREE.Vector3());
+    const row = document.createElement('div');
+    row.className = 'piece-row';
+    row.innerHTML = `<span>${key} &nbsp;(${s.x.toFixed(0)}x${s.y.toFixed(0)}x${s.z.toFixed(0)}mm)</span>`;
+    const btn = document.createElement('button');
+    btn.className = 'small'; btn.textContent = '다운로드';
+    btn.onclick = () => downloadArrayBuffer(exportPieceSTL(geometry), `${baseName}_${index.join('-')}.stl`);
+    row.appendChild(btn);
+    els.pieceList.appendChild(row);
+  }
+}
+
+function downloadArrayBuffer(buffer, name) {
+  const blob = new Blob([buffer], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+els.zipBtn.addEventListener('click', async () => {
+  const zip = new JSZip();
+  for (const [, { geometry, index }] of pieces) {
+    zip.file(`${baseName}_${index.join('-')}.stl`, exportPieceSTL(geometry));
+  }
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `${baseName}_parts.zip`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STL 크기 확인 프로그램</title>
+<style>
+  html, body { margin: 0; min-height: 100%; font-family: "Segoe UI", sans-serif; background: #1e1e1e; color: #eee; }
+  .panel { max-width: 640px; margin: 0 auto; padding: 32px 20px; box-sizing: border-box; }
+  h2 { font-size: 18px; margin: 0 0 4px; }
+  .hint { font-size: 12px; color: #888; margin: 0 0 20px; line-height: 1.5; }
+  input[type=file] { width: 100%; padding: 8px 0; color: #eee; margin-bottom: 20px; }
+  .result-list { display: flex; flex-direction: column; gap: 10px; }
+  .result-card { background: #2a2a2a; border: 1px solid #3a3a3a; border-radius: 6px; padding: 14px 16px; font-size: 13px; line-height: 1.7; }
+  .result-card .fname { color: #9ec1ff; font-weight: 600; margin-bottom: 4px; word-break: break-all; }
+  .result-card .dim-label { color: #888; display: inline-block; width: 70px; }
+  .result-card .error { color: #ff8a8a; }
+  .empty { font-size: 13px; color: #666; }
+</style>
+</head>
+<body>
+<div class="panel">
+  <h2>STL 크기(가로/세로/높이) 확인</h2>
+  <p class="hint">STL 파일을 선택하세요 (여러 개 선택 가능). ASCII/바이너리 STL 모두 지원하며, mm 단위로 표시합니다.</p>
+  <input type="file" id="fileInput" accept=".stl" multiple>
+  <div class="result-list" id="resultList">
+    <div class="empty">아직 선택한 파일이 없습니다.</div>
+  </div>
+</div>
+
+<script>
+// ---------- parse_stl 포팅 (stl_size_checker.py의 parse_stl과 1:1 대응) ----------
+function parseStl(bytes) {
+  const fileSize = bytes.length;
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+
+  let triangleCount = 0;
+  if (fileSize >= 84) triangleCount = view.getUint32(80, true);
+
+  const expectedBinarySize = 84 + 50 * triangleCount;
+  if (fileSize === expectedBinarySize && triangleCount > 0) {
+    return parseBinaryStl(view, triangleCount);
+  }
+  return parseAsciiStl(bytes);
+}
+
+function parseBinaryStl(view, triangleCount) {
+  const minXyz = [Infinity, Infinity, Infinity];
+  const maxXyz = [-Infinity, -Infinity, -Infinity];
+  let offset = 84;
+  for (let t = 0; t < triangleCount; t++) {
+    if (offset + 50 > view.byteLength) break;
+    let vOffset = offset + 12; // skip normal
+    for (let i = 0; i < 3; i++) {
+      const x = view.getFloat32(vOffset, true);
+      const y = view.getFloat32(vOffset + 4, true);
+      const z = view.getFloat32(vOffset + 8, true);
+      vOffset += 12;
+      const vals = [x, y, z];
+      for (let axis = 0; axis < 3; axis++) {
+        if (vals[axis] < minXyz[axis]) minXyz[axis] = vals[axis];
+        if (vals[axis] > maxXyz[axis]) maxXyz[axis] = vals[axis];
+      }
+    }
+    offset += 50;
+  }
+  return { minXyz, maxXyz };
+}
+
+function parseAsciiStl(bytes) {
+  const minXyz = [Infinity, Infinity, Infinity];
+  const maxXyz = [-Infinity, -Infinity, -Infinity];
+  const text = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+  for (const rawLine of text.split(/\r\n|\r|\n/)) {
+    const line = rawLine.trim();
+    if (line.startsWith("vertex")) {
+      const parts = line.split(/\s+/);
+      if (parts.length >= 4) {
+        const vals = [parseFloat(parts[1]), parseFloat(parts[2]), parseFloat(parts[3])];
+        for (let axis = 0; axis < 3; axis++) {
+          if (vals[axis] < minXyz[axis]) minXyz[axis] = vals[axis];
+          if (vals[axis] > maxXyz[axis]) maxXyz[axis] = vals[axis];
+        }
+      }
+    }
+  }
+  return { minXyz, maxXyz };
+}
+
+// ---------- UI ----------
+const fileInput = document.getElementById('fileInput');
+const resultList = document.getElementById('resultList');
+
+fileInput.addEventListener('change', async (e) => {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+  resultList.innerHTML = '';
+
+  for (const file of files) {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    try {
+      const buf = await file.arrayBuffer();
+      const { minXyz, maxXyz } = parseStl(new Uint8Array(buf));
+      const width = maxXyz[0] - minXyz[0];
+      const depth = maxXyz[1] - minXyz[1];
+      const height = maxXyz[2] - minXyz[2];
+      card.innerHTML =
+        `<div class="fname">${file.name}</div>` +
+        `<div><span class="dim-label">가로 (X)</span>${width.toFixed(2)} mm</div>` +
+        `<div><span class="dim-label">세로 (Y)</span>${depth.toFixed(2)} mm</div>` +
+        `<div><span class="dim-label">높이 (Z)</span>${height.toFixed(2)} mm</div>`;
+    } catch (err) {
+      card.innerHTML = `<div class="fname">${file.name}</div><div class="error">오류: ${err.message}</div>`;
+    }
+    resultList.appendChild(card);
+  }
+});
+</script>
+</body>
+</html>

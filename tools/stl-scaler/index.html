@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>STL 크기 조절 프로그램</title>
+<style>
+  html, body { margin: 0; height: 100%; font-family: "Segoe UI", sans-serif; background: #1e1e1e; color: #eee; }
+  #viewer { position: absolute; top: 0; left: 0; right: 320px; bottom: 0; }
+  #panel { position: absolute; top: 0; right: 0; width: 320px; bottom: 0; background: #2a2a2a; padding: 16px; box-sizing: border-box; overflow-y: auto; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .row label { width: 60px; font-size: 13px; }
+  .row input[type=number] { flex: 1; padding: 4px; background: #1e1e1e; color: #eee; border: 1px solid #555; border-radius: 4px; }
+  .lockrow { display: flex; align-items: center; gap: 6px; margin: 14px 0; font-size: 13px; }
+  button { width: 100%; padding: 10px; margin-top: 8px; background: #3a7afe; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+  button:disabled { background: #555; cursor: not-allowed; }
+  button.secondary { background: #444; }
+  #info { font-size: 12px; color: #aaa; margin-top: 16px; line-height: 1.6; white-space: pre-wrap; }
+  input[type=file] { width: 100%; margin-bottom: 16px; color: #eee; }
+  hr { border-color: #444; margin: 16px 0; }
+</style>
+</head>
+<body>
+<div id="viewer"></div>
+<div id="panel">
+  <h2>STL 크기 조절</h2>
+  <input type="file" id="fileInput" accept=".stl">
+
+  <div class="row"><label>가로(X)</label><input type="number" id="dimX" step="any" disabled></div>
+  <div class="row"><label>세로(Y)</label><input type="number" id="dimY" step="any" disabled></div>
+  <div class="row"><label>높이(Z)</label><input type="number" id="dimZ" step="any" disabled></div>
+
+  <div class="lockrow">
+    <input type="checkbox" id="lockRatio" checked>
+    <label for="lockRatio">비율 유지 (가로/세로/높이 동시 조절)</label>
+  </div>
+
+  <button id="exportBtn" disabled>변경된 STL 저장</button>
+  <button id="resetBtn" class="secondary" disabled>원본 크기로 되돌리기</button>
+
+  <div id="info">STL 파일을 선택하면 원본 치수(mm)가 표시됩니다.</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/STLExporter.js"></script>
+<script>
+const viewerEl = document.getElementById('viewer');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1e1e1e);
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+viewerEl.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.2));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(1, 1, 1);
+scene.add(dirLight);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+function resize() {
+  const w = viewerEl.clientWidth, h = viewerEl.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+resize();
+
+(function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+})();
+
+let mesh = null;
+let originalSize = null; // THREE.Vector3, bounding box size at scale (1,1,1)
+
+const dimX = document.getElementById('dimX');
+const dimY = document.getElementById('dimY');
+const dimZ = document.getElementById('dimZ');
+const lockRatio = document.getElementById('lockRatio');
+const exportBtn = document.getElementById('exportBtn');
+const resetBtn = document.getElementById('resetBtn');
+const info = document.getElementById('info');
+
+document.getElementById('fileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => loadSTL(ev.target.result, file.name);
+  reader.readAsArrayBuffer(file);
+});
+
+function loadSTL(arrayBuffer, name) {
+  if (mesh) scene.remove(mesh);
+
+  const geometry = new THREE.STLLoader().parse(arrayBuffer);
+  geometry.center();
+  geometry.computeBoundingBox();
+
+  const material = new THREE.MeshStandardMaterial({ color: 0x3a7afe, metalness: 0.1, roughness: 0.6 });
+  mesh = new THREE.Mesh(geometry, material);
+  mesh.scale.set(1, 1, 1);
+  scene.add(mesh);
+
+  const bb = geometry.boundingBox;
+  originalSize = new THREE.Vector3(bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z);
+
+  dimX.value = originalSize.x.toFixed(3);
+  dimY.value = originalSize.y.toFixed(3);
+  dimZ.value = originalSize.z.toFixed(3);
+  [dimX, dimY, dimZ].forEach(el => el.disabled = false);
+  exportBtn.disabled = false;
+  resetBtn.disabled = false;
+
+  frameCamera();
+  info.textContent = `파일: ${name}\n원본 크기 (mm): ${originalSize.x.toFixed(2)} x ${originalSize.y.toFixed(2)} x ${originalSize.z.toFixed(2)}`;
+}
+
+function frameCamera() {
+  const box = new THREE.Box3().setFromObject(mesh);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const dist = maxDim * 2.2;
+  camera.position.set(center.x + dist, center.y + dist, center.z + dist);
+  controls.target.copy(center);
+  camera.near = maxDim / 100;
+  camera.far = maxDim * 100;
+  camera.updateProjectionMatrix();
+  controls.update();
+}
+
+function applyDim(axis, value) {
+  if (!mesh || !originalSize) return;
+  const target = parseFloat(value);
+  if (!isFinite(target) || target <= 0) return;
+
+  if (lockRatio.checked) {
+    setUniform(target / originalSize[axis]);
+  } else {
+    mesh.scale[axis] = target / originalSize[axis];
+    syncFieldsFromScale();
+  }
+}
+
+function setUniform(factor) {
+  mesh.scale.set(factor, factor, factor);
+  syncFieldsFromScale();
+}
+
+function syncFieldsFromScale() {
+  dimX.value = (originalSize.x * mesh.scale.x).toFixed(3);
+  dimY.value = (originalSize.y * mesh.scale.y).toFixed(3);
+  dimZ.value = (originalSize.z * mesh.scale.z).toFixed(3);
+  frameCamera();
+}
+
+dimX.addEventListener('input', () => applyDim('x', dimX.value));
+dimY.addEventListener('input', () => applyDim('y', dimY.value));
+dimZ.addEventListener('input', () => applyDim('z', dimZ.value));
+
+resetBtn.addEventListener('click', () => {
+  if (!mesh || !originalSize) return;
+  mesh.scale.set(1, 1, 1);
+  syncFieldsFromScale();
+});
+
+exportBtn.addEventListener('click', () => {
+  if (!mesh) return;
+  const exporter = new THREE.STLExporter();
+  const stlString = exporter.parse(mesh, { binary: false });
+  const blob = new Blob([stlString], { type: 'model/stl' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'scaled_model.stl';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>

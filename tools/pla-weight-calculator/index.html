@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>PLA 무게 계산기 (STL 업로드)</title>
+<style>
+  html, body { margin: 0; height: 100%; font-family: "Segoe UI", sans-serif; background: #1e1e1e; color: #eee; }
+  #viewer { position: absolute; top: 0; left: 0; right: 360px; bottom: 0; }
+  #panel { position: absolute; top: 0; right: 0; width: 360px; bottom: 0; background: #2a2a2a; padding: 16px; box-sizing: border-box; overflow-y: auto; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  h3 { font-size: 13px; margin: 18px 0 8px; color: #9ec1ff; border-top: 1px solid #444; padding-top: 12px; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .row label { width: 110px; font-size: 12px; flex-shrink: 0; }
+  .row input[type=number] { flex: 1; padding: 4px; background: #1e1e1e; color: #eee; border: 1px solid #555; border-radius: 4px; width: 0; }
+  .hint { font-size: 11px; color: #888; margin: -4px 0 10px; line-height: 1.4; }
+  input[type=file] { width: 100%; margin-bottom: 12px; color: #eee; }
+  #result { font-size: 12px; color: #ccc; margin-top: 14px; line-height: 1.7; white-space: pre-wrap; }
+  #result .big { font-size: 20px; color: #9ec1ff; font-weight: bold; }
+  .file-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; padding: 6px 0; border-bottom: 1px solid #383838; }
+  .file-row span { color: #aaa; }
+  .total-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid #444; }
+</style>
+</head>
+<body>
+<div id="viewer"></div>
+<div id="panel">
+  <h2>PLA 출력물 무게 계산기</h2>
+  <input type="file" id="fileInput" accept=".stl" multiple>
+  <div id="origInfo" class="hint">STL 파일을 선택하면(여러 개 가능) 부피/표면적을 자동 계산합니다.</div>
+
+  <h3>출력 설정</h3>
+  <div class="row"><label>벽(쉘) 두께</label><input type="number" id="wallThickness" value="2" min="0" step="0.1"> mm</div>
+  <div class="row"><label>내부 채움</label><input type="number" id="infill" value="20" min="0" max="100" step="1"> %</div>
+  <div class="row"><label>PLA 밀도</label><input type="number" id="density" value="1.24" min="0" step="0.01"> g/cm³</div>
+  <div class="hint">무게 = 쉘 부피(표면적×두께) + 내부 부피×채움비율, 전부 밀도를 곱해 계산합니다.</div>
+
+  <div id="result"></div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.179.0/build/three.module.js",
+    "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.179.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+
+// ---------- viewer setup ----------
+const viewerEl = document.getElementById('viewer');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1e1e1e);
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1e6);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+viewerEl.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.2));
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(1, 1, 1);
+scene.add(dirLight);
+const orbit = new OrbitControls(camera, renderer.domElement);
+
+function resize() {
+  const w = viewerEl.clientWidth, h = viewerEl.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+resize();
+(function animate() {
+  requestAnimationFrame(animate);
+  orbit.update();
+  renderer.render(scene, camera);
+})();
+
+function frameCameraToBox(box) {
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const dist = maxDim * 2.2;
+  camera.position.set(center.x + dist, center.y + dist, center.z + dist);
+  orbit.target.copy(center);
+  camera.near = maxDim / 100;
+  camera.far = maxDim * 100;
+  camera.updateProjectionMatrix();
+  orbit.update();
+}
+
+// ---------- geometry -> volume/surface area (mesh divergence theorem) ----------
+function computeVolumeArea(geometry) {
+  const pos = geometry.attributes.position;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  let volume = 0, area = 0;
+  for (let i = 0; i < pos.count; i += 3) {
+    a.fromBufferAttribute(pos, i);
+    b.fromBufferAttribute(pos, i + 1);
+    c.fromBufferAttribute(pos, i + 2);
+    volume += a.dot(b.clone().cross(c)) / 6;
+    area += b.clone().sub(a).cross(c.clone().sub(a)).length() / 2;
+  }
+  return { volumeMm3: Math.abs(volume), areaMm2: area };
+}
+
+function calcWeight(volumeCm3, areaCm2, wallThicknessMm, infillPercent, densityGCm3) {
+  const wallCm = wallThicknessMm / 10;
+  const shellCm3 = Math.min(areaCm2 * wallCm, volumeCm3);
+  const internalCm3 = Math.max(volumeCm3 - shellCm3, 0);
+  const fillCm3 = internalCm3 * (infillPercent / 100);
+  return (shellCm3 + fillCm3) * densityGCm3;
+}
+
+// ---------- state ----------
+let modelList = []; // [{ name, size, volumeCm3, areaCm2 }]
+const colorCycle = [0x3a7afe, 0xff8a3a, 0x4ade80, 0xf472b6, 0xfacc15, 0x38bdf8, 0xa78bfa, 0xfb7185];
+
+const els = {
+  fileInput: document.getElementById('fileInput'),
+  origInfo: document.getElementById('origInfo'),
+  wallThickness: document.getElementById('wallThickness'),
+  infill: document.getElementById('infill'),
+  density: document.getElementById('density'),
+  result: document.getElementById('result'),
+};
+
+els.fileInput.addEventListener('change', (e) => {
+  const files = Array.from(e.target.files);
+  if (files.length) loadSTLFiles(files);
+});
+
+async function loadSTLFiles(files) {
+  els.origInfo.textContent = '불러오는 중...';
+  modelList = [];
+  scene.children = scene.children.filter(o => !o.isMesh);
+  const overallBox = new THREE.Box3();
+  let offsetX = 0;
+
+  for (const [i, file] of files.entries()) {
+    const buf = await file.arrayBuffer();
+    const geometry = new STLLoader().parse(buf);
+    geometry.computeBoundingBox();
+    const bb = geometry.boundingBox;
+    const size = [bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z];
+    const { volumeMm3, areaMm2 } = computeVolumeArea(geometry);
+    modelList.push({ name: file.name, size, volumeCm3: volumeMm3 / 1000, areaCm2: areaMm2 / 100 });
+
+    geometry.translate(-bb.min.x, -bb.min.y, -bb.min.z); // sit on origin corner
+    const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: colorCycle[i % colorCycle.length], metalness: 0.1, roughness: 0.6 }));
+    mesh.position.x = offsetX;
+    scene.add(mesh);
+    overallBox.expandByObject(mesh);
+    offsetX += size[0] + Math.max(size[0], size[1], size[2]) * 0.2; // gap so pieces don't overlap
+  }
+
+  els.origInfo.textContent = `${modelList.length}개 파일 로드됨`;
+  frameCameraToBox(overallBox);
+  updateResult();
+}
+
+function updateResult() {
+  if (!modelList.length) { els.result.textContent = ''; return; }
+  const wallThickness = parseFloat(els.wallThickness.value) || 0;
+  const infill = parseFloat(els.infill.value) || 0;
+  const density = parseFloat(els.density.value) || 0;
+
+  let totalWeight = 0;
+  const rows = modelList.map(m => {
+    const weight = calcWeight(m.volumeCm3, m.areaCm2, wallThickness, infill, density);
+    totalWeight += weight;
+    return `<div class="file-row"><span>${m.name} (${m.size[0].toFixed(0)}x${m.size[1].toFixed(0)}x${m.size[2].toFixed(0)}mm)</span><span>${weight.toFixed(2)} g</span></div>`;
+  }).join('');
+
+  els.result.innerHTML = rows +
+    `<div class="total-row">전체 무게\n<span class="big">${totalWeight.toFixed(2)} g</span>  (${(totalWeight / 1000).toFixed(3)} kg)</div>`;
+}
+
+[els.wallThickness, els.infill, els.density].forEach(el => el.addEventListener('input', updateResult));
+</script>
+</body>
+</html>

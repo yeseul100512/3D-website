@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G-code 병합기 (베드 자동 배치)</title>
+<style>
+  html, body { margin: 0; min-height: 100%; font-family: "Segoe UI", sans-serif; background: #1e1e1e; color: #eee; }
+  .panel { max-width: 640px; margin: 0 auto; padding: 32px 20px 60px; box-sizing: border-box; }
+  h2 { font-size: 18px; margin: 0 0 4px; }
+  h3 { font-size: 13px; margin: 22px 0 8px; color: #9ec1ff; border-top: 1px solid #3a3a3a; padding-top: 14px; }
+  .hint { font-size: 12px; color: #888; margin: 0 0 16px; line-height: 1.5; }
+  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .row label { width: 140px; font-size: 12px; flex-shrink: 0; }
+  .row select, .row input[type=number] { flex: 1; padding: 6px; background: #1e1e1e; color: #eee; border: 1px solid #555; border-radius: 4px; }
+  input[type=file] { width: 100%; padding: 8px 0; color: #eee; margin-bottom: 10px; }
+  button { padding: 10px 16px; margin-top: 10px; background: #3a7afe; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+  button:disabled { background: #555; cursor: not-allowed; }
+  button.secondary { background: #444; }
+  .file-list { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+  .file-row { display: flex; justify-content: space-between; align-items: center; background: #2a2a2a; border: 1px solid #3a3a3a; border-radius: 4px; padding: 6px 10px; font-size: 12px; }
+  .file-row button { padding: 2px 8px; margin: 0; font-size: 11px; background: #663; }
+  #status { font-size: 12px; margin-top: 14px; white-space: pre-wrap; line-height: 1.6; }
+  #status.error { color: #ff8a8a; }
+  #status.ok { color: #9ec1ff; }
+  .result-card { background: #2a2a2a; border: 1px solid #3a3a3a; border-radius: 6px; padding: 10px 14px; margin-top: 8px; font-size: 12px; line-height: 1.6; }
+  .empty { font-size: 12px; color: #666; }
+</style>
+</head>
+<body>
+<div class="panel">
+  <h2>G-code 병합기</h2>
+  <p class="hint">여러 부품의 g-code 파일을 하나로 합치고, 프린터 베드 위에 겹치지 않게 자동 배치한 뒤 높이 오름차순으로 순차 출력되도록 병합합니다.</p>
+
+  <input type="file" id="fileInput" accept=".gcode,.gco,.g" multiple>
+  <div class="file-list" id="fileList"><div class="empty">추가된 파일이 없습니다.</div></div>
+
+  <h3>프린터 선택</h3>
+  <div class="row">
+    <label>프린터</label>
+    <select id="printerSelect"></select>
+  </div>
+
+  <h3>옵션</h3>
+  <div class="row"><label>안전이동 여유값(mm)</label><input type="number" id="clearance" value="5" min="0" step="0.5"></div>
+  <div class="row"><label>파츠 간 최소 간격(mm)</label><input type="number" id="margin" value="3" min="0" step="0.5"></div>
+
+  <button id="runBtn" disabled>병합 실행</button>
+  <div id="status"></div>
+  <div id="resultBox"></div>
+</div>
+
+<script>
+// ===========================================================================
+// gcode_parser.py / bin_packing.py / printer_profiles.py / merger.py 포팅
+// (js_harness.js로 원본 Python과 출력 일치 검증된 gcode_parser.js / bin_packing.js /
+//  merger.js 로직을 그대로 가져오되, 파일 I/O만 fs 대신 File API / Blob 다운로드로 교체)
+// ===========================================================================
+
+const PRINTER_PROFILES = {
+  sindoh_3dwox1: { name: "Sindoh 3DWOX1", width: 210.0, depth: 200.0, max_height: 195.0 },
+  sindoh_3dwox1x: { name: "Sindoh 3DWOX1X", width: 228.0, depth: 200.0, max_height: 300.0 },
+  sindoh_3dwox7x: { name: "Sindoh 3DWOX7X", width: 370.0, depth: 390.0, max_height: 450.0 },
+};
+
+// ---- gcode_parser ----
+const MOVE_RE = /^(G0|G1)\b/i;
+const PARAM_RE = /([XYZEF])(-?\d*\.?\d+)/gi;
+const G28_RE = /^\s*G28\b/i;
+const G92_E0_RE = /^\s*G92\s+E0(\.0*)?\b/i;
+
+function codePart(line) {
+  const idx = line.indexOf(";");
+  return idx === -1 ? line : line.slice(0, idx);
+}
+function parseParams(codeAfterCmd) {
+  const params = {};
+  let m;
+  PARAM_RE.lastIndex = 0;
+  while ((m = PARAM_RE.exec(codeAfterCmd)) !== null) params[m[1].toUpperCase()] = parseFloat(m[2]);
+  return params;
+}
+
+class GcodeInfo {
+  constructor(lines) {
+    this.minX = null; this.maxX = null; this.minY = null; this.maxY = null; this.maxZ = 0.0;
+    this._parse(lines);
+  }
+  _parse(lines) {
+    let absolute = true;
+    const cur = { X: 0.0, Y: 0.0, Z: 0.0 };
+    for (const raw of lines) {
+      const code = codePart(raw).trim();
+      if (!code) continue;
+      const upper = code.toUpperCase();
+      if (upper.startsWith("G90")) { absolute = true; continue; }
+      if (upper.startsWith("G91")) { absolute = false; continue; }
+      const m = MOVE_RE.exec(code);
+      if (!m) continue;
+      const params = parseParams(code.slice(m[0].length));
+      if (absolute) { for (const axis of ["X", "Y", "Z"]) if (axis in params) cur[axis] = params[axis]; }
+      else { for (const axis of ["X", "Y", "Z"]) if (axis in params) cur[axis] += params[axis]; }
+      const eVal = "E" in params ? params.E : undefined;
+      if (eVal !== undefined && eVal > 0) {
+        const x = cur.X, y = cur.Y;
+        if (this.minX === null) { this.minX = this.maxX = x; this.minY = this.maxY = y; }
+        else {
+          this.minX = Math.min(this.minX, x); this.maxX = Math.max(this.maxX, x);
+          this.minY = Math.min(this.minY, y); this.maxY = Math.max(this.maxY, y);
+        }
+      }
+      if (cur.Z > this.maxZ) this.maxZ = cur.Z;
+    }
+  }
+  get width() { return this.minX === null ? 0.0 : this.maxX - this.minX; }
+  get depth() { return this.minY === null ? 0.0 : this.maxY - this.minY; }
+  get height() { return this.maxZ; }
+}
+
+function offsetLines(lines, dx, dy) {
+  const result = [];
+  let absolute = true;
+  for (const raw of lines) {
+    const semiIdx = raw.indexOf(";");
+    const hasComment = semiIdx !== -1;
+    const code = hasComment ? raw.slice(0, semiIdx) : raw;
+    const comment = hasComment ? raw.slice(semiIdx + 1) : "";
+    const stripped = code.trim();
+    const upper = stripped.toUpperCase();
+    if (upper.startsWith("G90")) { absolute = true; result.push(raw); continue; }
+    if (upper.startsWith("G91")) { absolute = false; result.push(raw); continue; }
+    const m = MOVE_RE.exec(stripped);
+    if (!m || !absolute) { result.push(raw); continue; }
+    const newCode = code.replace(/([XY])(-?\d*\.?\d+)/gi, (match, axis, valStr) => {
+      const val = parseFloat(valStr);
+      const upperAxis = axis.toUpperCase();
+      if (upperAxis === "X") return `X${(val + dx).toFixed(4)}`;
+      if (upperAxis === "Y") return `Y${(val + dy).toFixed(4)}`;
+      return match;
+    });
+    result.push(newCode + (hasComment ? ";" + comment : ""));
+  }
+  return result;
+}
+function stripG28(lines) { return lines.filter((l) => !G28_RE.test(codePart(l))); }
+function stripG92E0(lines) { return lines.filter((l) => !G92_E0_RE.test(codePart(l))); }
+
+// ---- bin_packing ----
+function packShelves(items, bedWidth, bedDepth, margin = 3.0) {
+  const order = items.map((_, i) => i);
+  order.sort((a, b) => items[b][1] - items[a][1]);
+  const shelves = [];
+  const placements = new Array(items.length).fill(null);
+  const failedIndices = [];
+  for (const i of order) {
+    const [w, d] = items[i];
+    const pw = w + margin, pd = d + margin;
+    if (pw > bedWidth || pd > bedDepth) { failedIndices.push(i); continue; }
+    let placed = false;
+    for (const shelf of shelves) {
+      if (pd <= shelf.height && shelf.usedWidth + pw <= bedWidth) {
+        placements[i] = [shelf.usedWidth, shelf.y];
+        shelf.usedWidth += pw;
+        placed = true;
+        break;
+      }
+    }
+    if (placed) continue;
+    const newY = shelves.length === 0 ? 0.0 : shelves[shelves.length - 1].y + shelves[shelves.length - 1].height;
+    if (newY + pd > bedDepth) { failedIndices.push(i); continue; }
+    shelves.push({ y: newY, height: pd, usedWidth: pw });
+    placements[i] = [0.0, newY];
+  }
+  const success = failedIndices.length === 0;
+  return { placements, success, failedIndices: [...failedIndices].sort((a, b) => a - b) };
+}
+function classifyFailure(w, d, bedWidth, bedDepth, margin) {
+  if (w + margin > bedWidth || d + margin > bedDepth) return "too_large_alone";
+  return "insufficient_space";
+}
+function suggestRemovals(items, bedWidth, bedDepth, margin = 3.0) {
+  let remaining = items.map((_, i) => i);
+  const removed = [];
+  while (true) {
+    const currentItems = remaining.map((i) => items[i]);
+    const { success, failedIndices: failedLocal } = packShelves(currentItems, bedWidth, bedDepth, margin);
+    if (success) return { removedIndices: removed, remainingFits: true };
+    if (remaining.length === 0) return { removedIndices: removed, remainingFits: false };
+    const failedGlobal = failedLocal.map((i) => remaining[i]);
+    let worst = failedGlobal[0], worstArea = items[worst][0] * items[worst][1];
+    for (const gi of failedGlobal) {
+      const area = items[gi][0] * items[gi][1];
+      if (area > worstArea) { worst = gi; worstArea = area; }
+    }
+    removed.push(worst);
+    remaining = remaining.filter((i) => i !== worst);
+  }
+}
+
+// ---- merger ----
+class MergeError extends Error {}
+const TRAVEL_FEED = 6000;
+
+function buildPlacementErrorMessage(parts, items, bedW, bedD, margin, failed) {
+  const failedNames = failed.map((i) => parts[i].name);
+  const tooLarge = failed
+    .filter((i) => classifyFailure(items[i][0], items[i][1], bedW, bedD, margin) === "too_large_alone")
+    .map((i) => parts[i].name);
+  const insufficient = failedNames.filter((n) => !tooLarge.includes(n));
+  const lines = [
+    `다음 파츠가 베드(${bedW.toFixed(0)}x${bedD.toFixed(0)}mm, margin=${margin.toFixed(1)}mm)에 배치되지 않습니다: ${failedNames.join(", ")}.`,
+    "일부만 병합하지 않고 전체 작업을 중단합니다.",
+  ];
+  if (tooLarge.length) lines.push(`- 베드보다 파츠 자체가 커서 이 프린터에서는 배치할 수 없음: ${tooLarge.join(", ")} (더 큰 베드의 프린터를 선택하세요)`);
+  if (insufficient.length) lines.push(`- 다른 파츠들과 함께면 공간이 부족해 배치되지 못함: ${insufficient.join(", ")}`);
+  const { removedIndices, remainingFits } = suggestRemovals(items, bedW, bedD, margin);
+  const removedNames = removedIndices.map((i) => parts[i].name);
+  if (removedNames.length && remainingFits) {
+    const kept = parts.length - removedNames.length;
+    lines.push(`추천: 다음 ${removedNames.length}개 파일을 목록에서 제외하면 나머지 ${kept}개는 배치 가능합니다 → ${removedNames.join(", ")}`);
+  } else if (!remainingFits) {
+    lines.push("일부를 제외해도 전부 배치할 방법이 없습니다. 더 큰 베드의 프린터를 사용하세요.");
+  }
+  return lines.join("\n");
+}
+
+function mergeGcodeFiles(printerKey, parts, clearance, margin) {
+  const profile = PRINTER_PROFILES[printerKey];
+  const bedW = profile.width, bedD = profile.depth, bedH = profile.max_height;
+
+  const tooTall = parts.filter((p) => p.info.height > bedH).map((p) => p.name);
+  if (tooTall.length) throw new MergeError(`다음 파츠의 높이가 프린터 최대 높이(${bedH}mm)를 초과합니다: ${tooTall.join(", ")}. 배치를 중단합니다.`);
+
+  const items = parts.map((p) => [p.info.width, p.info.depth]);
+  const { placements, success, failedIndices } = packShelves(items, bedW, bedD, margin);
+  if (!success) throw new MergeError(buildPlacementErrorMessage(parts, items, bedW, bedD, margin, failedIndices));
+
+  const order = parts.map((_, i) => i);
+  order.sort((a, b) => parts[a].info.height - parts[b].info.height);
+
+  const outLines = [
+    "G21                         ; 단위 mm\n",
+    "G90                         ; 절대좌표\n",
+    "M82                         ; 절대 압출\n",
+    "G28                         ; 전체 작업 시작 시 1회만 호밍\n",
+    "\n",
+  ];
+  let runningMaxHeight = 0.0;
+  const results = [];
+  for (const i of order) {
+    const part = parts[i], info = part.info;
+    const [x, y] = placements[i];
+    const dx = x - (info.minX !== null ? info.minX : 0.0);
+    const dy = y - (info.minY !== null ? info.minY : 0.0);
+    const safeZ = runningMaxHeight + clearance;
+    let body = stripG92E0(stripG28(part.lines));
+    body = offsetLines(body, dx, dy);
+    outLines.push(`; ===PART ${part.name} h=${info.height.toFixed(3)} x=${x.toFixed(3)} y=${y.toFixed(3)}===\n`);
+    outLines.push("G92 E0\n");
+    outLines.push(`G0 Z${safeZ.toFixed(3)} F${TRAVEL_FEED}        ; 안전고도로 이동\n`);
+    outLines.push(`G0 X${x.toFixed(3)} Y${y.toFixed(3)} F${TRAVEL_FEED}\n`);
+    outLines.push(...body);
+    outLines.push("\n");
+    runningMaxHeight = Math.max(runningMaxHeight, info.height);
+    results.push({ name: part.name, width: info.width, depth: info.depth, height: info.height, x, y });
+  }
+  const finalSafeZ = runningMaxHeight + clearance;
+  outLines.push(`G0 Z${finalSafeZ.toFixed(3)}            ; 완료 후 헤드 들어올리기\n`);
+  outLines.push("M104 S0\n");
+  outLines.push("M140 S0\n");
+  outLines.push("M84                         ; 스테퍼 모터 끄기\n");
+
+  return { results, combinedText: outLines.join("") };
+}
+
+// ===========================================================================
+// UI
+// ===========================================================================
+const printerSelect = document.getElementById('printerSelect');
+Object.keys(PRINTER_PROFILES).sort().forEach((key) => {
+  const p = PRINTER_PROFILES[key];
+  const opt = document.createElement('option');
+  opt.value = key;
+  opt.textContent = `${p.name}  (${p.width.toFixed(0)}×${p.depth.toFixed(0)}×${p.max_height.toFixed(0)}mm)`;
+  printerSelect.appendChild(opt);
+});
+
+let selectedFiles = [];
+const fileInput = document.getElementById('fileInput');
+const fileListEl = document.getElementById('fileList');
+const runBtn = document.getElementById('runBtn');
+const statusEl = document.getElementById('status');
+const resultBox = document.getElementById('resultBox');
+
+function renderFileList() {
+  fileListEl.innerHTML = '';
+  if (!selectedFiles.length) {
+    fileListEl.innerHTML = '<div class="empty">추가된 파일이 없습니다.</div>';
+  } else {
+    selectedFiles.forEach((f, i) => {
+      const row = document.createElement('div');
+      row.className = 'file-row';
+      row.innerHTML = `<span>${f.name}</span>`;
+      const btn = document.createElement('button');
+      btn.textContent = '제거';
+      btn.onclick = () => { selectedFiles.splice(i, 1); renderFileList(); };
+      row.appendChild(btn);
+      fileListEl.appendChild(row);
+    });
+  }
+  runBtn.disabled = selectedFiles.length < 1;
+}
+
+fileInput.addEventListener('change', (e) => {
+  selectedFiles = selectedFiles.concat(Array.from(e.target.files));
+  fileInput.value = '';
+  renderFileList();
+});
+
+function nameWithoutExt(fname) {
+  const idx = fname.lastIndexOf('.');
+  return idx === -1 ? fname : fname.slice(0, idx);
+}
+
+runBtn.addEventListener('click', async () => {
+  runBtn.disabled = true;
+  statusEl.className = '';
+  statusEl.textContent = '병합 중...';
+  resultBox.innerHTML = '';
+
+  try {
+    const parts = [];
+    for (const file of selectedFiles) {
+      const text = await file.text();
+      const lines = text.split(/(?<=\n)/);
+      parts.push({ name: nameWithoutExt(file.name), lines, info: new GcodeInfo(lines) });
+    }
+
+    const printerKey = printerSelect.value;
+    const clearance = parseFloat(document.getElementById('clearance').value);
+    const margin = parseFloat(document.getElementById('margin').value);
+
+    const { results, combinedText } = mergeGcodeFiles(printerKey, parts, clearance, margin);
+
+    statusEl.className = 'ok';
+    statusEl.textContent = `완료 — ${results.length}개 파츠를 높이 오름차순으로 병합했습니다.`;
+
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.innerHTML = results
+      .map((r) => `${r.name}: ${r.width.toFixed(1)}×${r.depth.toFixed(1)}×${r.height.toFixed(1)}mm @ (${r.x.toFixed(1)}, ${r.y.toFixed(1)})`)
+      .join('<br>');
+    resultBox.appendChild(card);
+
+    const dlBtn = document.createElement('button');
+    dlBtn.className = 'secondary';
+    dlBtn.textContent = '병합된 combined.gcode 다운로드';
+    dlBtn.onclick = () => {
+      const blob = new Blob([combinedText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'combined.gcode';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    };
+    resultBox.appendChild(dlBtn);
+  } catch (err) {
+    statusEl.className = 'error';
+    statusEl.textContent = err instanceof MergeError ? `배치 실패:\n${err.message}` : `오류: ${err.message}`;
+  } finally {
+    runBtn.disabled = selectedFiles.length < 1;
+  }
+});
+
+renderFileList();
+</script>
+</body>
+</html>
