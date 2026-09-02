@@ -4,34 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>G-code 병합기 (베드 자동 배치)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  html, body { margin: 0; min-height: 100%; font-family: 'Inter', system-ui, sans-serif; background: #161826; color: #e9e9ed; }
-  .panel { max-width: 640px; margin: 0 auto; padding: 32px 20px 60px; box-sizing: border-box; }
-  h2 { font-size: 18px; margin: 0 0 4px; }
-  h3 { font-size: 13px; margin: 22px 0 8px; color: #9184d9; border-top: 1px solid #3f424d; padding-top: 14px; }
-  .hint { font-size: 12px; color: #75798c; margin: 0 0 16px; line-height: 1.5; }
-  .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .row label { width: 140px; font-size: 12px; flex-shrink: 0; }
-  .row select, .row input[type=number] { flex: 1; padding: 6px; background: #161826; color: #e9e9ed; border: 1px solid #3f424d; border-radius: 8px; }
-  input[type=file] { width: 100%; padding: 8px 0; color: #e9e9ed; margin-bottom: 10px; }
-  button { padding: 10px 16px; margin-top: 10px; background: #9184d9; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
-  button:disabled { background: #3f424d; cursor: not-allowed; }
-  button.secondary { background: #3f424d; }
+  :root {
+    --color-bg: #161826; --color-surface: #232532; --color-text: #e9e9ed;
+    --color-accent: #9184d9; --color-accent-300: #d2cefd;
+    --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
+    --color-neutral-400: #b2b6ca; --color-neutral-500: #9397ab; --color-neutral-600: #75798c;
+    --color-neutral-700: #595d6c; --color-neutral-800: #3f424d;
+    --radius-sm: 4px; --radius-md: 8px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; font-family: 'Inter', system-ui, sans-serif; background: var(--color-bg); color: var(--color-text); }
+  .back { display: inline-flex; align-items: center; gap: 6px; margin: 16px 0 0 16px; font-size: 12px; color: var(--color-neutral-500); text-decoration: none; }
+  .back:hover { color: var(--color-accent-300); }
+  .panel { max-width: 640px; margin: 0 auto; padding: 16px 20px 60px; }
+  h2 { font-size: 18px; margin: 16px 0 4px; font-weight: 600; }
+  h3 { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin: 22px 0 10px; color: var(--color-accent-300); border-top: 1px solid var(--color-divider); padding-top: 14px; font-weight: 500; }
+  .hint { font-size: 12px; color: var(--color-neutral-600); margin: 0 0 16px; line-height: 1.5; }
+  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .row label { width: 160px; font-size: 12px; color: var(--color-neutral-400); flex-shrink: 0; }
+  .row select, .row input[type=number] { flex: 1; padding: 6px 10px; background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); font: inherit; font-size: 13px; }
+  .row select:focus, .row input:focus { outline: none; border-color: var(--color-accent); }
+  .upload-row { display: flex; align-items: center; gap: 11px; padding: 14px; border: 1px dashed var(--color-neutral-700); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-bg) 60%, transparent); cursor: pointer; margin-bottom: 10px; }
+  .upload-row:hover { border-color: var(--color-accent); }
+  .upload-row .flabel { font-size: 13px; }
+  .upload-row .fnote { font-size: 11px; color: var(--color-neutral-600); margin-top: 2px; }
+  input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  button { padding: 9px 16px; margin-top: 10px; background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); border-radius: var(--radius-md); cursor: pointer; font-size: 13px; font-family: inherit; }
+  button:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
+  button:disabled { color: var(--color-neutral-600); border-color: var(--color-neutral-800); cursor: not-allowed; }
+  button.secondary { color: var(--color-neutral-400); border-color: var(--color-neutral-800); }
+  button.secondary:hover:not(:disabled) { border-color: var(--color-neutral-600); color: var(--color-text); background: transparent; }
   .file-list { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
-  .file-row { display: flex; justify-content: space-between; align-items: center; background: #232532; border: 1px solid #3f424d; border-radius: 8px; padding: 6px 10px; font-size: 12px; }
-  .file-row button { padding: 2px 8px; margin: 0; font-size: 11px; background: #663; }
-  #status { font-size: 12px; margin-top: 14px; white-space: pre-wrap; line-height: 1.6; }
+  .file-row { display: flex; justify-content: space-between; align-items: center; background: var(--color-surface); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; }
+  .file-row button { padding: 2px 8px; margin: 0; font-size: 11px; color: var(--color-neutral-500); border-color: var(--color-neutral-800); }
+  .file-row button:hover { color: var(--color-text); border-color: var(--color-neutral-600); background: transparent; }
+  #status { font-size: 12px; margin-top: 14px; white-space: pre-wrap; line-height: 1.6; color: var(--color-neutral-400); }
   #status.error { color: #ff8a8a; }
-  #status.ok { color: #9184d9; }
-  .result-card { background: #232532; border: 1px solid #3f424d; border-radius: 8px; padding: 10px 14px; margin-top: 8px; font-size: 12px; line-height: 1.6; }
-  .empty { font-size: 12px; color: #75798c; }
+  #status.ok { color: var(--color-accent-300); }
+  .result-card { background: var(--color-surface); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); padding: 10px 14px; margin-top: 8px; font-size: 12px; line-height: 1.6; }
+  .empty { font-size: 12px; color: var(--color-neutral-600); }
 </style>
 </head>
 <body>
+<a class="back" href="../../index.html">&larr; 전체 도구</a>
 <div class="panel">
   <h2>G-code 병합기</h2>
   <p class="hint">여러 부품의 g-code 파일을 하나로 합치고, 프린터 베드 위에 겹치지 않게 자동 배치한 뒤 높이 오름차순으로 순차 출력되도록 병합합니다.</p>
 
+  <label class="upload-row" for="fileInput">
+    <svg width="18" height="18" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M168 92l-40-40-40 40" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M128 52v112" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div>
+      <div class="flabel">G-code 파일 추가</div>
+      <div class="fnote">.gcode · .gco · .g — 여러 개 선택 가능</div>
+    </div>
+  </label>
   <input type="file" id="fileInput" accept=".gcode,.gco,.g" multiple>
   <div class="file-list" id="fileList"><div class="empty">추가된 파일이 없습니다.</div></div>
 
