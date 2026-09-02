@@ -6,37 +6,63 @@
 <title>PLA 무게 계산기 (STL 업로드)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --color-bg: #161826; --color-surface: #232532; --color-text: #e9e9ed;
-    --color-accent: #9184d9; --color-accent-300: #d2cefd;
+    --color-accent: #9184d9; --color-accent-300: #d2cefd; --color-accent-400: #b5abfc;
+    --color-accent-700: #5d5294;
     --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
     --color-neutral-400: #b2b6ca; --color-neutral-500: #9397ab; --color-neutral-600: #75798c;
     --color-neutral-700: #595d6c; --color-neutral-800: #3f424d;
+    --font-heading: 'Gowun Batang', 'Hiragino Mincho ProN', 'Songti SC', 'Inter', serif;
+    --font-body: 'Inter', system-ui, sans-serif;
     --radius-sm: 4px; --radius-md: 8px;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; font-family: 'Inter', system-ui, sans-serif; background: var(--color-bg); color: var(--color-text); }
-  .back { position: absolute; top: 14px; left: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-neutral-500); text-decoration: none; padding: 4px 8px; border-radius: var(--radius-sm); background: color-mix(in srgb, var(--color-surface) 85%, transparent); }
+  html, body { margin: 0; min-height: 100%; font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 22.4px 22.4px 33.6px; }
+  .back { display: inline-flex; align-items: center; gap: 5.6px; margin-bottom: 16.8px; font-size: 12px; color: var(--color-neutral-500); text-decoration: none; }
   .back:hover { color: var(--color-accent-300); }
-  #viewer { position: absolute; top: 0; left: 0; right: 360px; bottom: 0; border-right: 1px solid var(--color-neutral-800); }
-  .orbit-hint { position: absolute; left: 12px; bottom: 12px; z-index: 2; display: flex; align-items: center; gap: 6px; padding: 4px 9px; background: color-mix(in srgb, var(--color-surface) 85%, transparent); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); font-size: 11px; color: var(--color-neutral-500); }
-  #panel { position: absolute; top: 0; right: 0; width: 360px; bottom: 0; background: var(--color-surface); padding: 16px; box-sizing: border-box; overflow-y: auto; }
-  h2 { font-size: 16px; margin: 0 0 12px; font-weight: 600; }
-  h3 { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin: 18px 0 10px; color: var(--color-accent-300); border-top: 1px solid var(--color-divider); padding-top: 12px; font-weight: 500; }
-  .upload-row { display: flex; align-items: center; gap: 11px; padding: 14px; border: 1px dashed var(--color-neutral-700); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-bg) 60%, transparent); cursor: pointer; margin-bottom: 8px; }
-  .upload-row:hover { border-color: var(--color-accent); }
-  .upload-row .flabel { font-size: 13px; }
-  .upload-row .fnote { font-size: 11px; color: var(--color-neutral-600); margin-top: 2px; }
+  .head { display: flex; align-items: flex-start; gap: 11.2px; margin-bottom: 16.8px; }
+  .head i { font-size: 24px; color: var(--color-accent-400); margin-top: 2px; }
+  .head h1 { flex: 1; margin: 0; font-family: var(--font-heading); font-weight: 700; font-size: 20px; letter-spacing: -0.005em; }
+  .badge { display: flex; align-items: center; gap: 5.6px; padding: 4px 10px; border: 1px solid var(--color-neutral-800); border-radius: 999px; background: var(--color-surface); }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+  .badge span { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-500); }
+
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16.8px; align-items: start; }
+  .viewer-frame { position: relative; min-height: 460px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: radial-gradient(120% 90% at 50% 0%, #1c1f31 0%, #14162200 70%), var(--color-bg); overflow: hidden; }
+  .viewer-frame .vgrid { position: absolute; inset: 0; background-image: linear-gradient(color-mix(in srgb, var(--color-text) 5%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--color-text) 5%, transparent) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(70% 70% at 50% 45%, #000 0%, transparent 100%); }
+  .viewer-frame .vplaceholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8.4px; color: var(--color-neutral-600); }
+  .viewer-frame .vplaceholder i { font-size: 32px; }
+  .viewer-frame .vplaceholder span { font-size: 12px; }
+  .orbit-hint { position: absolute; left: 11.2px; bottom: 11.2px; display: flex; align-items: center; gap: 5.6px; padding: 4px 9px; background: color-mix(in srgb, var(--color-surface) 85%, transparent); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); font-size: 11px; color: var(--color-neutral-500); }
+  .viewer-frame canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
+
+  .panel { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; align-items: start; gap: 16.8px 22.4px; padding: 16.8px; background: var(--color-surface); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); overflow-y: auto; max-height: 700px; }
+  .section { display: flex; flex-direction: column; gap: 8.4px; }
+  .section h2 { margin: 0; padding-bottom: 5.6px; border-bottom: 1px solid var(--color-divider); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-300); font-weight: 500; }
+
+  .upload { display: flex; align-items: center; gap: 11.2px; padding: 14px; border: 1px dashed var(--color-neutral-700); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-bg) 60%, transparent); cursor: pointer; }
+  .upload:hover { border-color: var(--color-accent-700); }
+  .upload i { font-size: 18px; color: var(--color-accent-400); flex-shrink: 0; }
+  .upload .t { font-size: 13px; }
+  .upload .n { font-size: 11px; color: var(--color-neutral-600); margin-top: 2px; }
   input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
-  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .row label { flex: 1; font-size: 12px; color: var(--color-neutral-400); }
-  .row input[type=number] { width: 76px; padding: 5px 8px; text-align: right; background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); font: inherit; font-size: 13px; }
-  .row input[type=number]:focus { outline: none; border-color: var(--color-accent); }
-  .row .unit { width: 46px; font-size: 11px; color: var(--color-neutral-600); }
-  .hint { font-size: 11px; color: var(--color-neutral-600); margin: 4px 0 10px; line-height: 1.4; }
-  #result { font-size: 12px; color: var(--color-neutral-400); margin-top: 14px; line-height: 1.7; white-space: pre-wrap; }
+
+  .numrow { display: flex; align-items: center; gap: 11.2px; }
+  .numrow label { flex: 1; font-size: 12px; color: var(--color-neutral-400); }
+  .numrow .field { display: flex; align-items: center; gap: 5.6px; }
+  .numrow input[type=number] { width: 76px; padding: 5px 8px; text-align: right; background: var(--color-bg); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-body); font-size: 13px; outline: none; }
+  .numrow input[type=number]:focus { border-color: var(--color-accent); }
+  .numrow .unit { width: 46px; font-size: 11px; color: var(--color-neutral-600); }
+
+  .hint { margin: 0; font-size: 11px; line-height: 1.5; color: var(--color-neutral-600); }
+
+  #result { font-size: 12px; color: var(--color-neutral-400); line-height: 1.7; white-space: pre-wrap; }
   #result .big { font-size: 20px; color: var(--color-accent-300); font-weight: bold; }
   .file-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--color-divider); }
   .file-row span { color: var(--color-neutral-500); }
@@ -44,28 +70,48 @@
 </style>
 </head>
 <body>
-<a class="back" href="../../index.html">&larr; 전체 도구</a>
-<div id="viewer"></div>
-<div class="orbit-hint">드래그로 회전</div>
-<div id="panel">
-  <h2>PLA 출력물 무게 계산기</h2>
+<div class="wrap">
+  <a class="back" href="../../index.html"><i class="ph ph-arrow-left"></i><span>전체 도구</span></a>
 
-  <label class="upload-row" for="fileInput">
-    <svg width="18" height="18" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M168 92l-40-40-40 40" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M128 52v112" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div>
-      <div class="flabel">STL 파일 선택</div>
-      <div class="fnote" id="origInfo">여러 개 가능 · 부피/표면적을 자동 계산</div>
+  <div class="head">
+    <i class="ph ph-scales"></i>
+    <h1>PLA 무게 계산기</h1>
+    <div class="badge"><span class="dot"></span><span>완료</span></div>
+  </div>
+
+  <div class="grid">
+    <div class="viewer-frame">
+      <div class="vgrid"></div>
+      <div class="vplaceholder" id="viewerPlaceholder"><i class="ph ph-cube"></i><span>3D 미리보기 영역</span></div>
+      <div id="viewer" style="position:absolute; inset:0;"></div>
+      <div class="orbit-hint"><i class="ph ph-arrows-clockwise"></i><span>드래그로 회전</span></div>
     </div>
-  </label>
-  <input type="file" id="fileInput" accept=".stl" multiple>
 
-  <h3>출력 설정</h3>
-  <div class="row"><label>벽(쉘) 두께</label><input type="number" id="wallThickness" value="2" min="0" step="0.1"><span class="unit">mm</span></div>
-  <div class="row"><label>내부 채움</label><input type="number" id="infill" value="20" min="0" max="100" step="1"><span class="unit">%</span></div>
-  <div class="row"><label>PLA 밀도</label><input type="number" id="density" value="1.24" min="0" step="0.01"><span class="unit">g/cm³</span></div>
-  <div class="hint">무게 = 쉘 부피(표면적×두께) + 내부 부피×채움비율, 전부 밀도를 곱해 계산합니다.</div>
+    <div class="panel">
+      <div class="section">
+        <label class="upload" for="fileInput">
+          <i class="ph ph-upload-simple"></i>
+          <div>
+            <div class="t">STL 파일 선택</div>
+            <div class="n" id="origInfo">여러 개 가능 · 부피/표면적을 자동 계산</div>
+          </div>
+        </label>
+        <input type="file" id="fileInput" accept=".stl" multiple>
+      </div>
 
-  <div id="result"></div>
+      <div class="section">
+        <h2>출력 설정</h2>
+        <div class="numrow"><label>벽(쉘) 두께</label><div class="field"><input type="number" id="wallThickness" value="2" min="0" step="0.1"><span class="unit">mm</span></div></div>
+        <div class="numrow"><label>내부 채움</label><div class="field"><input type="number" id="infill" value="20" min="0" max="100" step="1"><span class="unit">%</span></div></div>
+        <div class="numrow"><label>PLA 밀도</label><div class="field"><input type="number" id="density" value="1.24" min="0" step="0.01"><span class="unit">g/cm³</span></div></div>
+        <p class="hint">무게 = 쉘 부피(표면적×두께) + 내부 부피×채움비율, 전부 밀도를 곱해 계산합니다.</p>
+      </div>
+
+      <div class="section">
+        <div id="result"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script type="importmap">
@@ -84,6 +130,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
 
 // ---------- viewer setup ----------
 const viewerEl = document.getElementById('viewer');
+const viewerPlaceholder = document.getElementById('viewerPlaceholder');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x161826);
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1e6);
@@ -147,7 +194,7 @@ function calcWeight(volumeCm3, areaCm2, wallThicknessMm, infillPercent, densityG
 
 // ---------- state ----------
 let modelList = []; // [{ name, size, volumeCm3, areaCm2 }]
-const colorCycle = [0x3a7afe, 0xff8a3a, 0x4ade80, 0xf472b6, 0xfacc15, 0x38bdf8, 0xa78bfa, 0xfb7185];
+const colorCycle = [0x9184d9, 0xff8a3a, 0x4ade80, 0xf472b6, 0xfacc15, 0x38bdf8, 0xb5abfc, 0xfb7185];
 
 const els = {
   fileInput: document.getElementById('fileInput'),
@@ -165,6 +212,7 @@ els.fileInput.addEventListener('change', (e) => {
 
 async function loadSTLFiles(files) {
   els.origInfo.textContent = '불러오는 중...';
+  viewerPlaceholder.style.display = 'none';
   modelList = [];
   scene.children = scene.children.filter(o => !o.isMesh);
   const overallBox = new THREE.Box3();

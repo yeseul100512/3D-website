@@ -6,74 +6,128 @@
 <title>STL 크기 조절 프로그램</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --color-bg: #161826; --color-surface: #232532; --color-text: #e9e9ed;
-    --color-accent: #9184d9; --color-accent-300: #d2cefd; --color-accent-900: #2b2741;
+    --color-accent: #9184d9; --color-accent-300: #d2cefd; --color-accent-400: #b5abfc;
+    --color-accent-700: #5d5294; --color-accent-900: #2b2741;
     --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
     --color-neutral-400: #b2b6ca; --color-neutral-500: #9397ab; --color-neutral-600: #75798c;
     --color-neutral-700: #595d6c; --color-neutral-800: #3f424d;
+    --font-heading: 'Gowun Batang', 'Hiragino Mincho ProN', 'Songti SC', 'Inter', serif;
+    --font-body: 'Inter', system-ui, sans-serif;
     --radius-sm: 4px; --radius-md: 8px;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; height: 100%; font-family: 'Inter', system-ui, sans-serif; background: var(--color-bg); color: var(--color-text); }
-  .back { position: absolute; top: 14px; left: 16px; z-index: 2; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-neutral-500); text-decoration: none; padding: 4px 8px; border-radius: var(--radius-sm); background: color-mix(in srgb, var(--color-surface) 85%, transparent); }
+  html, body { margin: 0; min-height: 100%; font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 22.4px 22.4px 33.6px; }
+  .back { display: inline-flex; align-items: center; gap: 5.6px; margin-bottom: 16.8px; font-size: 12px; color: var(--color-neutral-500); text-decoration: none; }
   .back:hover { color: var(--color-accent-300); }
-  #viewer { position: absolute; top: 0; left: 0; right: 320px; bottom: 0; border-right: 1px solid var(--color-neutral-800); }
-  .orbit-hint { position: absolute; left: 12px; bottom: 12px; z-index: 2; display: flex; align-items: center; gap: 6px; padding: 4px 9px; background: color-mix(in srgb, var(--color-surface) 85%, transparent); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); font-size: 11px; color: var(--color-neutral-500); }
-  #panel { position: absolute; top: 0; right: 0; width: 320px; bottom: 0; background: var(--color-surface); padding: 16px; box-sizing: border-box; overflow-y: auto; }
-  h2 { font-size: 16px; margin: 0 0 12px; font-weight: 600; }
-  .file-row { display: flex; align-items: center; gap: 11px; padding: 14px; border: 1px dashed var(--color-neutral-700); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-bg) 60%, transparent); cursor: pointer; margin-bottom: 16px; }
-  .file-row:hover { border-color: var(--color-accent); }
-  .file-row .flabel { font-size: 13px; }
-  .file-row .fnote { font-size: 11px; color: var(--color-neutral-600); margin-top: 2px; }
+  .head { display: flex; align-items: flex-start; gap: 11.2px; margin-bottom: 16.8px; }
+  .head i { font-size: 24px; color: var(--color-accent-400); margin-top: 2px; }
+  .head h1 { flex: 1; margin: 0; font-family: var(--font-heading); font-weight: 700; font-size: 20px; letter-spacing: -0.005em; }
+  .badge { display: flex; align-items: center; gap: 5.6px; padding: 4px 10px; border: 1px solid var(--color-neutral-800); border-radius: 999px; background: var(--color-surface); }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+  .badge span { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-500); }
+
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16.8px; align-items: start; }
+  .viewer-frame { position: relative; min-height: 460px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: radial-gradient(120% 90% at 50% 0%, #1c1f31 0%, #14162200 70%), var(--color-bg); overflow: hidden; }
+  .viewer-frame .vgrid { position: absolute; inset: 0; background-image: linear-gradient(color-mix(in srgb, var(--color-text) 5%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--color-text) 5%, transparent) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(70% 70% at 50% 45%, #000 0%, transparent 100%); }
+  .viewer-frame .vplaceholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8.4px; color: var(--color-neutral-600); }
+  .viewer-frame .vplaceholder i { font-size: 32px; }
+  .viewer-frame .vplaceholder span { font-size: 12px; }
+  .orbit-hint { position: absolute; left: 11.2px; bottom: 11.2px; display: flex; align-items: center; gap: 5.6px; padding: 4px 9px; background: color-mix(in srgb, var(--color-surface) 85%, transparent); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); font-size: 11px; color: var(--color-neutral-500); }
+  .viewer-frame canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
+
+  .panel { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; align-items: start; gap: 16.8px 22.4px; padding: 16.8px; background: var(--color-surface); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); }
+  .section { display: flex; flex-direction: column; gap: 8.4px; }
+  .section h2 { margin: 0; padding-bottom: 5.6px; border-bottom: 1px solid var(--color-divider); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-300); font-weight: 500; }
+
+  .upload { display: flex; align-items: center; gap: 11.2px; padding: 14px; border: 1px dashed var(--color-neutral-700); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-bg) 60%, transparent); cursor: pointer; }
+  .upload:hover { border-color: var(--color-accent-700); }
+  .upload i { font-size: 18px; color: var(--color-accent-400); flex-shrink: 0; }
+  .upload .t { font-size: 13px; }
+  .upload .n { font-size: 11px; color: var(--color-neutral-600); margin-top: 2px; }
   input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
-  .row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .row label { flex: 1; font-size: 12px; color: var(--color-neutral-400); }
-  .row input[type=number] { width: 90px; padding: 5px 8px; text-align: right; background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); font: inherit; font-size: 13px; }
-  .row input[type=number]:focus { outline: none; border-color: var(--color-accent); }
-  .row .unit { width: 26px; font-size: 11px; color: var(--color-neutral-600); }
-  .lockrow { display: flex; align-items: flex-start; gap: 9px; padding: 9px 11px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); cursor: pointer; margin: 14px 0; font-size: 12.5px; }
-  .lockrow:has(input:checked) { border-color: var(--color-accent); background: color-mix(in srgb, var(--color-accent-900) 55%, transparent); }
-  button { width: 100%; padding: 9px; margin-top: 8px; border-radius: var(--radius-md); font-size: 13px; cursor: pointer; font-family: inherit; background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); }
-  button:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
-  button:disabled { color: var(--color-neutral-600); border-color: var(--color-neutral-800); cursor: not-allowed; }
-  button.secondary { color: var(--color-neutral-400); border-color: var(--color-neutral-800); }
-  button.secondary:hover:not(:disabled) { border-color: var(--color-neutral-600); color: var(--color-text); background: transparent; }
-  #info { font-size: 12px; color: var(--color-neutral-500); margin-top: 16px; line-height: 1.6; white-space: pre-wrap; }
-  hr { border: none; border-top: 1px solid var(--color-divider); margin: 16px 0; }
+
+  .numrow { display: flex; align-items: center; gap: 11.2px; }
+  .numrow label { flex: 1; font-size: 12px; color: var(--color-neutral-400); }
+  .numrow .field { display: flex; align-items: center; gap: 5.6px; }
+  .numrow input[type=number] { width: 76px; padding: 5px 8px; text-align: right; background: var(--color-bg); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-body); font-size: 13px; outline: none; }
+  .numrow input[type=number]:focus { border-color: var(--color-accent); }
+  .numrow input[type=number]:disabled { color: var(--color-neutral-600); }
+  .numrow .unit { width: 42px; font-size: 11px; color: var(--color-neutral-600); }
+
+  .choice { display: flex; align-items: flex-start; gap: 8.4px; padding: 9px 11.2px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); cursor: pointer; }
+  .choice:has(input:checked) { border-color: var(--color-accent-700); background: color-mix(in srgb, var(--color-accent-900) 55%, transparent); }
+  .choice input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .choice i { font-size: 15px; color: var(--color-accent-400); margin-top: 1px; }
+  .choice .t { font-size: 12.5px; }
+  .choice .n { font-size: 11px; color: var(--color-neutral-600); line-height: 1.4; }
+
+  .hint { margin: 0; font-size: 11px; line-height: 1.5; color: var(--color-neutral-600); white-space: pre-wrap; }
+
+  button.primary, button.ghost { width: 100%; display: flex; align-items: center; justify-content: center; gap: 5.6px; padding: 9px; border-radius: var(--radius-md); font-size: 13px; cursor: pointer; font-family: var(--font-body); }
+  button.primary { background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); }
+  button.primary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 14%, transparent); }
+  button.primary:disabled { color: var(--color-neutral-600); border-color: var(--color-neutral-800); cursor: not-allowed; }
+  button.ghost { background: transparent; color: var(--color-neutral-400); border: 1px solid var(--color-neutral-800); }
+  button.ghost:hover:not(:disabled) { border-color: var(--color-neutral-600); color: var(--color-text); }
+  button.ghost:disabled { color: var(--color-neutral-700); cursor: not-allowed; }
 </style>
 </head>
 <body>
-<a class="back" href="../../index.html">&larr; 전체 도구</a>
-<div id="viewer"></div>
-<div class="orbit-hint">드래그로 회전</div>
-<div id="panel">
-  <h2>STL 크기 조절</h2>
+<div class="wrap">
+  <a class="back" href="../../index.html"><i class="ph ph-arrow-left"></i><span>전체 도구</span></a>
 
-  <label class="file-row" for="fileInput">
-    <svg width="18" height="18" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M224 152v56a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-56" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M168 92l-40-40-40 40" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><path d="M128 52v112" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div>
-      <div class="flabel">STL 파일 선택</div>
-      <div class="fnote">선택하면 원본 치수(mm)가 표시됩니다</div>
+  <div class="head">
+    <i class="ph ph-arrows-out-cardinal"></i>
+    <h1>STL 크기 조절</h1>
+    <div class="badge"><span class="dot"></span><span>완료</span></div>
+  </div>
+
+  <div class="grid">
+    <div class="viewer-frame">
+      <div class="vgrid"></div>
+      <div class="vplaceholder" id="viewerPlaceholder"><i class="ph ph-cube"></i><span>3D 미리보기 영역</span></div>
+      <div id="viewer" style="position:absolute; inset:0;"></div>
+      <div class="orbit-hint"><i class="ph ph-arrows-clockwise"></i><span>드래그로 회전</span></div>
     </div>
-  </label>
-  <input type="file" id="fileInput" accept=".stl">
 
-  <div class="row"><label>가로 (X)</label><input type="number" id="dimX" step="any" disabled><span class="unit">mm</span></div>
-  <div class="row"><label>세로 (Y)</label><input type="number" id="dimY" step="any" disabled><span class="unit">mm</span></div>
-  <div class="row"><label>높이 (Z)</label><input type="number" id="dimZ" step="any" disabled><span class="unit">mm</span></div>
+    <div class="panel">
+      <div class="section">
+        <label class="upload" for="fileInput">
+          <i class="ph ph-upload-simple"></i>
+          <div>
+            <div class="t">STL 파일 선택</div>
+            <div class="n">선택하면 원본 치수(mm)가 표시됩니다</div>
+          </div>
+        </label>
+        <input type="file" id="fileInput" accept=".stl">
+      </div>
 
-  <label class="lockrow">
-    <input type="checkbox" id="lockRatio" checked>
-    <span>비율 유지 (가로/세로/높이 동시 조절)</span>
-  </label>
+      <div class="section">
+        <h2>치수</h2>
+        <div class="numrow"><label>가로 (X)</label><div class="field"><input type="number" id="dimX" step="any" disabled><span class="unit">mm</span></div></div>
+        <div class="numrow"><label>세로 (Y)</label><div class="field"><input type="number" id="dimY" step="any" disabled><span class="unit">mm</span></div></div>
+        <div class="numrow"><label>높이 (Z)</label><div class="field"><input type="number" id="dimZ" step="any" disabled><span class="unit">mm</span></div></div>
+        <label class="choice">
+          <input type="checkbox" id="lockRatio" checked>
+          <i class="ph ph-lock-simple"></i>
+          <div><div class="t">비율 유지</div><div class="n">가로/세로/높이를 동시에 조절</div></div>
+        </label>
+      </div>
 
-  <button id="exportBtn" disabled>변경된 STL 저장</button>
-  <button id="resetBtn" class="secondary" disabled>원본 크기로 되돌리기</button>
-
-  <div id="info">STL 파일을 선택하면 원본 치수(mm)가 표시됩니다.</div>
+      <div class="section">
+        <button class="primary" id="exportBtn" disabled><i class="ph ph-floppy-disk"></i><span>변경된 STL 저장</span></button>
+        <button class="ghost" id="resetBtn" disabled><i class="ph ph-arrow-counter-clockwise"></i><span>원본 크기로 되돌리기</span></button>
+        <p class="hint" id="info">STL 파일을 선택하면 원본 치수(mm)가 표시됩니다.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
@@ -82,6 +136,7 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/STLExporter.js"></script>
 <script>
 const viewerEl = document.getElementById('viewer');
+const viewerPlaceholder = document.getElementById('viewerPlaceholder');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x161826);
 const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100000);
@@ -130,6 +185,7 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
 
 function loadSTL(arrayBuffer, name) {
   if (mesh) scene.remove(mesh);
+  viewerPlaceholder.style.display = 'none';
 
   const geometry = new THREE.STLLoader().parse(arrayBuffer);
   geometry.center();
