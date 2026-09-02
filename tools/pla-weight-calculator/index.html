@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <title>PLA 무게 계산기 (STL 업로드)</title>
 <style>
-  html, body { margin: 0; height: 100%; font-family: "Segoe UI", sans-serif; background: #1e1e1e; color: #eee; }
+  html, body { margin: 0; height: 100%; font-family: 'Inter', system-ui, sans-serif; background: #161826; color: #e9e9ed; }
   #viewer { position: absolute; top: 0; left: 0; right: 360px; bottom: 0; }
-  #panel { position: absolute; top: 0; right: 0; width: 360px; bottom: 0; background: #2a2a2a; padding: 16px; box-sizing: border-box; overflow-y: auto; }
+  #panel { position: absolute; top: 0; right: 0; width: 360px; bottom: 0; background: #232532; padding: 16px; box-sizing: border-box; overflow-y: auto; }
   h2 { font-size: 16px; margin: 0 0 12px; }
-  h3 { font-size: 13px; margin: 18px 0 8px; color: #9ec1ff; border-top: 1px solid #444; padding-top: 12px; }
+  h3 { font-size: 13px; margin: 18px 0 8px; color: #9184d9; border-top: 1px solid #3f424d; padding-top: 12px; }
   .row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
   .row label { width: 110px; font-size: 12px; flex-shrink: 0; }
-  .row input[type=number] { flex: 1; padding: 4px; background: #1e1e1e; color: #eee; border: 1px solid #555; border-radius: 4px; width: 0; }
-  .hint { font-size: 11px; color: #888; margin: -4px 0 10px; line-height: 1.4; }
-  input[type=file] { width: 100%; margin-bottom: 12px; color: #eee; }
-  #result { font-size: 12px; color: #ccc; margin-top: 14px; line-height: 1.7; white-space: pre-wrap; }
-  #result .big { font-size: 20px; color: #9ec1ff; font-weight: bold; }
-  .file-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; padding: 6px 0; border-bottom: 1px solid #383838; }
-  .file-row span { color: #aaa; }
-  .total-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid #444; }
+  .row input[type=number] { flex: 1; padding: 4px; background: #161826; color: #e9e9ed; border: 1px solid #3f424d; border-radius: 8px; width: 0; }
+  .hint { font-size: 11px; color: #75798c; margin: -4px 0 10px; line-height: 1.4; }
+  input[type=file] { width: 100%; margin-bottom: 12px; color: #e9e9ed; }
+  #result { font-size: 12px; color: #b2b6ca; margin-top: 14px; line-height: 1.7; white-space: pre-wrap; }
+  #result .big { font-size: 20px; color: #9184d9; font-weight: bold; }
+  .file-row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; padding: 6px 0; border-bottom: 1px solid #3f424d; }
+  .file-row span { color: #9397ab; }
+  .total-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid #3f424d; }
 </style>
 </head>
 <body>
