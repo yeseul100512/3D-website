@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yeseul100512.github.io/3D-website/sitemap.xml
