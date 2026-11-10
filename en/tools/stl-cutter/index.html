@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STL Splitter – cut a model larger than your bed, with finger joints | BENCH</title>
+<meta name="description" content="Split an STL, 3MF or OBJ model that is too big for your printer into pieces that fit, with finger joints. See the real size of every piece, whether it fits, and download everything as a ZIP with an assembly map. Files are never uploaded.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/stl-cutter/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-cutter/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/stl-cutter/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="STL Splitter – cut a model larger than your bed, with finger joints | BENCH">
+<meta property="og:description" content="Split an STL, 3MF or OBJ model that is too big for your printer into pieces that fit, with finger joints. See the real size of every piece, whether it fits, and download everything as a ZIP with an assembly map. Files are never uploaded.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"STL Splitter","url":"https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/","description":"Split an STL, 3MF or OBJ model that is too big for your printer into pieces that fit, with finger joints. See the real size of every piece, whether it fits, and download everything as a ZIP with an assembly map. Files are never uploaded.","inLanguage":"en","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Will the pieces really fit my bed?","acceptedAnswer":{"@type":"Answer","text":"With the number of pieces on \"Automatic\", the grid is planned with the protruding teeth included, and after cutting each piece is measured again and marked \"Fits\" or \"Too big\" in the table. If you set the counts manually a piece can be too big, so check the table."}},{"@type":"Question","name":"Will a thin plate be stood on its edge?","acceptedAnswer":{"@type":"Answer","text":"No. The default is \"Keep my orientation\", which never rotates the model. Only when you choose \"Rotate for the fewest pieces\" is it turned in 90° steps, and the result then states which axis went where."}},{"@type":"Question","name":"Can I split 3MF or OBJ files?","acceptedAnswer":{"@type":"Answer","text":"Yes. STL (binary and ASCII), 3MF and OBJ are read. If a file holds several objects they are cut together as one model, and the result is saved as STL. Colours and slicer settings are not kept."}},{"@type":"Question","name":"Where is the clearance applied?","acceptedAnswer":{"@type":"Answer","text":"On both side faces of every tooth, each by the value you enter. Tooth tips and socket floors touch without a gap, so the assembled length equals the original."}},{"@type":"Question","name":"Is my file uploaded?","acceptedAnswer":{"@type":"Answer","text":"No. Reading, cutting and building the ZIP all happen inside this browser. The only thing downloaded is the public library used for the 3D view and the cutting."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="brand" href="../../../en/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="Language">
+<a href="../../../tools/stl-cutter/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/stl-cutter/" lang="en" hreflang="en" aria-current="page">English</a>
+<a href="../../../ja/tools/stl-cutter/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../../zh/tools/stl-cutter/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../en/"><span aria-hidden="true">←</span> All tools</a></p>
+<h1>STL Splitter</h1>
+<p class="lead">Enter your printer&#x27;s build volume and the model is cut into pieces that fit inside it. The size of every piece is planned with the joint teeth included.</p>
+<noscript><p class="notice warn">This tool needs JavaScript. Please enable it in your browser.</p></noscript>
+<div class="tool">
+<link rel="stylesheet" href="../../../assets/tools/stl-cutter/cutter.css">
+<div class="tool-grid">
+<div class="viewer" id="viewer"><p id="viewer-empty">The 3D preview appears here once a model is loaded.</p></div>
+<div class="controls">
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.3mf,.obj">
+<strong>Drop an STL, 3MF or OBJ file here, or click to choose</strong>
+<span>The file is processed on this device only.</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<button class="button secondary" id="partial" type="button" hidden>Load the intact part</button>
+<p id="info" hidden></p>
+<p class="notice warn" id="open" hidden><span id="open-text"></span> <a href="../stl-inspector/">Check it in the STL/3MF Check &amp; Repair tool</a></p>
+</div>
+<form class="panel" id="form" novalidate>
+<fieldset class="cut-set">
+<legend>Printer build volume</legend>
+<div class="fields">
+<div class="field"><label for="bed-x">Width X (mm)</label><input id="bed-x" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+<div class="field"><label for="bed-y">Depth Y (mm)</label><input id="bed-y" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+<div class="field"><label for="bed-z">Height Z (mm)</label><input id="bed-z" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+</div>
+<div class="field"><label for="margin">Edge margin (mm)</label><input id="margin" type="number" inputmode="decimal" value="2" min="0" max="1000" step="any" required><small>Pieces are sized to fit the build volume minus twice this margin in every direction.</small></div>
+</fieldset>
+<fieldset class="cut-set">
+<legend>Orientation</legend>
+<label class="check"><input type="radio" name="orient" value="keep" checked> Keep my orientation</label>
+<label class="check"><input type="radio" name="orient" value="auto"> Rotate for the fewest pieces</label>
+<small>Rotation tries 90° turns, so a thin plate may end up standing on its edge.</small>
+</fieldset>
+<fieldset class="cut-set">
+<legend>Number of pieces</legend>
+<label class="check"><input type="radio" name="count" value="auto" checked> Automatic (fit the build volume)</label>
+<label class="check"><input type="radio" name="count" value="manual"> Set manually</label>
+<div class="fields" id="manual" hidden>
+<div class="field"><label for="n-x">Pieces along X</label><input id="n-x" type="number" inputmode="numeric" value="2" min="1" max="20" step="1" required></div>
+<div class="field"><label for="n-y">Pieces along Y</label><input id="n-y" type="number" inputmode="numeric" value="1" min="1" max="20" step="1" required></div>
+<div class="field"><label for="n-z">Pieces along Z</label><input id="n-z" type="number" inputmode="numeric" value="1" min="1" max="20" step="1" required></div>
+</div>
+</fieldset>
+<fieldset class="cut-set">
+<legend>Cut face</legend>
+<label class="check"><input type="radio" name="joint" value="teeth" checked> Finger joints (interlocking)</label>
+<label class="check"><input type="radio" name="joint" value="flat"> Flat (glue together)</label>
+<div id="teeth" class="cut-set">
+<div class="fields">
+<div class="field"><label for="tooth-w">Tooth width (mm)</label><input id="tooth-w" type="number" inputmode="decimal" value="15" min="0" max="500" step="any" required></div>
+<div class="field"><label for="tooth-d">Tooth depth (mm)</label><input id="tooth-d" type="number" inputmode="decimal" value="4" min="0.5" max="50" step="any" required></div>
+<div class="field"><label for="tooth-gap">Clearance (mm)</label><input id="tooth-gap" type="number" inputmode="decimal" value="0.3" min="0" max="2" step="any" required></div>
+</div>
+<small>The clearance is the gap on each side face of a tooth. A tooth width of 0 gives a flat cut.</small>
+</div>
+</fieldset>
+<div class="cut-actions">
+<button class="button" id="run" type="submit" disabled>Split</button>
+<button class="button secondary" id="cancel" type="button" hidden>Cancel</button>
+</div>
+<p class="notice" id="status" hidden></p>
+</form>
+</div>
+</div>
+<div class="panel cut-out" id="out" hidden>
+<h2>Result</h2>
+<p id="summary"></p>
+<p class="notice warn" id="warn" hidden></p>
+<label class="check" id="explode-row"><input type="checkbox" id="explode"> Spread the pieces apart in the preview (files are not affected)</label>
+<h3>Assembly map</h3>
+<p class="lead">Seen from above. The label in each cell is the end of that piece&#x27;s file name.</p>
+<div class="cut-map" id="map"></div>
+<div class="table-scroll">
+<table class="result">
+<caption>Pieces</caption>
+<thead><tr><th scope="col">Piece</th><th scope="col">Real size (mm)</th><th scope="col">Fits the printer</th><th scope="col">File</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+<div class="cut-actions">
+<button class="button" id="zip" type="button">Download all as ZIP</button>
+<button class="button secondary" id="map-save" type="button">Save the assembly map (SVG)</button>
+</div>
+</div>
+
+</div>
+<section class="doc">
+<h2>What this tool does</h2>
+<p>The model is cut into an evenly spaced grid along X, Y and Z. The number of pieces is worked out from the build volume minus the edge margin and the tooth depth, so a piece with its teeth never exceeds the build volume. After cutting, every piece is measured again and the table shows whether it really fits.</p>
+<p>Cut faces can be interlocking finger joints (box joints) or flat. You set the tooth width, depth and clearance, and where two cuts cross, the teeth next to the crossing are left out, so teeth neither collide nor break off as loose slivers.</p>
+<p>Each piece file is named after its grid position, such as X1-Y2, and an assembly map with the same labels comes with it. Download pieces one by one as STL, or everything as a ZIP.</p>
+</section>
+<section class="doc">
+<h2>How to use it</h2>
+<ol>
+<li>Drop an STL, 3MF or OBJ file, or click to choose one. Its size and triangle count appear, with a warning if the mesh has holes.</li>
+<li>Enter the printer&#x27;s build volume (X, Y, Z) and the edge margin.</li>
+<li>Choose whether to keep the model&#x27;s orientation or rotate it for fewer pieces. Pick &quot;Set manually&quot; if you want to decide the number of pieces yourself.</li>
+<li>Choose the cut face and press &quot;Split&quot;. Progress is shown and you can cancel at any time.</li>
+<li>Check the real size and fit of each piece in the table, then download the STL files or the ZIP. When assembling, follow the labels on the assembly map.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>Limits and caveats</h2>
+<ul>
+<li>You cannot choose where the cuts go. They are always axis-aligned planes at equal spacing. To cut around a detail or at an angle, use the cut tool of a CAD program or slicer.</li>
+<li>The model must be a closed mesh without holes. If it has open edges you get a warning and the cut still runs, but pieces can come out hollow or with missing faces. The pieces usually contain edges that were split on one side only (T-junctions), so a mesh checker, including the one on this site, reports open edges on them. These gaps have zero width and slicers normally stitch them on their own, but always check the slicer preview before printing.</li>
+<li>Finger joints only stop the pieces sliding in one direction along the cut. They do not resist pulling apart, so glue the parts. When a model is cut across Z, the teeth of the upper piece point down and need supports; a flat cut is the better choice there.</li>
+<li>The 0.3 mm clearance is a starting value for a typical FDM printer. Depending on printer and material the fit can be tight or loose, so test with a small piece first. The tooth width is adjusted slightly so that a whole number of teeth fits the side.</li>
+<li>Pieces are saved in their assembled position. Laying them flat and arranging them on the bed is done in the slicer. Units are assumed to be millimetres.</li>
+<li>A file with millions of triangles can take from tens of seconds to a few minutes to cut and use several GB of memory. Large files may fail on a phone. The 3D preview and the cutting library are downloaded from a CDN on first use, so you need an internet connection (your model is not sent anywhere).</li>
+</ul>
+</section>
+<section class="doc"><h2>Frequently asked questions</h2>
+<details><summary>Will the pieces really fit my bed?</summary><p>With the number of pieces on &quot;Automatic&quot;, the grid is planned with the protruding teeth included, and after cutting each piece is measured again and marked &quot;Fits&quot; or &quot;Too big&quot; in the table. If you set the counts manually a piece can be too big, so check the table.</p></details>
+<details><summary>Will a thin plate be stood on its edge?</summary><p>No. The default is &quot;Keep my orientation&quot;, which never rotates the model. Only when you choose &quot;Rotate for the fewest pieces&quot; is it turned in 90° steps, and the result then states which axis went where.</p></details>
+<details><summary>Can I split 3MF or OBJ files?</summary><p>Yes. STL (binary and ASCII), 3MF and OBJ are read. If a file holds several objects they are cut together as one model, and the result is saved as STL. Colours and slicer settings are not kept.</p></details>
+<details><summary>Where is the clearance applied?</summary><p>On both side faces of every tooth, each by the value you enter. Tooth tips and socket floors touch without a gap, so the assembled length equals the original.</p></details>
+<details><summary>Is my file uploaded?</summary><p>No. Reading, cutting and building the ZIP all happen inside this browser. The only thing downloaded is the public library used for the 3D view and the cutting.</p></details>
+</section>
+<section>
+<h2>Other tools</h2>
+<ul class="cards">
+<li><a class="card" href="../../../en/tools/stl-inspector/"><h3>STL/3MF Check &amp; Repair</h3><p>Find holes, flipped faces and other mesh problems, see where they are, and fix only what you choose. Also checks size and bed fit and saves to another format or to Excel.</p><p class="formats">Input · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../en/tools/print-cost-calculator/"><h3>Print Weight &amp; Cost Calculator</h3><p>Get filament weight from sliced G-code or a 3D model, then work out material cost, electricity and a selling price.</p><p class="formats">Input · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../en/tools/gcode-analyzer/"><h3>G-code Analyzer</h3><p>Read print time and filament use from G-code, broken down by feature and by filament.</p><p class="formats">Input · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../../en/tools/infill-recommender/"><h3>Infill Recommender</h3><p>Answer a few questions and get a Bambu Studio infill pattern, density, wall loops and top/bottom layers for your part.</p><p class="formats">Input · No file needed</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Your files never leave your browser. Everything is calculated on this device.</p>
+
+</main>
+<footer class="site-footer"><p>Free to use. No sign-up, no uploads, no tracking.</p></footer>
+<script>window.T={"lang":"en","js_err_empty":"{name} is empty (0 bytes).","js_err_wrong_type":"{name} is not a supported file type. Supported: {types}","js_err_not_mesh":"{name} does not contain a 3D model we can read. Check that it is an STL, 3MF or OBJ file.","js_err_truncated":"{name} is cut off: it holds only {present} of the {declared} triangles it declares.","js_err_truncated_unknown":"{name} is cut off: only {present} complete triangles were found.","js_load_partial":"Load the intact part","js_err_too_large":"{name} is too large for this device's memory. Close other tabs or try a desktop browser.","js_err_no_triangles":"{name} contains no triangles.","js_err_unknown":"Could not process {name}. ({detail})","js_bad_triangles":"{n} triangles with invalid coordinates (NaN or infinity) were left out.","js_reading":"Reading {name}… {percent}%","js_working":"Working…","js_num_required":"Enter a value.","js_num_invalid":"Enter a number.","js_num_min":"Enter {min} or more.","js_num_max":"Enter {max} or less.","js_unit_h":"h","js_unit_m":"m","js_unit_s":"s","js_viewer_fail":"The 3D preview could not be shown (no connection, or WebGL is unavailable). Splitting and downloading still work.","js_model_info":"{name}: {size} mm, {n} triangles","js_open_warn":"This mesh is not closed: {n} edges are open or shared by more than two faces, so pieces may come out hollow or with missing faces.","js_err_fields":"Check the fields marked in red.","js_err_count_int":"Enter whole numbers for the piece counts.","js_err_margin":"Nothing is left of the build volume after the margin. Enter a larger build volume or a smaller margin.","js_err_no_fit":"With this build volume no piece can fit once the tooth depth is included. Reduce the tooth depth or choose a flat cut.","js_err_too_long":"With this build volume the model would need more than 50 pieces along one axis. Check the model's units (mm) and the build volume.","js_err_too_many":"That would make {n} pieces, which is too many (the limit is {max}). Check the build volume or the piece counts.","js_err_tooth_small":"The teeth are too narrow for this clearance. Increase the tooth width or reduce the clearance.","js_err_tooth_deep":"The teeth are too deep for pieces this thin. Reduce the tooth depth or the number of pieces.","js_stage_lib":"Loading the cutting library…","js_stage_prep":"Preparing the model…","js_stage_cut":"Cutting… {done} of {total}","js_err_lib":"The library needed for cutting could not be loaded. Check your internet connection and try again. ({detail})","js_err_cut":"Cutting {name} failed. The mesh may not be closed, or its faces may intersect each other. ({detail})","js_err_no_pieces":"The cut produced no pieces. Check that the mesh is closed.","js_sum_nocut":"The model fits the build volume without cutting.","js_sum_grid":"Pieces: {total} (X {x} × Y {y} × Z {z}), {mode}.","js_mode_teeth":"finger joints","js_mode_flat":"flat cuts","js_flat_zero":"The tooth width is 0, so the cuts are flat.","js_flat_short":"The cut faces are too narrow for two teeth, so the cuts are flat.","js_sum_rotated":"The model was rotated: its original {x} axis now runs along X, {y} along Y and {z} along Z.","js_sum_usable":"Usable volume after the margin: {size} mm.","js_fit_yes":"Fits","js_fit_no":"Too big","js_warn_nofit":"Pieces larger than the usable volume: {n}. Increase the piece counts or choose \"Automatic\".","js_warn_volume":"The pieces' total volume differs from the original by {percent}%. The cut may be faulty, so check the pieces in your slicer.","js_warn_open_result":"The source mesh is not closed, so the pieces may be wrong. Check them in the slicer preview.","js_cancelled":"Cancelled."}</script>
+<script type="module" src="../../../assets/tools/stl-cutter/main.js"></script>
+</body>
+</html>

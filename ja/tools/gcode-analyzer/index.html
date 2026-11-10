@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G-code 解析 – 造形時間、フィラメント使用量、フィーチャー別内訳 | BENCH</title>
+<meta name="description" content="G-code や .gcode.3mf から、予想造形時間、フィラメントの長さと重量、レイヤー数、壁・インフィル・サポートごとの使用量を確認できます。登録不要・無料で、ファイルはサーバーに送信されません。">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/ja/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="G-code 解析 – 造形時間、フィラメント使用量、フィーチャー別内訳 | BENCH">
+<meta property="og:description" content="G-code や .gcode.3mf から、予想造形時間、フィラメントの長さと重量、レイヤー数、壁・インフィル・サポートごとの使用量を確認できます。登録不要・無料で、ファイルはサーバーに送信されません。">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/ja/tools/gcode-analyzer/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"G-code 解析","url":"https://yeseul100512.github.io/3D-website/ja/tools/gcode-analyzer/","description":"G-code や .gcode.3mf から、予想造形時間、フィラメントの長さと重量、レイヤー数、壁・インフィル・サポートごとの使用量を確認できます。登録不要・無料で、ファイルはサーバーに送信されません。","inLanguage":"ja","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"スライサーの予想時間と実際の造形時間が違うのはなぜですか？","acceptedAnswer":{"@type":"Answer","text":"スライサーは加減速を仮定して移動時間を見積もりますが、プリンターのファームウェアの実際の動きと完全には一致しません。予熱、ベッドレベリング、フィラメント交換やパージにかかる時間も、機種や状況によって変わります。このツールはスライサーより正確に予測できるとは考えておらず、スライサーが記録した値をそのまま表示します。"}},{"@type":"Question","name":"ヘッダーの値と「E 移動の合計」が少し違うのはなぜですか？","acceptedAnswer":{"@type":"Answer","text":"ヘッダーはスライサーが計算して書き込んだ値で、合計はファイルに実際に含まれる押し出し命令を足し合わせた値です。開始 G-code のパージラインや丸め誤差のため、通常は 1% 未満の差が出ます。5% を超えて違う場合は、ファイルが編集されたか途中で切れている可能性があるため、警告を表示します。"}},{"@type":"Question","name":"複数プレートの合計は出せますか？","acceptedAnswer":{"@type":"Answer","text":"はい。プレートごとの G-code ファイルをまとめて選択するか、複数プレートを含む .gcode.3mf を読み込むと、プレートごとの結果に加えて、時間とフィラメントの合計がいちばん下に表示されます。"}},{"@type":"Question","name":"ファイルはサーバーに送信されますか？","acceptedAnswer":{"@type":"Answer","text":"いいえ。ファイルはこのブラウザー内でのみ読み込み、計算します。コスト計算ツールに引き継ぐときも、重量と時間の数値を URL の # 以降に付けて渡すだけなので、サーバーには送信されません。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+<header class="site-header">
+<a class="brand" href="../../../ja/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="言語">
+<a href="../../../tools/gcode-analyzer/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/gcode-analyzer/" lang="en" hreflang="en">English</a>
+<a href="../../../ja/tools/gcode-analyzer/" lang="ja" hreflang="ja" aria-current="page">日本語</a>
+<a href="../../../zh/tools/gcode-analyzer/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../ja/"><span aria-hidden="true">←</span> すべてのツール</a></p>
+<h1>G-code 解析</h1>
+<p class="lead">スライス済みのファイルを読み込むと、造形時間とフィラメント使用量を表示します。押し出し量を実際に合計し、ヘッダーの値が正しいかも確認します。</p>
+<noscript><p class="notice warn">このツールを使うには、ブラウザーの JavaScript を有効にしてください。</p></noscript>
+<div class="tool">
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".gcode,.gco,.g,.bgcode,.3mf" multiple>
+<strong>G-code ファイルをここにドロップ、またはクリックして選択</strong>
+<span>.gcode · .gco · .g · .gcode.3mf（複数選択可）</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errors" style="white-space:pre-line" hidden></p>
+</div>
+<div id="out" style="display:grid;gap:16px;margin-top:16px"></div>
+<div class="panel" id="actions" style="margin-top:16px" hidden>
+<h2>合計とエクスポート</h2>
+<div id="totals"></div>
+<p style="display:flex;flex-wrap:wrap;gap:8px">
+<a class="button" id="cost" href="../print-cost-calculator/">この数値でコストを計算</a>
+<button type="button" class="button secondary" id="copy">結果をコピー</button>
+<button type="button" class="button secondary" id="csv">CSV で保存</button>
+<button type="button" class="button secondary" id="xlsx">xlsx で保存</button>
+</p>
+<p class="notice" id="copied" hidden></p>
+</div>
+
+</div>
+<section class="doc">
+<h2>このツールでできること</h2>
+<p>スライサーが出力した G-code（.gcode、.gco、.g）や、Bambu Studio・OrcaSlicer の .gcode.3mf を開き、ファイルに記録されている予想造形時間、フィラメントの長さ・体積・重量、レイヤー数と積層ピッチ、ノズル・ベッド温度、フィラメント交換回数をまとめて表示します。</p>
+<p>ヘッダーの値だけに頼らず、すべての押し出し（E）移動を合計してフィラメントの長さを計算し直し、外壁・内壁・インフィル・サポートなど、どこにどれだけ使われたかを表示します。ヘッダーの値と大きく食い違う場合や、ヘッダーが未記入の場合は警告します。</p>
+<p>複数のファイルやプレートをまとめて読み込むと合計も表示します。結果はコピーしたり、CSV・xlsx で保存したり、コスト計算ツールに引き継いだりできます。</p>
+</section>
+<section class="doc">
+<h2>使い方</h2>
+<ol>
+<li>スライサーから G-code または .gcode.3mf を書き出し、上のエリアにドラッグ＆ドロップするか、エリアをクリックして選択します。複数のファイルを一度に選べます。</li>
+<li>ファイルごとに、概要、フィラメント別の表、フィーチャー別の表が表示されます。確認が必要な点は表の上に警告として表示されます。</li>
+<li>下のボタンで結果をコピーしたり、CSV・xlsx として保存したりできます。「この数値でコストを計算」を押すと、重量と時間が入力された状態でコスト計算ツールが開きます。</li>
+</ol>
+</section>
+<section class="doc">
+<h2>制限と注意点</h2>
+<ul>
+<li>造形時間は、スライサーがファイルに書き込んだ値をそのまま表示しています。このツールが独自に予測しているわけではありません。実際の時間は、フィラメント交換にかかる時間、プリンターの加速度の上限、予熱やベッドレベリングといったファームウェアの動作によって、スライサーの値とは変わります。</li>
+<li>重量は、ファイルに重量または密度が記録されている場合にのみ表示します。Cura のように長さしか記録しないスライサーのファイルでは、長さと体積のみの表示になります。フィラメント径の記録がない場合は 1.75 mm と仮定します。</li>
+<li>フィーチャー別の内訳は、;TYPE: または ; FEATURE: コメントがあるファイル（Bambu Studio、OrcaSlicer、PrusaSlicer、Cura など）でのみ表示されます。開始 G-code のパージラインはスライサーのヘッダーに含まれないことが多いため、合計値がヘッダーよりわずかに大きくなる場合があります。</li>
+<li>PrusaSlicer のバイナリ G-code（.bgcode）は読み込めません。スライサーで通常の G-code として書き出してください。ファームウェアリトラクション（G10/G11）や体積押し出し（M200）を使うファイルでは、合計した長さが正しくならないことがあります。</li>
+<li>通常の G-code は少しずつ読み込むため、数十 MB のファイルでも画面が固まりません。.gcode.3mf は展開してメモリに読み込むため、非常に大きなファイルはスマートフォンでは開けないことがあります。</li>
+</ul>
+</section>
+<section class="doc"><h2>よくある質問</h2>
+<details><summary>スライサーの予想時間と実際の造形時間が違うのはなぜですか？</summary><p>スライサーは加減速を仮定して移動時間を見積もりますが、プリンターのファームウェアの実際の動きと完全には一致しません。予熱、ベッドレベリング、フィラメント交換やパージにかかる時間も、機種や状況によって変わります。このツールはスライサーより正確に予測できるとは考えておらず、スライサーが記録した値をそのまま表示します。</p></details>
+<details><summary>ヘッダーの値と「E 移動の合計」が少し違うのはなぜですか？</summary><p>ヘッダーはスライサーが計算して書き込んだ値で、合計はファイルに実際に含まれる押し出し命令を足し合わせた値です。開始 G-code のパージラインや丸め誤差のため、通常は 1% 未満の差が出ます。5% を超えて違う場合は、ファイルが編集されたか途中で切れている可能性があるため、警告を表示します。</p></details>
+<details><summary>複数プレートの合計は出せますか？</summary><p>はい。プレートごとの G-code ファイルをまとめて選択するか、複数プレートを含む .gcode.3mf を読み込むと、プレートごとの結果に加えて、時間とフィラメントの合計がいちばん下に表示されます。</p></details>
+<details><summary>ファイルはサーバーに送信されますか？</summary><p>いいえ。ファイルはこのブラウザー内でのみ読み込み、計算します。コスト計算ツールに引き継ぐときも、重量と時間の数値を URL の # 以降に付けて渡すだけなので、サーバーには送信されません。</p></details>
+</section>
+<section>
+<h2>ほかのツール</h2>
+<ul class="cards">
+<li><a class="card" href="../../../ja/tools/stl-inspector/"><h3>STL/3MF チェック・修復</h3><p>穴や裏返った面などメッシュの問題を見つけて場所を表示し、選んだものだけを修復します。サイズやベッドに収まるかも確認でき、別形式や Excel に保存できます。</p><p class="formats">入力 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../ja/tools/stl-cutter/"><h3>STL 分割ツール</h3><p>ベッドより大きいモデルを印刷できるサイズに分割し、組み立てやすいようにフィンガージョイントを付けます。</p><p class="formats">入力 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../ja/tools/print-cost-calculator/"><h3>造形重量・コスト計算</h3><p>スライス済みの G-code や 3D モデルからフィラメント重量を求め、材料費・電気代・販売価格まで計算します。</p><p class="formats">入力 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../ja/tools/infill-recommender/"><h3>インフィル設定おすすめ</h3><p>造形物の用途と荷重に合わせて、Bambu Studio の充填パターン・充填密度・壁面層数・トップ面/底面層数をおすすめします。</p><p class="formats">入力 · ファイル不要</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>ファイルはサーバーに送信されません。すべての処理はこのブラウザー内で行われます。</p>
+
+</main>
+<footer class="site-footer"><p>登録不要・アップロードなし・トラッキングなしの無料ツールです。</p></footer>
+<script>window.T={"lang":"ja","js_err_empty":"{name} は空のファイルです（0 バイト）。","js_err_wrong_type":"{name} は対応していない形式です。対応形式: {types}","js_err_not_mesh":"{name} は破損しているか途中で切れているため、開けません。","js_err_truncated":"{name} は途中で切れています。{declared} 個の三角形のうち {present} 個しか含まれていません。","js_err_truncated_unknown":"{name} は途中で切れています。完全な三角形は {present} 個です。","js_load_partial":"読み込める部分だけ開く","js_err_too_large":"{name} は大きすぎて、この端末のメモリでは開けません。ほかのタブを閉じるか、パソコンのブラウザーでお試しください。","js_err_no_triangles":"{name} には三角形が 1 つもありません。","js_err_unknown":"{name} を処理できませんでした。（{detail}）","js_bad_triangles":"座標が不正（NaN・無限大）な三角形 {n} 個を除外しました。","js_reading":"{name} を読み込み中… {percent}%","js_working":"処理中…","js_num_required":"値を入力してください。","js_num_invalid":"数値を入力してください。","js_num_min":"{min} 以上の値を入力してください。","js_num_max":"{max} 以下の値を入力してください。","js_unit_h":"時間","js_unit_m":"分","js_unit_s":"秒","js_status":"{name} を解析中… {percent}%（{i}/{n}）","js_err_not_text":"{name} は G-code のテキストファイルではありません。スライサーから G-code として書き出したファイルかご確認ください。","js_err_bgcode":"{name} はバイナリ G-code（.bgcode）のため読み込めません。スライサーで通常の G-code（.gcode）として書き出してください。","js_err_no_moves":"{name} には移動命令（G0/G1）が 1 つもありません。G-code ファイルではないようです。","js_err_no_plate":"{name} にはスライス済みの G-code が含まれていません。スライサーの「スライス済みプレートをエクスポート」で保存した .gcode.3mf を読み込んでください。","js_plate":"プレート {n}","js_summary":"概要","js_unknown":"ファイルに記録なし","js_slicer":"スライサー","js_printer":"プリンター","js_time":"予想造形時間（スライサー）","js_time_model":"モデルのみ {t}","js_filament":"フィラメント使用量","js_esum":"E 移動の合計","js_esum_diff":"ヘッダー比 {diff}%","js_layers":"レイヤー数","js_layers_z":"Z 高さの変化から算出","js_layer_height":"積層ピッチ","js_max_z":"最大造形高さ（Z）","js_nozzle":"ノズル温度","js_bed":"ベッド温度","js_changes":"フィラメント交換回数","js_slice_info":"3MF 内の slice_info.config","js_fil_caption":"フィラメント別","js_slot":"スロット","js_type":"種類","js_colour":"色","js_length":"長さ","js_volume":"体積","js_weight":"重量","js_feat_caption":"フィーチャー別（E 移動の合計）","js_feature":"フィーチャー","js_share":"割合","js_feat_outer_wall":"外壁","js_feat_inner_wall":"内壁","js_feat_overhang_wall":"オーバーハング壁","js_feat_sparse_infill":"インフィル","js_feat_solid_infill":"内部ソリッドインフィル","js_feat_top_surface":"トップ面","js_feat_bottom_surface":"ボトム面","js_feat_skin":"トップ・ボトム面（スキン）","js_feat_bridge":"ブリッジ","js_feat_gap_infill":"ギャップフィル","js_feat_support":"サポート","js_feat_support_interface":"サポート接触面","js_feat_skirt_brim":"スカート・ブリム","js_feat_prime_tower":"プライムタワー","js_feat_ironing":"アイロニング","js_feat_custom":"開始・終了 G-code","js_feat_unlabelled":"分類なし","js_warn_time_placeholder":"ヘッダーの造形時間（;TIME:{value}）は、スライサーが記入していない仮の値と思われるため使用していません。ファイルに ;TIME_ELAPSED がある場合は、その最後の値を表示します。","js_warn_filament_placeholder":"ヘッダーのフィラメント使用量が 0 になっています。表示している数値は E 移動を合計した値です。","js_warn_mismatch":"ヘッダーのフィラメント長（{header}）と E 移動の合計（{measured}）が 5% を超えて食い違っています。ファイルが編集されたか、途中で切れている可能性があります。","js_warn_no_time":"このファイルには、スライサーによる予想造形時間が記録されていません。","js_warn_no_density":"ファイルにフィラメントの密度が記録されていないため、重量は計算していません。コスト計算ツールに引き継いで材料を選ぶと、重量が計算されます。","js_warn_no_features":"フィーチャーを示すコメント（;TYPE: または ; FEATURE:）がないため、フィーチャー別の内訳は表示できません。","js_total_caption":"合計（{n} 件）","js_total_partial":"時間の記録がないファイルがあるため、合計していません","js_file":"ファイル","js_copied":"結果をクリップボードにコピーしました。表計算ソフトにそのまま貼り付けられます。","js_copy_failed":"ブラウザーがクリップボードへのアクセスを許可しなかったため、コピーできませんでした。CSV で保存をご利用ください。"}</script>
+<script type="module" src="../../../assets/tools/gcode-analyzer/main.js"></script>
+</body>
+</html>

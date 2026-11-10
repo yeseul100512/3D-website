@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STL・3MF チェック＆修復 – メッシュエラー、サイズ、ベッド適合の確認 | BENCH</title>
+<meta name="description" content="STL・3MF・OBJ ファイルの穴、非多様体エッジ、裏返った面を見つけて 3D で場所を表示し、選んだものだけを修復します。サイズとベッド適合の確認、形式変換、Excel 保存まで、登録不要・無料でブラウザーだけで使え、ファイルは送信されません。">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-inspector/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/stl-inspector/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-inspector/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/stl-inspector/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="STL・3MF チェック＆修復 – メッシュエラー、サイズ、ベッド適合の確認 | BENCH">
+<meta property="og:description" content="STL・3MF・OBJ ファイルの穴、非多様体エッジ、裏返った面を見つけて 3D で場所を表示し、選んだものだけを修復します。サイズとベッド適合の確認、形式変換、Excel 保存まで、登録不要・無料でブラウザーだけで使え、ファイルは送信されません。">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/ja/tools/stl-inspector/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"STL/3MF チェック・修復","url":"https://yeseul100512.github.io/3D-website/ja/tools/stl-inspector/","description":"STL・3MF・OBJ ファイルの穴、非多様体エッジ、裏返った面を見つけて 3D で場所を表示し、選んだものだけを修復します。サイズとベッド適合の確認、形式変換、Excel 保存まで、登録不要・無料でブラウザーだけで使え、ファイルは送信されません。","inLanguage":"ja","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"ファイルはサーバーにアップロードされますか？","acceptedAnswer":{"@type":"Answer","text":"いいえ。ファイルはこのブラウザー内でのみ読み込んで処理し、どこにも送信しません。順番待ちや時間制限もありません。"}},{"@type":"Question","name":"スライサーの自動修復と何が違いますか？","acceptedAnswer":{"@type":"Answer","text":"自動修復はすべてを一度に直し、何を変えたかを教えてくれないため、意図して開けた穴がふさがれたり形が変わったりしても気づきにくくなります。このツールでは、まず問題の場所を確認し、直す項目を自分で選び、修復後に前後の件数とバウンディングボックスの比較を確認できます。"}},{"@type":"Question","name":"「非多様体（non-manifold）」とは何ですか？","acceptedAnswer":{"@type":"Answer","text":"1 本のエッジを 3 つ以上の面が共有している状態です。エッジに薄い羽根のような面が付いている場合や、2 つの立体が 1 本のエッジだけでつながっている場合に起こります。実際の立体ではどのエッジにも面がちょうど 2 つ接するため、スライサーはその場所で内側と外側を判断できません。"}},{"@type":"Question","name":"開いたエッジがあると表示されますが、問題なく印刷できています。大丈夫ですか？","acceptedAnswer":{"@type":"Answer","text":"多くの場合は問題ありません。スライサーは小さなすき間を自動でふさぐため、軽い問題は「スライサーが自動で直す可能性が高い」と判定します。大きな穴や非多様体エッジは層の欠けや開口のふさがりの原因になるので、その箇所はスライス後のプレビューで確認してください。"}},{"@type":"Question","name":"STL を 3MF や OBJ に変換できますか？","acceptedAnswer":{"@type":"Answer","text":"はい。ファイルを読み込み、「メッシュを保存」で保存したい形式を押すだけです。修復を適用する必要はなく、単位はミリメートルです。"}},{"@type":"Question","name":"サイズが 25.4 倍（または 1000 倍）小さく表示されます。なぜですか？","acceptedAnswer":{"@type":"Answer","text":"STL ファイルには単位の情報がありません。インチやメートルで書き出したファイルもミリメートルとして読み込まれるため、小さく表示されます。「単位を変更」で 25.4 または 1000 を掛けてから、保存し直してください。"}},{"@type":"Question","name":"どのくらい大きなファイルまで開けますか？","acceptedAnswer":{"@type":"Answer","text":"150 MB のバイナリ STL（三角形 300 万個）なら、一般的なノートパソコンで数秒でチェックでき、3D でも表示します。500 MB（三角形 1,000 万個）のファイルも、メモリに余裕のあるデスクトップならチェックできますが、3D ビューなしで数値のみの表示になります。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+<header class="site-header">
+<a class="brand" href="../../../ja/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="言語">
+<a href="../../../tools/stl-inspector/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/stl-inspector/" lang="en" hreflang="en">English</a>
+<a href="../../../ja/tools/stl-inspector/" lang="ja" hreflang="ja" aria-current="page">日本語</a>
+<a href="../../../zh/tools/stl-inspector/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../ja/"><span aria-hidden="true">←</span> すべてのツール</a></p>
+<h1>STL/3MF チェック・修復</h1>
+<p class="lead">STL・3MF・OBJ ファイルを読み込むと、メッシュのどこにどんな問題があるか（穴、非多様体エッジ、裏返った面）をまず表示します。そのうえで直したい項目だけを選んで修復し、サイズが変わっていないことまで確認できます。</p>
+<noscript><p class="notice warn">このツールを使うには、ブラウザーの JavaScript を有効にしてください。</p></noscript>
+<div class="tool">
+<style>
+#viewer canvas { touch-action: none; cursor: grab; }
+#view-reset { position: absolute; right: 8px; bottom: 8px; background: var(--surface); }
+#viewer-msg { margin: 0; padding: 16px; }
+@media (min-width: 900px) { #viewer { position: sticky; top: 8px; } }
+#msg, #errs { white-space: pre-line; }
+#p-files { margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.row .field { flex: 1 1 120px; }
+.hint { color: var(--muted); font-size: .92rem; }
+.notice.good { color: var(--ok); border-color: var(--ok); }
+.probs, #hole-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.probs li { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.prob-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 44px; }
+.prob-head span { font-weight: 600; }
+.prob-head strong { margin-right: auto; color: var(--warn); font-variant-numeric: tabular-nums; }
+.probs li.none strong { color: var(--ok); font-weight: 500; }
+.probs li.none p, .probs li.none button { display: none; }
+.probs p { margin: 0 0 8px; color: var(--muted); font-size: .92rem; }
+[aria-pressed="true"].button { color: var(--bg); background: var(--warn); border-color: var(--warn); }
+#p-summary details summary, #p-repair summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--link); }
+#p-summary details > * + * { margin-top: 8px; }
+fieldset { margin: 0; padding: 12px; min-width: 0; border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 10px; }
+fieldset > * { margin: 0; min-width: 0; }
+legend { padding: 0 6px; font-weight: 600; }
+#hole-list { max-height: 320px; overflow-y: auto; }
+#hole-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#files button.name { min-height: 44px; padding: 0; font: inherit; color: var(--link); background: none; border: 0; cursor: pointer; text-align: left; text-decoration: underline; }
+#files tr[aria-current="true"] button.name { color: var(--text); font-weight: 600; text-decoration: none; }
+#files td.err { color: var(--danger); }
+</style>
+<div class="tool-grid">
+<div class="viewer" id="viewer">
+<canvas id="canvas" tabindex="0" role="application" aria-label="モデルの 3D ビュー。ドラッグで回転、Shift を押しながらドラッグで移動、ホイールで拡大縮小します。矢印キーで回転、プラス・マイナスキーで拡大縮小、0 キーで視点をリセットします。" hidden></canvas>
+<p id="viewer-msg">ファイルを読み込むと、ここにモデルが表示されます。</p>
+<button class="button secondary" id="view-reset" type="button" hidden>視点をリセット</button>
+</div>
+<div class="controls">
+
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.obj,.3mf" multiple>
+<strong>STL・3MF・OBJ ファイルをドロップ、またはクリックして選択</strong>
+<span>複数のファイルをまとめて読み込めます。ファイルはブラウザー内だけで処理されます。</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errs" hidden></p>
+</div>
+
+<div class="panel" id="p-summary" hidden>
+<h2 id="s-name"></h2>
+<p class="notice" id="s-verdict"></p>
+<table class="result">
+<tbody>
+<tr><th scope="row">サイズ (X × Y × Z)</th><td id="s-size"></td></tr>
+<tr><th scope="row">三角形数</th><td id="s-tris"></td></tr>
+<tr><th scope="row">体積</th><td id="s-volume"></td></tr>
+<tr><th scope="row">表面積</th><td id="s-area"></td></tr>
+<tr><th scope="row">分離したシェル数</th><td id="s-shells"></td></tr>
+<tr><th scope="row">形式</th><td id="s-format"></td></tr>
+</tbody>
+</table>
+<p class="notice warn" id="s-unit" hidden></p>
+<details id="s-scale">
+<summary>単位を変更（スケールし直す）</summary>
+<p class="hint">STL ファイルには単位の情報がありません。サイズが一定の倍率でずれている場合は、すべての座標に倍率を掛けて直せます。</p>
+<div class="row">
+<button class="button secondary act" type="button" data-scale="25.4">× 25.4 (インチ → mm)</button>
+<button class="button secondary act" type="button" data-scale="1000">× 1000 (m → mm)</button>
+<button class="button secondary act" type="button" data-scale="0.001">× 0.001</button>
+</div>
+<p class="hint" id="s-scaled" hidden></p>
+</details>
+</div>
+
+<div class="panel" id="p-bed" hidden>
+<h2>プリンターに収まりますか？</h2>
+<div class="field">
+<label for="bed">プリンターの造形範囲 (X × Y × Z mm)</label>
+<select id="bed">
+<option value="180,180,180">180 × 180 × 180 – Bambu Lab A1 mini, Prusa MINI+</option>
+<option value="220,220,250">220 × 220 × 250 – Creality Ender-3, K1, Anycubic Kobra 2</option>
+<option value="225,225,265">225 × 225 × 265 – Elegoo Neptune 4</option>
+<option value="250,210,220">250 × 210 × 220 – Prusa MK4S, MK3S+</option>
+<option value="250,220,270">250 × 220 × 270 – Prusa CORE One</option>
+<option value="256,256,256" selected>256 × 256 × 256 – Bambu Lab A1, P1, X1</option>
+<option value="300,300,300">300 × 300 × 300 – Creality K1 Max, Voron 2.4 (300)</option>
+<option value="350,320,325">350 × 320 × 325 – Bambu Lab H2D</option>
+<option value="350,350,350">350 × 350 × 350 – Creality K2 Plus, Voron 2.4 (350)</option>
+<option value="360,360,360">360 × 360 × 360 – Prusa XL</option>
+<option value="420,420,480">420 × 420 × 480 – Elegoo Neptune 4 Max</option>
+<option value="custom">サイズを直接入力…</option>
+</select>
+</div>
+<div class="fields" id="bed-custom" hidden>
+<div class="field"><label for="bed-x">X (mm)</label><input type="number" id="bed-x" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-y">Y (mm)</label><input type="number" id="bed-y" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-z">Z (mm)</label><input type="number" id="bed-z" value="250" min="1" max="5000" step="any" required inputmode="decimal"></div>
+</div>
+<p class="notice" id="bed-result" hidden></p>
+<p id="bed-cut" hidden><a class="button secondary" href="../stl-cutter/">STL 分割ツールで造形範囲に収まるように分割する</a></p>
+</div>
+
+<div class="panel" id="p-problems" hidden>
+<h2>見つかった問題</h2>
+<p class="notice warn" id="view-note" hidden></p>
+<ul class="probs">
+<li id="pr-open"><div class="prob-head"><span>開いたエッジ（穴）</span><strong></strong><button class="button secondary" type="button" data-hl="open" aria-pressed="false">表示</button></div><p>この部分は表面が閉じておらず、スライサーが立体の境界を推測することになります。小さなすき間はたいてい自動でふさがれますが、大きな穴は層が欠けたり、開けておきたい場所がふさがれたりする原因になります。</p></li>
+<li id="pr-nonManifold"><div class="prob-head"><span>非多様体エッジ</span><strong></strong><button class="button secondary" type="button" data-hl="nonManifold" aria-pressed="false">表示</button></div><p>1 本のエッジに 3 つ以上の面が接しています。その場所では内側と外側を区別できず、スライサーが材料を抜いたり足したりすることがあります。</p></li>
+<li id="pr-flipped"><div class="prob-head"><span>裏返った面</span><strong></strong><button class="button secondary" type="button" data-hl="flipped" aria-pressed="false">表示</button></div><p>周りの面は外を向いているのに、これらの面だけが内側を向いています。スライサーがこの部分を穴とみなしたり、内外を逆に処理したりすることがあります。</p></li>
+<li id="pr-degenerate"><div class="prob-head"><span>面積ゼロの三角形</span><strong></strong><button class="button secondary" type="button" data-hl="degenerate" aria-pressed="false">表示</button></div><p>面積のない三角形（線や点）です。形には影響しませんが、修復処理を混乱させることがあります。</p></li>
+<li id="pr-duplicate"><div class="prob-head"><span>重複した面</span><strong></strong><button class="button secondary" type="button" data-hl="duplicate" aria-pressed="false">表示</button></div><p>同じ三角形が 2 回以上保存されています。その場所の表面が二重になっています。</p></li>
+<li id="pr-bad"><div class="prob-head"><span>読み取れない三角形（NaN・Inf）</span><strong></strong></div><p>座標が数値ではない三角形のため、読み込み時に除外しました。その場所に穴ができている可能性があります。</p></li>
+<li id="pr-truncated"><div class="prob-head"><span>途中で切れたファイル</span><strong></strong></div><p>ファイルに記録された三角形数より早く終わっています。ダウンロードや書き出しが途中で中断されたと考えられ、読み込めた部分だけを表示しています。可能であればファイルを入手し直してください。</p></li>
+</ul>
+</div>
+
+<div class="panel" id="p-thin" hidden>
+<h2>薄い壁（推定）</h2>
+<p class="hint">表面に均等にまいた 2 万点から部品の内側へ光線を飛ばし、反対側の壁までの距離を測ります。ノズル径の 2 倍より薄い壁は、弱くなったり印刷されなかったりすることがよくあります。正確な測定ではなく推定です。</p>
+<div class="row">
+<div class="field"><label for="nozzle">ノズル径 (mm)</label><input type="number" id="nozzle" value="0.4" min="0.1" max="2" step="0.05" required inputmode="decimal"></div>
+<button class="button secondary act" type="button" id="thin-run">薄い壁をチェック</button>
+</div>
+<p class="notice" id="thin-result" hidden></p>
+<button class="button secondary" type="button" id="thin-show" data-hl="thin" aria-pressed="false" hidden>表示</button>
+</div>
+
+<div class="panel" id="p-repair" hidden>
+<h2>修復（任意）</h2>
+<p class="hint">チェックを入れない限り、何も変更しません。項目ごとに個別に適用され、いつでも取り消せます。</p>
+<label class="check"><input type="checkbox" id="rep-weld"> 許容差より近い頂点を結合する</label>
+<div class="field"><label for="rep-tol">許容差 (mm)</label><input type="number" id="rep-tol" value="0.001" min="0.0001" max="0.1" step="any" required inputmode="decimal"><small>三角形どうしのごく細いすき間をふさぎます。頂点がこの値を超えて動くことはありません。</small></div>
+<label class="check"><input type="checkbox" id="rep-clean"> つぶれた三角形（2 つの頂点が同じ位置）と重複した三角形を削除する</label>
+<label class="check"><input type="checkbox" id="rep-normals"> シェルごとに面の向きを外向きにそろえる</label>
+<fieldset>
+<legend>穴をふさぐ</legend>
+<p class="hint" id="holes-info"></p>
+<div id="holes-tools" hidden>
+<div class="row">
+<div class="field"><label for="hole-max">この大きさ未満 (mm)</label><input type="number" id="hole-max" value="5" min="0" max="100000" step="any" required inputmode="decimal"></div>
+<button class="button secondary" type="button" id="hole-pick">小さい穴を選択</button>
+<button class="button secondary" type="button" id="hole-clear">選択を解除</button>
+</div>
+</div>
+<ul id="hole-list"></ul>
+</fieldset>
+<div class="row">
+<button class="button act" type="button" id="rep-apply">選択した修復を適用</button>
+<button class="button secondary act" type="button" id="rep-undo" hidden>修復をすべて取り消す</button>
+</div>
+<p class="notice" id="rep-msg" hidden></p>
+<p class="notice" id="rep-proof" hidden></p>
+<div class="table-scroll">
+<table class="result" id="rep-table" hidden>
+<caption>修復前後の比較</caption>
+<thead><tr><th scope="col">項目</th><th scope="col" class="num">修復前</th><th scope="col" class="num">修復後</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+<div class="panel" id="p-export" hidden>
+<h2>メッシュを保存</h2>
+<p class="hint" id="exp-what"></p>
+<div class="row">
+<button class="button act" type="button" data-export="stl">STL</button>
+<button class="button secondary act" type="button" data-export="3mf">3MF</button>
+<button class="button secondary act" type="button" data-export="obj">OBJ</button>
+</div>
+<p class="notice" id="exp-msg" hidden></p>
+</div>
+
+</div>
+</div>
+
+<div class="panel" id="p-files" hidden>
+<h2>読み込んだすべてのファイル</h2>
+<p class="hint">ファイル名を押すと、そのファイルの詳細を確認できます。別のファイルに切り替えると拡大縮小と修復の内容は失われるため、先に保存してください。</p>
+<div class="table-scroll">
+<table class="result" id="files">
+<thead><tr><th scope="col">ファイル</th><th scope="col" class="num">X (mm)</th><th scope="col" class="num">Y (mm)</th><th scope="col" class="num">Z (mm)</th><th scope="col" class="num">体積 (cm³)</th><th scope="col" class="num">三角形数</th><th scope="col">問題</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="row">
+<button class="button secondary" type="button" id="dl-xlsx">一覧を Excel (.xlsx) で保存</button>
+<button class="button secondary" type="button" id="dl-csv">一覧を CSV で保存</button>
+</div>
+</div>
+
+</div>
+<section class="doc">
+<h2>このツールでできること</h2>
+<p>STL・3MF・OBJ ファイルを読み込み、サイズ（mm）、三角形数、表面積、体積、分離したシェルの数を表示します。選んだプリンターの造形範囲にそのまま収まるか、向きを変えれば収まるか、どれだけはみ出すかを確認し、インチやメートルで保存されたように見えるサイズのときはお知らせします。</p>
+<p>続いて、スライサーが失敗したり勝手に推測したりする原因になる問題を探します。穴ごとにまとめた開いたエッジ、3 つ以上の面が共有するエッジ、向きが裏返った面、面積ゼロの三角形や重複した面、読み取れない座標、途中で切れたファイルです。問題ごとに件数と造形への影響をやさしい言葉で説明し、ボタンを押すと 3D ビューでその箇所だけを強調して拡大します。</p>
+<p>修復はすべて任意で、項目ごとに個別に適用します。ほぼ同じ位置の頂点の結合、壊れた三角形の削除、面の向きを外向きにそろえる処理、そして穴を 1 つずつ選んでふさぐ処理です。意図して開けた穴はそのまま残せます。修復後は再チェックして前後の件数を比較し、バウンディングボックスが 0.001 mm 以内で変わっていないことを表示します。結果は STL・3MF・OBJ で保存できるので形式変換にも使え、読み込んだ全ファイルの一覧は Excel や CSV で保存できます。</p>
+</section>
+<section class="doc">
+<h2>使い方</h2>
+<ol>
+<li>STL・3MF・OBJ ファイルを 1 つまたは複数、枠にドロップするか、クリックして選択します。</li>
+<li>判定とサイズを確認します。サイズが 25.4 倍や 1000 倍ほどずれて見える場合は「単位を変更」を開き、ワンクリックで直します。</li>
+<li>プリンターを選ぶか造形範囲を直接入力して、収まるかどうかを確認します。</li>
+<li>「見つかった問題」で項目の横にある「表示」を押すと、3D ビューでその箇所が強調され、拡大されます。</li>
+<li>修復するには、必要な項目とふさぎたい穴だけにチェックを入れて「選択した修復を適用」を押します。前後の比較表を確認し、気に入らなければ「修復をすべて取り消す」で読み込み時の状態に戻せます。</li>
+<li>メッシュを STL・3MF・OBJ で保存するか、全ファイルの一覧を Excel または CSV で保存します。</li>
+</ol>
+</section>
+<section class="doc">
+<h2>制限と注意点</h2>
+<ul>
+<li>自己交差（表面どうしが突き抜けている部分）、厚みのない壁、設計そのものに誤りがあるモデルは修復できません。これらは CAD やモデリングソフトで直す必要があります。</li>
+<li>穴は、その穴の縁の点だけを使った平らな面でふさぎます。小さなすき間や平らな開口には適していますが、曲面の穴は元の曲面ではなく平らなふたでふさがれます。エッジが 2,000 を超える穴と、閉じた輪にならない縁は、表示するだけでふさぎません。</li>
+<li>頂点の結合では、頂点が許容差の分まで動くことがあり、許容差より小さい三角形はつぶれてなくなります。許容差は小さく保ってください（初期値 0.001 mm）。</li>
+<li>薄い壁の数値は、表面に均等にまいた 2 万点のサンプルによる推定で、すべての壁を測った値ではありません。サンプルの間にある薄い箇所は見落とすことがあり、くさび状にとがったエッジの先端は必ず薄いと判定されます。</li>
+<li>体積は、メッシュが完全に閉じている場合にのみ信頼できます。そうでない場合は「信頼できない」と表示します。</li>
+<li>ベッド適合の判定は、バウンディングボックスを軸に沿って置いた向きだけで比較します。斜めに置く場合は計算せず、ブリム、スカート、パージ領域も考慮しません。</li>
+<li>三角形が約 500 万個を超えると 3D ビューをオフにして数値のみを表示し、薄い壁のチェックは約 400 万個を超えるとスキップします。どこまで大きなファイルを開けるかは、端末のメモリによります。</li>
+<li>3MF は形状だけを読み込みます。色、材料、印刷設定、プレート配置は保存時に引き継がれず、ファイル内の複数のオブジェクトは 1 つのメッシュとしてまとめてチェックします。</li>
+</ul>
+</section>
+<section class="doc"><h2>よくある質問</h2>
+<details><summary>ファイルはサーバーにアップロードされますか？</summary><p>いいえ。ファイルはこのブラウザー内でのみ読み込んで処理し、どこにも送信しません。順番待ちや時間制限もありません。</p></details>
+<details><summary>スライサーの自動修復と何が違いますか？</summary><p>自動修復はすべてを一度に直し、何を変えたかを教えてくれないため、意図して開けた穴がふさがれたり形が変わったりしても気づきにくくなります。このツールでは、まず問題の場所を確認し、直す項目を自分で選び、修復後に前後の件数とバウンディングボックスの比較を確認できます。</p></details>
+<details><summary>「非多様体（non-manifold）」とは何ですか？</summary><p>1 本のエッジを 3 つ以上の面が共有している状態です。エッジに薄い羽根のような面が付いている場合や、2 つの立体が 1 本のエッジだけでつながっている場合に起こります。実際の立体ではどのエッジにも面がちょうど 2 つ接するため、スライサーはその場所で内側と外側を判断できません。</p></details>
+<details><summary>開いたエッジがあると表示されますが、問題なく印刷できています。大丈夫ですか？</summary><p>多くの場合は問題ありません。スライサーは小さなすき間を自動でふさぐため、軽い問題は「スライサーが自動で直す可能性が高い」と判定します。大きな穴や非多様体エッジは層の欠けや開口のふさがりの原因になるので、その箇所はスライス後のプレビューで確認してください。</p></details>
+<details><summary>STL を 3MF や OBJ に変換できますか？</summary><p>はい。ファイルを読み込み、「メッシュを保存」で保存したい形式を押すだけです。修復を適用する必要はなく、単位はミリメートルです。</p></details>
+<details><summary>サイズが 25.4 倍（または 1000 倍）小さく表示されます。なぜですか？</summary><p>STL ファイルには単位の情報がありません。インチやメートルで書き出したファイルもミリメートルとして読み込まれるため、小さく表示されます。「単位を変更」で 25.4 または 1000 を掛けてから、保存し直してください。</p></details>
+<details><summary>どのくらい大きなファイルまで開けますか？</summary><p>150 MB のバイナリ STL（三角形 300 万個）なら、一般的なノートパソコンで数秒でチェックでき、3D でも表示します。500 MB（三角形 1,000 万個）のファイルも、メモリに余裕のあるデスクトップならチェックできますが、3D ビューなしで数値のみの表示になります。</p></details>
+</section>
+<section>
+<h2>ほかのツール</h2>
+<ul class="cards">
+<li><a class="card" href="../../../ja/tools/stl-cutter/"><h3>STL 分割ツール</h3><p>ベッドより大きいモデルを印刷できるサイズに分割し、組み立てやすいようにフィンガージョイントを付けます。</p><p class="formats">入力 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../ja/tools/print-cost-calculator/"><h3>造形重量・コスト計算</h3><p>スライス済みの G-code や 3D モデルからフィラメント重量を求め、材料費・電気代・販売価格まで計算します。</p><p class="formats">入力 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../ja/tools/gcode-analyzer/"><h3>G-code 解析</h3><p>G-code から造形時間とフィラメント使用量を読み取り、フィーチャー別・フィラメント別の内訳を表示します。</p><p class="formats">入力 · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../../ja/tools/infill-recommender/"><h3>インフィル設定おすすめ</h3><p>造形物の用途と荷重に合わせて、Bambu Studio の充填パターン・充填密度・壁面層数・トップ面/底面層数をおすすめします。</p><p class="formats">入力 · ファイル不要</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>ファイルはサーバーに送信されません。すべての処理はこのブラウザー内で行われます。</p>
+
+</main>
+<footer class="site-footer"><p>登録不要・アップロードなし・トラッキングなしの無料ツールです。</p></footer>
+<script>window.T={"lang":"ja","js_err_empty":"{name} は空のファイルです（0 バイト）。","js_err_wrong_type":"{name} は対応していない形式です。対応形式: {types}","js_err_not_mesh":"{name} から 3D モデルを読み取れませんでした。STL・3MF・OBJ ファイルかどうかご確認ください。","js_err_truncated":"{name} は途中で切れています。{declared} 個の三角形のうち {present} 個しか含まれていません。","js_err_truncated_unknown":"{name} は途中で切れています。完全な三角形は {present} 個です。","js_load_partial":"読み込める部分だけ開く","js_err_too_large":"{name} は大きすぎて、この端末のメモリでは開けません。ほかのタブを閉じるか、パソコンのブラウザーでお試しください。","js_err_no_triangles":"{name} には三角形が 1 つもありません。","js_err_unknown":"{name} を処理できませんでした。（{detail}）","js_bad_triangles":"座標が不正（NaN・無限大）な三角形 {n} 個を除外しました。","js_reading":"{name} を読み込み中… {percent}%","js_working":"処理中…","js_num_required":"値を入力してください。","js_num_invalid":"数値を入力してください。","js_num_min":"{min} 以上の値を入力してください。","js_num_max":"{max} 以下の値を入力してください。","js_unit_h":"時間","js_unit_m":"分","js_unit_s":"秒","js_viewer_empty":"ファイルを読み込むと、ここにモデルが表示されます。","js_row_triangles":"三角形数","js_row_volume":"体積","js_row_shells":"分離したシェル数","js_row_holes":"穴の数","js_volume_unreliable":"メッシュが閉じていないため信頼できません","js_fmt_stl_binary":"STL（バイナリ）","js_fmt_stl_ascii":"STL（ASCII）","js_fmt_obj":"OBJ","js_fmt_3mf":"3MF","js_analyzing":"{name} をチェック中…","js_verdict_ok":"このまま印刷できます。表面は閉じており、問題は見つかりませんでした。","js_verdict_auto":"軽い問題があります。スライサーが自動で直す可能性が高いですが、スライス後のプレビューを確認してください。","js_verdict_attention":"確認が必要です。印刷する前に下の問題を確認してください。","js_scaled":"読み込んだファイルから × {factor} 倍に変更しています。","js_hint_m":"最も長い辺が {size} しかありません。メートル単位で保存されたファイルかもしれません。× 1000（インチなら × 25.4）をお試しください。","js_hint_inch":"最も長い辺が {size} しかありません。本来もっと大きい部品なら、インチ単位で保存されたファイルかもしれません。× 25.4 をお試しください。","js_hint_big":"最も長い辺が {size} あります。大きすぎる場合は、マイクロメートル単位で保存されたファイルかもしれません。× 0.001 をお試しください。","js_bed_fits":"そのまま収まります。","js_bed_rotated":"この向きでは収まりませんが、別の面を下にして置けば収まります。","js_bed_too_big":"どの向きに置いても収まりません。現在の向きでの超過: {over}","js_prob_open":"開いたエッジ（穴）","js_n_open":"エッジ {edges} 本、穴 {holes} 個","js_prob_nonmanifold":"非多様体エッジ","js_prob_flipped":"裏返った面","js_prob_degenerate":"面積ゼロの三角形","js_prob_duplicate":"重複した面","js_prob_bad":"読み取れない三角形（NaN・Inf）","js_prob_truncated":"途中で切れたファイル","js_n_truncated":"三角形 {declared} 個のうち {present} 個のみ","js_n_truncated_unknown":"完全な三角形 {present} 個","js_none":"なし","js_show":"表示","js_view_skipped":"三角形が {n} 個を超えるため、3D ビューをオフにしました。数値の確認と修復はそのまま使えます。","js_view_failed":"3D ビューを開始できませんでした（WebGL が使えないか、3D ライブラリを読み込めませんでした）。数値の確認と修復はそのまま使えます。","js_thin_result":"表面の約 {percent}% で、裏側の材料の厚みが {limit} mm 未満です（サンプル {samples} 点による推定）。","js_thin_skipped":"三角形が {n} 個を超えるため、薄い壁のチェックをスキップします。時間とメモリがかかりすぎるためです。","js_holes_none":"穴はありません。","js_holes_pick":"選択されている穴はありません。ふさぐ穴だけにチェックを入れ、意図して開けた穴はそのままにしてください。","js_holes_more":"{total} 個の穴のうち、大きいものと小さいものを合わせて {shown} 個を表示しています。","js_hole":"穴 {i}: エッジ {edges} 本、さしわたし約 {size}","js_hole_uncappable":"自動ではふさげません","js_rep_nothing":"何も選択されていません。修復項目か穴を 1 つ以上選択してください。","js_rep_done":"完了: 穴 {capped} 個をふさぎ、頂点 {merged} 個を結合、三角形 {removed} 個を削除、面 {flipped} 個を反転しました。","js_err_rep_empty":"この修復を適用すると三角形が 1 つも残らないため、適用しませんでした。","js_bbox_same":"バウンディングボックスは変わっていません: {size}（最大差 {delta} mm、基準 0.001 mm）。","js_bbox_changed":"バウンディングボックスが {delta} mm 変わり、現在は {size} です。意図した結果でなければ修復を取り消してください。","js_exp_original":"読み込んだままのメッシュをミリメートル単位で保存します（修復は適用されていません）。","js_exp_repaired":"修復後のメッシュをミリメートル単位で保存します。","js_exp_done":"{name} を保存しました。","js_col_name":"ファイル","js_col_volume":"体積 (cm³)","js_col_triangles":"三角形数","js_col_issues":"問題"}</script>
+<script type="module" src="../../../assets/tools/stl-inspector/main.js"></script>
+</body>
+</html>

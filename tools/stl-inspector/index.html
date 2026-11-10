@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STL·3MF 검사 및 수리 – 메시 오류, 크기, 베드 적합 확인 | BENCH</title>
+<meta name="description" content="STL, 3MF, OBJ 파일의 구멍, 비다양체 모서리, 뒤집힌 면을 찾아 3D로 위치를 보여 주고, 고를 것만 골라 수리합니다. 크기와 베드 적합 여부 확인, 형식 변환, 엑셀 저장까지 가입 없이 브라우저에서 무료로 쓸 수 있으며 파일은 서버로 전송되지 않습니다.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/tools/stl-inspector/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/stl-inspector/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-inspector/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/stl-inspector/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="STL·3MF 검사 및 수리 – 메시 오류, 크기, 베드 적합 확인 | BENCH">
+<meta property="og:description" content="STL, 3MF, OBJ 파일의 구멍, 비다양체 모서리, 뒤집힌 면을 찾아 3D로 위치를 보여 주고, 고를 것만 골라 수리합니다. 크기와 베드 적합 여부 확인, 형식 변환, 엑셀 저장까지 가입 없이 브라우저에서 무료로 쓸 수 있으며 파일은 서버로 전송되지 않습니다.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/tools/stl-inspector/">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"STL/3MF 검사·수리","url":"https://yeseul100512.github.io/3D-website/tools/stl-inspector/","description":"STL, 3MF, OBJ 파일의 구멍, 비다양체 모서리, 뒤집힌 면을 찾아 3D로 위치를 보여 주고, 고를 것만 골라 수리합니다. 크기와 베드 적합 여부 확인, 형식 변환, 엑셀 저장까지 가입 없이 브라우저에서 무료로 쓸 수 있으며 파일은 서버로 전송되지 않습니다.","inLanguage":"ko","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"파일이 서버로 업로드되나요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 파일은 이 브라우저 안에서만 읽고 계산하며 어디로도 전송하지 않습니다. 대기열이나 시간 제한도 없습니다."}},{"@type":"Question","name":"슬라이서의 자동 수리와 무엇이 다른가요?","acceptedAnswer":{"@type":"Answer","text":"자동 수리는 모든 것을 한꺼번에 고치고 무엇을 바꿨는지 알려 주지 않아서, 일부러 뚫어 둔 구멍이 막히거나 모양이 바뀌어도 알기 어렵습니다. 이 도구는 문제가 어디에 있는지 먼저 보여 주고, 고칠 항목을 직접 고르게 하며, 수리 후에는 전후 수치와 바운딩 박스 비교를 보여 드립니다."}},{"@type":"Question","name":"‘비다양체(non-manifold)’가 무슨 뜻인가요?","acceptedAnswer":{"@type":"Answer","text":"모서리 하나를 면이 셋 이상 함께 쓰는 상태입니다. 모서리에 얇은 날개가 붙어 있거나 두 물체가 모서리 하나로만 붙어 있을 때 생깁니다. 실제 입체는 모든 모서리에 면이 정확히 둘씩 만나므로, 슬라이서는 그 자리에서 어디가 안이고 밖인지 판단하지 못합니다."}},{"@type":"Question","name":"열린 모서리가 있다고 나오는데 출력은 잘 됩니다. 문제인가요?","acceptedAnswer":{"@type":"Answer","text":"대개는 아닙니다. 슬라이서가 작은 틈은 알아서 메우기 때문에, 가벼운 문제에는 ‘슬라이서가 자동으로 고칠 가능성이 높습니다’라고 판정합니다. 큰 구멍과 비다양체 모서리는 레이어가 빠지거나 구멍이 막히는 원인이 되므로, 그 부분은 슬라이스 미리보기를 확인해 주세요."}},{"@type":"Question","name":"STL을 3MF나 OBJ로 변환할 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"네. 파일을 불러온 뒤 ‘메시 저장’에서 원하는 형식을 누르면 됩니다. 수리를 적용하지 않아도 되며, 단위는 밀리미터입니다."}},{"@type":"Question","name":"크기가 25.4배(또는 1000배) 작게 나옵니다. 왜 그런가요?","acceptedAnswer":{"@type":"Answer","text":"STL 파일에는 단위 정보가 없습니다. 인치나 미터로 내보낸 파일도 밀리미터로 읽기 때문에 작게 나옵니다. ‘단위 바꾸기’에서 25.4나 1000을 곱한 뒤 다시 저장해 주세요."}},{"@type":"Question","name":"얼마나 큰 파일까지 열 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"150MB 바이너리 STL(삼각형 300만 개)은 일반 노트북에서 몇 초 안에 검사하고 3D로도 보여 드립니다. 500MB(삼각형 1,000만 개) 파일도 메모리가 넉넉한 데스크톱에서는 검사할 수 있지만 3D 화면 없이 수치만 표시합니다."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+<a class="brand" href="../../"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="언어">
+<a href="../../tools/stl-inspector/" lang="ko" hreflang="ko" aria-current="page">한국어</a>
+<a href="../../en/tools/stl-inspector/" lang="en" hreflang="en">English</a>
+<a href="../../ja/tools/stl-inspector/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../zh/tools/stl-inspector/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../"><span aria-hidden="true">←</span> 모든 도구</a></p>
+<h1>STL/3MF 검사·수리</h1>
+<p class="lead">STL, 3MF, OBJ 파일을 넣으면 메시의 어디에 어떤 문제가 있는지(구멍, 비다양체 모서리, 뒤집힌 면) 먼저 보여 드립니다. 그다음 원하는 항목만 골라 고치고, 크기가 변하지 않았다는 것까지 확인할 수 있습니다.</p>
+<noscript><p class="notice warn">이 도구를 사용하려면 브라우저에서 자바스크립트를 켜야 합니다.</p></noscript>
+<div class="tool">
+<style>
+#viewer canvas { touch-action: none; cursor: grab; }
+#view-reset { position: absolute; right: 8px; bottom: 8px; background: var(--surface); }
+#viewer-msg { margin: 0; padding: 16px; }
+@media (min-width: 900px) { #viewer { position: sticky; top: 8px; } }
+#msg, #errs { white-space: pre-line; }
+#p-files { margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.row .field { flex: 1 1 120px; }
+.hint { color: var(--muted); font-size: .92rem; }
+.notice.good { color: var(--ok); border-color: var(--ok); }
+.probs, #hole-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.probs li { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.prob-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 44px; }
+.prob-head span { font-weight: 600; }
+.prob-head strong { margin-right: auto; color: var(--warn); font-variant-numeric: tabular-nums; }
+.probs li.none strong { color: var(--ok); font-weight: 500; }
+.probs li.none p, .probs li.none button { display: none; }
+.probs p { margin: 0 0 8px; color: var(--muted); font-size: .92rem; }
+[aria-pressed="true"].button { color: var(--bg); background: var(--warn); border-color: var(--warn); }
+#p-summary details summary, #p-repair summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--link); }
+#p-summary details > * + * { margin-top: 8px; }
+fieldset { margin: 0; padding: 12px; min-width: 0; border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 10px; }
+fieldset > * { margin: 0; min-width: 0; }
+legend { padding: 0 6px; font-weight: 600; }
+#hole-list { max-height: 320px; overflow-y: auto; }
+#hole-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#files button.name { min-height: 44px; padding: 0; font: inherit; color: var(--link); background: none; border: 0; cursor: pointer; text-align: left; text-decoration: underline; }
+#files tr[aria-current="true"] button.name { color: var(--text); font-weight: 600; text-decoration: none; }
+#files td.err { color: var(--danger); }
+</style>
+<div class="tool-grid">
+<div class="viewer" id="viewer">
+<canvas id="canvas" tabindex="0" role="application" aria-label="모델 3D 화면. 끌어서 회전, Shift를 누른 채 끌어서 이동, 휠로 확대·축소합니다. 화살표 키로 회전, 더하기·빼기 키로 확대·축소, 0 키로 처음 시점으로 돌아갑니다." hidden></canvas>
+<p id="viewer-msg">파일을 불러오면 여기에 모델이 표시됩니다.</p>
+<button class="button secondary" id="view-reset" type="button" hidden>시점 초기화</button>
+</div>
+<div class="controls">
+
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.obj,.3mf" multiple>
+<strong>STL, 3MF, OBJ 파일을 끌어다 놓거나 눌러서 선택해 주세요</strong>
+<span>여러 파일을 한 번에 넣을 수 있습니다. 파일은 이 브라우저 안에서만 처리됩니다.</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errs" hidden></p>
+</div>
+
+<div class="panel" id="p-summary" hidden>
+<h2 id="s-name"></h2>
+<p class="notice" id="s-verdict"></p>
+<table class="result">
+<tbody>
+<tr><th scope="row">크기 (X × Y × Z)</th><td id="s-size"></td></tr>
+<tr><th scope="row">삼각형 수</th><td id="s-tris"></td></tr>
+<tr><th scope="row">부피</th><td id="s-volume"></td></tr>
+<tr><th scope="row">표면적</th><td id="s-area"></td></tr>
+<tr><th scope="row">분리된 셸 수</th><td id="s-shells"></td></tr>
+<tr><th scope="row">형식</th><td id="s-format"></td></tr>
+</tbody>
+</table>
+<p class="notice warn" id="s-unit" hidden></p>
+<details id="s-scale">
+<summary>단위 바꾸기 (크기 다시 맞추기)</summary>
+<p class="hint">STL 파일에는 단위 정보가 없습니다. 크기가 일정한 배수로 어긋나 있으면 모든 좌표에 값을 곱해 맞출 수 있습니다.</p>
+<div class="row">
+<button class="button secondary act" type="button" data-scale="25.4">× 25.4 (인치 → mm)</button>
+<button class="button secondary act" type="button" data-scale="1000">× 1000 (m → mm)</button>
+<button class="button secondary act" type="button" data-scale="0.001">× 0.001</button>
+</div>
+<p class="hint" id="s-scaled" hidden></p>
+</details>
+</div>
+
+<div class="panel" id="p-bed" hidden>
+<h2>프린터에 들어가나요?</h2>
+<div class="field">
+<label for="bed">프린터 출력 범위 (X × Y × Z mm)</label>
+<select id="bed">
+<option value="180,180,180">180 × 180 × 180 – Bambu Lab A1 mini, Prusa MINI+</option>
+<option value="220,220,250">220 × 220 × 250 – Creality Ender-3, K1, Anycubic Kobra 2</option>
+<option value="225,225,265">225 × 225 × 265 – Elegoo Neptune 4</option>
+<option value="250,210,220">250 × 210 × 220 – Prusa MK4S, MK3S+</option>
+<option value="250,220,270">250 × 220 × 270 – Prusa CORE One</option>
+<option value="256,256,256" selected>256 × 256 × 256 – Bambu Lab A1, P1, X1</option>
+<option value="300,300,300">300 × 300 × 300 – Creality K1 Max, Voron 2.4 (300)</option>
+<option value="350,320,325">350 × 320 × 325 – Bambu Lab H2D</option>
+<option value="350,350,350">350 × 350 × 350 – Creality K2 Plus, Voron 2.4 (350)</option>
+<option value="360,360,360">360 × 360 × 360 – Prusa XL</option>
+<option value="420,420,480">420 × 420 × 480 – Elegoo Neptune 4 Max</option>
+<option value="custom">직접 입력…</option>
+</select>
+</div>
+<div class="fields" id="bed-custom" hidden>
+<div class="field"><label for="bed-x">X (mm)</label><input type="number" id="bed-x" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-y">Y (mm)</label><input type="number" id="bed-y" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-z">Z (mm)</label><input type="number" id="bed-z" value="250" min="1" max="5000" step="any" required inputmode="decimal"></div>
+</div>
+<p class="notice" id="bed-result" hidden></p>
+<p id="bed-cut" hidden><a class="button secondary" href="../stl-cutter/">STL 분할 도구로 출력 범위에 맞게 나누기</a></p>
+</div>
+
+<div class="panel" id="p-problems" hidden>
+<h2>발견된 문제</h2>
+<p class="notice warn" id="view-note" hidden></p>
+<ul class="probs">
+<li id="pr-open"><div class="prob-head"><span>열린 모서리(구멍)</span><strong></strong><button class="button secondary" type="button" data-hl="open" aria-pressed="false">보기</button></div><p>이 부분은 표면이 닫혀 있지 않아 슬라이서가 입체의 경계를 추측해야 합니다. 작은 틈은 대개 자동으로 메워지지만, 큰 구멍은 레이어가 빠지거나 뚫려 있어야 할 곳이 막히는 원인이 됩니다.</p></li>
+<li id="pr-nonManifold"><div class="prob-head"><span>비다양체 모서리</span><strong></strong><button class="button secondary" type="button" data-hl="nonManifold" aria-pressed="false">보기</button></div><p>모서리 하나에 면이 셋 이상 만납니다. 그 자리에서는 안과 밖을 구분할 수 없어 슬라이서가 재료를 빼먹거나 더할 수 있습니다.</p></li>
+<li id="pr-flipped"><div class="prob-head"><span>뒤집힌 면</span><strong></strong><button class="button secondary" type="button" data-hl="flipped" aria-pressed="false">보기</button></div><p>주변 면은 바깥을 향하는데 이 면들만 안쪽을 향하고 있습니다. 슬라이서가 이 부분을 구멍으로 보거나 안팎을 반대로 처리할 수 있습니다.</p></li>
+<li id="pr-degenerate"><div class="prob-head"><span>넓이가 0인 삼각형</span><strong></strong><button class="button secondary" type="button" data-hl="degenerate" aria-pressed="false">보기</button></div><p>넓이가 없는 삼각형(선이나 점)입니다. 모양에는 영향이 없지만 수리 알고리즘을 헷갈리게 할 수 있습니다.</p></li>
+<li id="pr-duplicate"><div class="prob-head"><span>중복된 면</span><strong></strong><button class="button secondary" type="button" data-hl="duplicate" aria-pressed="false">보기</button></div><p>같은 삼각형이 두 번 이상 저장되어 있습니다. 그 자리의 표면이 이중으로 겹칩니다.</p></li>
+<li id="pr-bad"><div class="prob-head"><span>읽을 수 없는 삼각형(NaN·Inf)</span><strong></strong></div><p>좌표가 숫자가 아닌 삼각형이어서 불러올 때 제외했습니다. 그 자리에 구멍이 생겼을 수 있습니다.</p></li>
+<li id="pr-truncated"><div class="prob-head"><span>잘린 파일</span><strong></strong></div><p>파일에 적힌 삼각형 수보다 일찍 끝납니다. 다운로드나 내보내기가 중간에 끊긴 것으로 보이며, 온전한 부분만 표시합니다. 가능하면 파일을 다시 받아 주세요.</p></li>
+</ul>
+</div>
+
+<div class="panel" id="p-thin" hidden>
+<h2>얇은 벽 (추정)</h2>
+<p class="hint">표면에 고르게 뿌린 2만 개 지점에서 부품 안쪽으로 광선을 쏘아 반대편 벽까지의 거리를 잽니다. 노즐 지름의 2배보다 얇은 벽은 약하게 출력되거나 아예 출력되지 않는 경우가 많습니다. 정확한 측정이 아니라 추정치입니다.</p>
+<div class="row">
+<div class="field"><label for="nozzle">노즐 지름 (mm)</label><input type="number" id="nozzle" value="0.4" min="0.1" max="2" step="0.05" required inputmode="decimal"></div>
+<button class="button secondary act" type="button" id="thin-run">얇은 벽 검사</button>
+</div>
+<p class="notice" id="thin-result" hidden></p>
+<button class="button secondary" type="button" id="thin-show" data-hl="thin" aria-pressed="false" hidden>보기</button>
+</div>
+
+<div class="panel" id="p-repair" hidden>
+<h2>수리 (선택 사항)</h2>
+<p class="hint">선택하지 않은 것은 아무것도 바꾸지 않습니다. 항목마다 따로 적용되며 언제든 취소할 수 있습니다.</p>
+<label class="check"><input type="checkbox" id="rep-weld"> 허용 오차보다 가까운 꼭짓점 합치기</label>
+<div class="field"><label for="rep-tol">허용 오차 (mm)</label><input type="number" id="rep-tol" value="0.001" min="0.0001" max="0.1" step="any" required inputmode="decimal"><small>삼각형 사이의 아주 가는 틈을 메웁니다. 꼭짓점은 이 값보다 멀리 움직이지 않습니다.</small></div>
+<label class="check"><input type="checkbox" id="rep-clean"> 찌그러진 삼각형(두 꼭짓점이 같은 위치)과 중복된 삼각형 제거</label>
+<label class="check"><input type="checkbox" id="rep-normals"> 셸마다 면 방향을 일관되게 바깥쪽으로 맞추기</label>
+<fieldset>
+<legend>구멍 막기</legend>
+<p class="hint" id="holes-info"></p>
+<div id="holes-tools" hidden>
+<div class="row">
+<div class="field"><label for="hole-max">이 크기보다 작은 구멍 (mm)</label><input type="number" id="hole-max" value="5" min="0" max="100000" step="any" required inputmode="decimal"></div>
+<button class="button secondary" type="button" id="hole-pick">작은 구멍 선택</button>
+<button class="button secondary" type="button" id="hole-clear">선택 해제</button>
+</div>
+</div>
+<ul id="hole-list"></ul>
+</fieldset>
+<div class="row">
+<button class="button act" type="button" id="rep-apply">선택한 수리 적용</button>
+<button class="button secondary act" type="button" id="rep-undo" hidden>수리 모두 취소</button>
+</div>
+<p class="notice" id="rep-msg" hidden></p>
+<p class="notice" id="rep-proof" hidden></p>
+<div class="table-scroll">
+<table class="result" id="rep-table" hidden>
+<caption>수리 전후 비교</caption>
+<thead><tr><th scope="col">항목</th><th scope="col" class="num">수리 전</th><th scope="col" class="num">수리 후</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+<div class="panel" id="p-export" hidden>
+<h2>메시 저장</h2>
+<p class="hint" id="exp-what"></p>
+<div class="row">
+<button class="button act" type="button" data-export="stl">STL</button>
+<button class="button secondary act" type="button" data-export="3mf">3MF</button>
+<button class="button secondary act" type="button" data-export="obj">OBJ</button>
+</div>
+<p class="notice" id="exp-msg" hidden></p>
+</div>
+
+</div>
+</div>
+
+<div class="panel" id="p-files" hidden>
+<h2>불러온 파일 전체</h2>
+<p class="hint">파일 이름을 누르면 그 파일을 자세히 볼 수 있습니다. 다른 파일로 바꾸면 배율 변경과 수리 내용은 사라지므로 먼저 저장해 주세요.</p>
+<div class="table-scroll">
+<table class="result" id="files">
+<thead><tr><th scope="col">파일</th><th scope="col" class="num">X (mm)</th><th scope="col" class="num">Y (mm)</th><th scope="col" class="num">Z (mm)</th><th scope="col" class="num">부피 (cm³)</th><th scope="col" class="num">삼각형 수</th><th scope="col">문제</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="row">
+<button class="button secondary" type="button" id="dl-xlsx">표를 엑셀(.xlsx)로 저장</button>
+<button class="button secondary" type="button" id="dl-csv">표를 CSV로 저장</button>
+</div>
+</div>
+
+</div>
+<section class="doc">
+<h2>이 도구가 하는 일</h2>
+<p>STL, 3MF, OBJ 파일을 읽어 크기(mm), 삼각형 수, 표면적, 부피, 분리된 셸 수를 알려 드립니다. 고른 프린터의 출력 범위에 그대로 들어가는지, 눕혀야 들어가는지, 얼마나 넘치는지 확인하고, 크기가 인치나 미터 단위로 저장된 것처럼 보이면 알려 드립니다.</p>
+<p>이어서 슬라이서가 실패하거나 임의로 추측하게 만드는 문제를 찾습니다. 구멍 단위로 묶은 열린 모서리, 면이 셋 이상 만나는 모서리, 방향이 뒤집힌 면, 넓이가 0인 삼각형과 중복된 면, 읽을 수 없는 좌표, 중간에 잘린 파일입니다. 문제마다 개수와 출력에 미치는 영향을 쉬운 말로 설명하고, 버튼을 누르면 3D 화면에서 바로 그 부분을 강조해 확대합니다.</p>
+<p>수리는 모두 선택 사항이며 항목별로 따로 적용합니다. 거의 같은 위치의 꼭짓점 합치기, 망가진 삼각형 제거, 면 방향을 바깥쪽으로 통일하기, 그리고 구멍을 하나씩 골라 막기입니다. 그래서 일부러 뚫어 둔 구멍은 그대로 둘 수 있습니다. 수리 후에는 다시 검사해 전후 수치를 비교하고, 바운딩 박스가 0.001 mm 이내로 그대로인지 보여 드립니다. 결과는 STL, 3MF, OBJ로 저장할 수 있어 형식 변환기로도 쓸 수 있고, 불러온 파일 전체의 표는 엑셀이나 CSV로 저장할 수 있습니다.</p>
+</section>
+<section class="doc">
+<h2>사용 방법</h2>
+<ol>
+<li>STL, 3MF, OBJ 파일을 하나 또는 여러 개 끌어다 놓거나, 상자를 눌러 선택합니다.</li>
+<li>판정 문구와 크기를 확인합니다. 크기가 25.4배나 1000배쯤 어긋나 보이면 ‘단위 바꾸기’를 열어 한 번에 다시 맞춥니다.</li>
+<li>프린터를 고르거나 출력 범위를 직접 입력해 들어가는지 확인합니다.</li>
+<li>‘발견된 문제’에서 항목 옆의 ‘보기’를 누르면 3D 화면에서 해당 부분이 강조되고 확대됩니다.</li>
+<li>수리하려면 원하는 항목과 막을 구멍만 선택하고 ‘선택한 수리 적용’을 누릅니다. 전후 비교 표를 확인하고, 마음에 들지 않으면 ‘수리 모두 취소’로 불러온 상태로 되돌립니다.</li>
+<li>메시를 STL, 3MF, OBJ로 저장하거나, 전체 파일 표를 엑셀 또는 CSV로 저장합니다.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>한계와 주의할 점</h2>
+<ul>
+<li>자기 교차(표면끼리 서로 뚫고 지나가는 부분), 두께가 없는 벽, 처음부터 잘못 설계된 모델은 고치지 못합니다. 이런 문제는 CAD나 모델링 프로그램에서 고쳐야 합니다.</li>
+<li>구멍은 그 구멍 테두리의 점만 사용해 평평한 면으로 막습니다. 작은 틈이나 평평한 구멍에는 잘 맞지만, 곡면에 난 구멍은 원래 곡면이 아니라 평평한 뚜껑으로 막힙니다. 모서리가 2,000개를 넘는 구멍과 닫히지 않는 테두리는 표시만 하고 막지 않습니다.</li>
+<li>꼭짓점 합치기는 꼭짓점을 허용 오차만큼까지 움직일 수 있고, 허용 오차보다 작은 삼각형은 찌그러져 없어집니다. 허용 오차는 작게 유지해 주세요(기본값 0.001 mm).</li>
+<li>얇은 벽 수치는 표면에 고르게 뿌린 2만 개 표본으로 계산한 추정치이며 모든 벽을 잰 값이 아닙니다. 표본 사이의 얇은 부분은 놓칠 수 있고, 쐐기처럼 뾰족한 모서리 끝은 항상 얇게 나옵니다.</li>
+<li>부피는 메시가 완전히 닫혀 있을 때만 믿을 수 있습니다. 그렇지 않으면 신뢰할 수 없다고 표시합니다.</li>
+<li>베드 적합 여부는 바운딩 박스를 축에 맞춰 눕히거나 세운 경우만 비교합니다. 대각선으로 놓는 경우는 계산하지 않으며, 브림·스커트·퍼지 영역도 고려하지 않습니다.</li>
+<li>삼각형이 약 500만개를 넘으면 3D 화면을 끄고 수치만 보여 드리며, 얇은 벽 검사는 약 400만개를 넘으면 건너뜁니다. 얼마나 큰 파일까지 열리는지는 기기의 메모리에 따라 다릅니다.</li>
+<li>3MF는 형상만 읽습니다. 색상, 재질, 출력 설정, 플레이트 배치는 저장할 때 유지되지 않으며, 파일 안의 여러 오브젝트는 하나로 합쳐서 검사합니다.</li>
+</ul>
+</section>
+<section class="doc"><h2>자주 묻는 질문</h2>
+<details><summary>파일이 서버로 업로드되나요?</summary><p>아니요. 파일은 이 브라우저 안에서만 읽고 계산하며 어디로도 전송하지 않습니다. 대기열이나 시간 제한도 없습니다.</p></details>
+<details><summary>슬라이서의 자동 수리와 무엇이 다른가요?</summary><p>자동 수리는 모든 것을 한꺼번에 고치고 무엇을 바꿨는지 알려 주지 않아서, 일부러 뚫어 둔 구멍이 막히거나 모양이 바뀌어도 알기 어렵습니다. 이 도구는 문제가 어디에 있는지 먼저 보여 주고, 고칠 항목을 직접 고르게 하며, 수리 후에는 전후 수치와 바운딩 박스 비교를 보여 드립니다.</p></details>
+<details><summary>‘비다양체(non-manifold)’가 무슨 뜻인가요?</summary><p>모서리 하나를 면이 셋 이상 함께 쓰는 상태입니다. 모서리에 얇은 날개가 붙어 있거나 두 물체가 모서리 하나로만 붙어 있을 때 생깁니다. 실제 입체는 모든 모서리에 면이 정확히 둘씩 만나므로, 슬라이서는 그 자리에서 어디가 안이고 밖인지 판단하지 못합니다.</p></details>
+<details><summary>열린 모서리가 있다고 나오는데 출력은 잘 됩니다. 문제인가요?</summary><p>대개는 아닙니다. 슬라이서가 작은 틈은 알아서 메우기 때문에, 가벼운 문제에는 ‘슬라이서가 자동으로 고칠 가능성이 높습니다’라고 판정합니다. 큰 구멍과 비다양체 모서리는 레이어가 빠지거나 구멍이 막히는 원인이 되므로, 그 부분은 슬라이스 미리보기를 확인해 주세요.</p></details>
+<details><summary>STL을 3MF나 OBJ로 변환할 수 있나요?</summary><p>네. 파일을 불러온 뒤 ‘메시 저장’에서 원하는 형식을 누르면 됩니다. 수리를 적용하지 않아도 되며, 단위는 밀리미터입니다.</p></details>
+<details><summary>크기가 25.4배(또는 1000배) 작게 나옵니다. 왜 그런가요?</summary><p>STL 파일에는 단위 정보가 없습니다. 인치나 미터로 내보낸 파일도 밀리미터로 읽기 때문에 작게 나옵니다. ‘단위 바꾸기’에서 25.4나 1000을 곱한 뒤 다시 저장해 주세요.</p></details>
+<details><summary>얼마나 큰 파일까지 열 수 있나요?</summary><p>150MB 바이너리 STL(삼각형 300만 개)은 일반 노트북에서 몇 초 안에 검사하고 3D로도 보여 드립니다. 500MB(삼각형 1,000만 개) 파일도 메모리가 넉넉한 데스크톱에서는 검사할 수 있지만 3D 화면 없이 수치만 표시합니다.</p></details>
+</section>
+<section>
+<h2>다른 도구</h2>
+<ul class="cards">
+<li><a class="card" href="../../tools/stl-cutter/"><h3>STL 분할기</h3><p>베드보다 큰 모델을 출력할 수 있는 크기로 나누고, 조립할 때 잘 맞도록 핑거 조인트를 넣어 줍니다.</p><p class="formats">입력 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../tools/print-cost-calculator/"><h3>출력 무게·비용 계산기</h3><p>슬라이스한 G-code나 3D 모델에서 필라멘트 무게를 구해 재료비, 전기요금, 판매가까지 계산합니다.</p><p class="formats">입력 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../tools/gcode-analyzer/"><h3>G-code 분석기</h3><p>G-code에서 출력 시간과 필라멘트 사용량을 읽어 기능별, 필라멘트별로 나누어 보여 줍니다.</p><p class="formats">입력 · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../tools/infill-recommender/"><h3>채움(인필) 설정 추천</h3><p>출력물의 용도와 하중에 맞춰 Bambu Studio의 채움 패턴, 채움 밀도, 벽 수, 윗면·아랫면 층 수를 추천합니다.</p><p class="formats">입력 · 파일 불필요</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>파일은 서버로 전송되지 않습니다. 모든 계산은 이 브라우저 안에서만 이루어집니다.</p>
+
+</main>
+<footer class="site-footer"><p>가입도, 업로드도, 추적도 없는 무료 도구입니다.</p></footer>
+<script>window.T={"lang":"ko","js_err_empty":"{name}: 파일이 비어 있습니다(0바이트).","js_err_wrong_type":"{name}: 지원하지 않는 형식입니다. 사용할 수 있는 형식: {types}","js_err_not_mesh":"{name}: 3D 모델 데이터를 찾지 못했습니다. STL, 3MF, OBJ 파일이 맞는지 확인해 주세요.","js_err_truncated":"{name}: 파일이 중간에 잘려 있습니다. 삼각형 {declared}개 중 {present}개만 들어 있습니다.","js_err_truncated_unknown":"{name}: 파일이 중간에 잘려 있습니다. 온전한 삼각형은 {present}개입니다.","js_load_partial":"온전한 부분만 불러오기","js_err_too_large":"{name}: 파일이 너무 커서 이 기기의 메모리로는 열 수 없습니다. 다른 탭을 닫거나 데스크톱 브라우저에서 다시 시도해 주세요.","js_err_no_triangles":"{name}: 삼각형이 하나도 없습니다.","js_err_unknown":"{name}: 파일을 처리하지 못했습니다. ({detail})","js_bad_triangles":"좌표가 숫자가 아닌(NaN·무한대) 삼각형 {n}개는 제외했습니다.","js_reading":"{name} 읽는 중… {percent}%","js_working":"처리하는 중…","js_num_required":"값을 입력해 주세요.","js_num_invalid":"숫자만 입력해 주세요.","js_num_min":"{min} 이상으로 입력해 주세요.","js_num_max":"{max} 이하로 입력해 주세요.","js_unit_h":"시간","js_unit_m":"분","js_unit_s":"초","js_viewer_empty":"파일을 불러오면 여기에 모델이 표시됩니다.","js_row_triangles":"삼각형 수","js_row_volume":"부피","js_row_shells":"분리된 셸 수","js_row_holes":"구멍 수","js_volume_unreliable":"메시가 닫혀 있지 않아 신뢰할 수 없음","js_fmt_stl_binary":"STL (바이너리)","js_fmt_stl_ascii":"STL (ASCII)","js_fmt_obj":"OBJ","js_fmt_3mf":"3MF","js_analyzing":"{name} 검사 중…","js_verdict_ok":"그대로 출력할 수 있습니다. 표면이 닫혀 있고 문제가 발견되지 않았습니다.","js_verdict_auto":"가벼운 문제가 있습니다. 슬라이서가 자동으로 고칠 가능성이 높지만, 슬라이스 미리보기를 확인해 주세요.","js_verdict_attention":"확인이 필요합니다. 출력하기 전에 아래 문제를 살펴봐 주세요.","js_scaled":"불러온 파일에서 × {factor} 배로 조정한 상태입니다.","js_hint_m":"가장 긴 변이 {size}밖에 되지 않습니다. 미터 단위로 저장된 파일일 수 있습니다. × 1000(인치라면 × 25.4)을 눌러 보세요.","js_hint_inch":"가장 긴 변이 {size}밖에 되지 않습니다. 실제로 더 큰 부품이라면 인치 단위로 저장된 파일일 수 있습니다. × 25.4를 눌러 보세요.","js_hint_big":"가장 긴 변이 {size}입니다. 너무 크다면 마이크로미터 단위로 저장된 파일일 수 있습니다. × 0.001을 눌러 보세요.","js_bed_fits":"그대로 들어갑니다.","js_bed_rotated":"지금 방향으로는 들어가지 않지만, 다른 면으로 눕히거나 세우면 들어갑니다.","js_bed_too_big":"어느 방향으로 놓아도 들어가지 않습니다. 지금 방향 기준으로 넘치는 길이: {over}","js_prob_open":"열린 모서리(구멍)","js_n_open":"모서리 {edges}개, 구멍 {holes}개","js_prob_nonmanifold":"비다양체 모서리","js_prob_flipped":"뒤집힌 면","js_prob_degenerate":"넓이가 0인 삼각형","js_prob_duplicate":"중복된 면","js_prob_bad":"읽을 수 없는 삼각형(NaN·Inf)","js_prob_truncated":"잘린 파일","js_n_truncated":"삼각형 {declared}개 중 {present}개만 있음","js_n_truncated_unknown":"온전한 삼각형 {present}개","js_none":"없음","js_show":"보기","js_view_skipped":"삼각형이 {n}개를 넘어 3D 화면을 껐습니다. 수치 확인과 수리는 그대로 사용할 수 있습니다.","js_view_failed":"3D 화면을 시작하지 못했습니다(WebGL을 쓸 수 없거나 3D 라이브러리를 불러오지 못했습니다). 수치 확인과 수리는 그대로 사용할 수 있습니다.","js_thin_result":"표면의 약 {percent}%에서 뒤쪽 재료 두께가 {limit} mm보다 얇습니다(표본 {samples}개 기준 추정).","js_thin_skipped":"삼각형이 {n}개를 넘어 얇은 벽 검사를 건너뜁니다. 시간과 메모리가 너무 많이 필요합니다.","js_holes_none":"구멍이 없습니다.","js_holes_pick":"선택된 구멍이 없습니다. 막아야 할 구멍만 선택하고, 일부러 뚫어 둔 구멍은 그대로 두세요.","js_holes_more":"구멍 {total}개 중 가장 큰 것과 가장 작은 것을 합쳐 {shown}개만 표시합니다.","js_hole":"구멍 {i}: 모서리 {edges}개, 지름 약 {size}","js_hole_uncappable":"자동으로 막을 수 없음","js_rep_nothing":"선택한 항목이 없습니다. 수리 항목이나 구멍을 하나 이상 선택해 주세요.","js_rep_done":"완료: 구멍 {capped}개 막음, 꼭짓점 {merged}개 합침, 삼각형 {removed}개 제거, 면 {flipped}개 뒤집음.","js_err_rep_empty":"이 수리를 적용하면 삼각형이 하나도 남지 않아 적용하지 않았습니다.","js_bbox_same":"바운딩 박스는 그대로입니다: {size} (최대 차이 {delta} mm, 기준 0.001 mm).","js_bbox_changed":"바운딩 박스가 {delta} mm 달라져 지금은 {size}입니다. 원하지 않는 결과라면 수리를 취소해 주세요.","js_exp_original":"불러온 그대로의 메시를 밀리미터 단위로 저장합니다(수리 적용 안 됨).","js_exp_repaired":"수리한 메시를 밀리미터 단위로 저장합니다.","js_exp_done":"{name} 파일을 저장했습니다.","js_col_name":"파일","js_col_volume":"부피 (cm³)","js_col_triangles":"삼각형 수","js_col_issues":"문제"}</script>
+<script type="module" src="../../assets/tools/stl-inspector/main.js"></script>
+</body>
+</html>

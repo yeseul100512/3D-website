@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D 프린팅 무게·비용 계산기 – G-code 또는 STL로 재료별 계산 | BENCH</title>
+<meta name="description" content="G-code에서 읽은 필라멘트 무게와 출력 시간으로 재료비, 전기요금, 장비 비용, 실패 여유분, 인건비, 판매가를 계산합니다. STL로 대략적인 무게도 추정합니다. 가입 없이 무료이며 파일은 서버로 전송되지 않습니다.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="3D 프린팅 무게·비용 계산기 – G-code 또는 STL로 재료별 계산 | BENCH">
+<meta property="og:description" content="G-code에서 읽은 필라멘트 무게와 출력 시간으로 재료비, 전기요금, 장비 비용, 실패 여유분, 인건비, 판매가를 계산합니다. STL로 대략적인 무게도 추정합니다. 가입 없이 무료이며 파일은 서버로 전송되지 않습니다.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/tools/print-cost-calculator/">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"출력 무게·비용 계산기","url":"https://yeseul100512.github.io/3D-website/tools/print-cost-calculator/","description":"G-code에서 읽은 필라멘트 무게와 출력 시간으로 재료비, 전기요금, 장비 비용, 실패 여유분, 인건비, 판매가를 계산합니다. STL로 대략적인 무게도 추정합니다. 가입 없이 무료이며 파일은 서버로 전송되지 않습니다.","inLanguage":"ko","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"STL로 추정한 무게와 슬라이서가 알려 준 무게가 왜 다른가요?","acceptedAnswer":{"@type":"Answer","text":"STL 추정은 모델의 부피와 표면적만 봅니다. 실제 출력물은 벽 수, 윗면·바닥면 층수, 채움 패턴, 서포트, 브림에 따라 필라멘트 양이 달라지고, 이 값은 슬라이스를 해야 알 수 있습니다. 정확한 값이 필요하면 슬라이스한 G-code를 넣어 주세요."}},{"@type":"Question","name":"판매가는 어떻게 계산하나요?","acceptedAnswer":{"@type":"Answer","text":"총 원가에 마진(%)을 더한 뒤, 판매 수수료가 판매가의 일정 비율로 빠져나가도 그 금액이 남도록 나눕니다. 판매가 = 총 원가 × (1 + 마진) ÷ (1 − 수수료)입니다."}},{"@type":"Question","name":"실패 여유분은 어디에 적용되나요?","acceptedAnswer":{"@type":"Answer","text":"재료비, 전기요금, 장비 비용의 합에 입력한 비율을 곱합니다. 예를 들어 열 번에 한 번 실패한다면 10%를 넣습니다. 인건비에는 적용하지 않습니다."}},{"@type":"Question","name":"입력한 설정은 어디에 저장되나요?","acceptedAnswer":{"@type":"Answer","text":"이 브라우저의 로컬 저장소에만 저장되며 서버로 보내지 않습니다. ‘설정 초기화’를 누르면 지워집니다."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+<a class="brand" href="../../"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="언어">
+<a href="../../tools/print-cost-calculator/" lang="ko" hreflang="ko" aria-current="page">한국어</a>
+<a href="../../en/tools/print-cost-calculator/" lang="en" hreflang="en">English</a>
+<a href="../../ja/tools/print-cost-calculator/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../zh/tools/print-cost-calculator/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../"><span aria-hidden="true">←</span> 모든 도구</a></p>
+<h1>출력 무게·비용 계산기</h1>
+<p class="lead">슬라이스한 파일을 넣으면 슬라이서가 계산한 무게와 시간으로 출력 비용을 계산합니다. 아직 슬라이스하지 않았다면 3D 모델로 대략적인 무게를 추정할 수 있습니다.</p>
+<noscript><p class="notice warn">이 도구를 사용하려면 브라우저에서 자바스크립트를 켜야 합니다.</p></noscript>
+<div class="tool">
+<div class="panel">
+<h2>무게와 시간</h2>
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".gcode,.gco,.g,.bgcode,.3mf,.stl,.obj">
+<strong>슬라이스한 G-code 파일을 끌어다 놓거나 눌러서 선택해 주세요</strong>
+<span>.gcode · .gcode.3mf는 정확한 값(권장), STL · OBJ · 3MF 모델은 대략적인 추정</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice warn" id="open-mesh" role="alert" hidden>이 모델은 구멍이 있거나 면 방향이 뒤섞여 있어 부피를 믿을 수 없습니다. 그래서 무게를 추정하지 않았습니다. <a href="../stl-inspector/">모델 검사 도구</a>에서 문제를 확인하거나, 슬라이스한 G-code를 넣어 주세요.</p>
+<div id="estimate" hidden>
+<p class="notice warn">슬라이스 전의 대략적인 추정입니다. 서포트, 브림, 퍼지는 포함하지 않으며 슬라이서 결과와 다를 수 있습니다.</p>
+<div class="fields" style="margin-top:12px">
+<div class="field"><label for="wall">벽(쉘) 두께 (mm)</label><input type="number" id="wall" value="1.2" min="0" max="20" step="0.1" required inputmode="decimal"></div>
+<div class="field"><label for="infill">내부 채움 (%)</label><input type="number" id="infill" value="15" min="0" max="100" step="1" required inputmode="decimal"></div>
+</div>
+</div>
+<div class="fields">
+<div class="field"><label for="weight">필라멘트 무게 (g)</label><input type="number" id="weight" min="0" max="1000000" step="any" inputmode="decimal"></div>
+<div class="field"><label for="hours">출력 시간 (시간)</label><input type="number" id="hours" min="0" max="100000" step="any" inputmode="decimal"><small>전기요금과 장비 비용 계산에 씁니다. 1시간 30분은 1.5로 입력합니다.</small></div>
+</div>
+</div>
+<div class="panel">
+<h2>재료</h2>
+<div class="fields">
+<div class="field"><label for="material">재료</label><select id="material"></select></div>
+<div class="field"><label for="density">밀도 (g/cm³)</label><input type="number" id="density" min="0.1" max="25" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="price">kg당 가격</label><input type="number" id="price" min="0" max="100000000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="currency">통화</label><select id="currency"><option>KRW</option><option>USD</option><option>EUR</option><option>JPY</option><option>CNY</option><option>GBP</option></select></div>
+</div>
+<p><small style="color:var(--muted)">밀도와 가격은 흔히 쓰이는 값을 넣어 둔 기본값입니다. 고친 값은 재료별로 기억합니다. 통화는 기호만 바꾸며 환산하지 않습니다.</small></p>
+</div>
+<div class="panel">
+<h2>추가 비용(선택)</h2>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">전기요금</summary>
+<div class="fields">
+<div class="field"><label for="watts">프린터 평균 소비전력 (W)</label><input type="number" id="watts" min="0" max="100000" step="any" inputmode="decimal"><small>출력 중 평균값입니다. 가정용 프린터는 보통 80~200 W입니다.</small></div>
+<div class="field"><label for="kwh">1 kWh당 요금</label><input type="number" id="kwh" min="0" max="1000000" step="any" inputmode="decimal"><small>전기요금 고지서의 단가를 넣습니다. 예: 150</small></div>
+</div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">장비 비용(감가·소모품)</summary>
+<div class="field"><label for="wear">시간당 장비 비용</label><input type="number" id="wear" min="0" max="100000000" step="any" inputmode="decimal"><small>프린터 가격과 소모품 비용을 예상 사용 시간으로 나눈 값입니다.</small></div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">실패 여유분</summary>
+<div class="field"><label for="fail">실패 여유분 (%)</label><input type="number" id="fail" min="0" max="1000" step="any" inputmode="decimal"><small>재료비·전기요금·장비 비용의 합에 더합니다. 열 번에 한 번 실패한다면 10을 넣습니다.</small></div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">인건비</summary>
+<div class="fields">
+<div class="field"><label for="labour-rate">시간당 인건비</label><input type="number" id="labour-rate" min="0" max="100000000" step="any" inputmode="decimal"></div>
+<div class="field"><label for="labour-min">작업 시간 (분)</label><input type="number" id="labour-min" min="0" max="100000" step="any" inputmode="decimal"><small>슬라이스, 출력 준비, 서포트 제거, 포장처럼 직접 손이 가는 시간입니다.</small></div>
+</div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">판매가</summary>
+<div class="fields">
+<div class="field"><label for="margin">마진 (%)</label><input type="number" id="margin" min="0" max="100000" step="any" inputmode="decimal"><small>총 원가에 더하는 비율입니다.</small></div>
+<div class="field"><label for="fee">판매 수수료 (%)</label><input type="number" id="fee" min="0" max="99" step="any" inputmode="decimal"><small>판매가에서 빠져나가는 오픈마켓·결제 수수료입니다.</small></div>
+</div>
+</details>
+</div>
+<div class="panel">
+<h2>계산 결과</h2>
+<p id="empty" style="color:var(--muted)">파일을 넣거나 필라멘트 무게를 입력하면 여기에 결과가 표시됩니다. 빨간색으로 표시된 입력값이 있으면 먼저 고쳐 주세요.</p>
+<div class="table-scroll" id="result" aria-live="polite" hidden></div>
+<p class="notice warn" id="need-hours" hidden>출력 시간이 비어 있어 전기요금과 장비 비용은 0으로 계산했습니다. 위에서 출력 시간을 입력해 주세요.</p>
+<p style="display:flex;flex-wrap:wrap;gap:8px">
+<button type="button" class="button secondary" id="csv" disabled>CSV 저장</button>
+<button type="button" class="button secondary" id="xlsx" disabled>xlsx 저장</button>
+<button type="button" class="button secondary" id="reset">설정 초기화</button>
+</p>
+</div>
+
+</div>
+<section class="doc">
+<h2>이 도구가 하는 일</h2>
+<p>필라멘트 무게와 kg당 가격으로 재료비를 계산합니다. 무게는 슬라이스한 G-code나 .gcode.3mf에서 읽는 방법이 가장 정확하며, G-code 분석기에서 넘겨받거나 직접 입력할 수도 있습니다.</p>
+<p>아직 슬라이스하지 않은 STL·OBJ·3MF 모델은 부피와 표면적으로 무게를 대략 추정합니다. 표면 전체에 일정한 두께의 벽이 있고 나머지는 채움 비율만큼 찬다고 가정하는 단순한 계산이라, 슬라이서 결과와는 차이가 납니다.</p>
+<p>필요하면 전기요금, 시간당 장비 비용, 실패 여유분, 인건비를 더하고, 마진과 판매 수수료를 넣어 판매가를 구합니다. 설정은 이 브라우저에 저장되며 결과는 CSV·xlsx로 내보낼 수 있습니다.</p>
+</section>
+<section class="doc">
+<h2>사용 방법</h2>
+<ol>
+<li>슬라이서에서 내보낸 G-code 또는 .gcode.3mf 파일을 넣습니다. 무게와 출력 시간이 자동으로 채워집니다. 파일이 없으면 무게를 직접 입력해도 됩니다.</li>
+<li>재료를 고르고, 가지고 있는 필라멘트에 맞게 밀도와 kg당 가격을 고칩니다.</li>
+<li>전기요금, 장비 비용, 실패 여유분, 인건비, 판매가가 필요하면 해당 항목을 펼쳐 값을 입력합니다. 비워 둔 항목은 계산에 넣지 않습니다.</li>
+<li>아래 표에서 항목별 금액과 합계를 확인하고, 필요하면 CSV나 xlsx로 저장합니다.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>한계와 주의할 점</h2>
+<ul>
+<li>3D 모델로 구한 무게는 슬라이스 전의 대략적인 추정입니다. 서포트, 브림, 퍼지, 윗면·바닥면 층수 등은 반영하지 않으므로 견적에는 슬라이스한 G-code를 사용해 주세요.</li>
+<li>구멍이 있거나 면 방향이 뒤섞인 모델은 부피를 믿을 수 없어 무게를 추정하지 않습니다. <a href="../stl-inspector/">모델 검사 도구</a>에서 상태를 확인해 주세요.</li>
+<li>재료의 밀도와 가격은 흔히 쓰이는 값을 넣어 둔 기본값입니다. 같은 재료라도 제조사와 색에 따라 달라지므로 필라멘트 사양서에 맞게 고쳐 주세요.</li>
+<li>통화는 기호와 소수 자릿수만 바꿉니다. 환율로 금액을 환산하지 않습니다.</li>
+<li>전기요금은 평균 소비전력 × 출력 시간으로 계산한 단순한 값입니다. 출력 시간은 슬라이서의 예상값이라 실제와 다를 수 있습니다. 세금과 배송비는 포함하지 않습니다.</li>
+</ul>
+</section>
+<section class="doc"><h2>자주 묻는 질문</h2>
+<details><summary>STL로 추정한 무게와 슬라이서가 알려 준 무게가 왜 다른가요?</summary><p>STL 추정은 모델의 부피와 표면적만 봅니다. 실제 출력물은 벽 수, 윗면·바닥면 층수, 채움 패턴, 서포트, 브림에 따라 필라멘트 양이 달라지고, 이 값은 슬라이스를 해야 알 수 있습니다. 정확한 값이 필요하면 슬라이스한 G-code를 넣어 주세요.</p></details>
+<details><summary>판매가는 어떻게 계산하나요?</summary><p>총 원가에 마진(%)을 더한 뒤, 판매 수수료가 판매가의 일정 비율로 빠져나가도 그 금액이 남도록 나눕니다. 판매가 = 총 원가 × (1 + 마진) ÷ (1 − 수수료)입니다.</p></details>
+<details><summary>실패 여유분은 어디에 적용되나요?</summary><p>재료비, 전기요금, 장비 비용의 합에 입력한 비율을 곱합니다. 예를 들어 열 번에 한 번 실패한다면 10%를 넣습니다. 인건비에는 적용하지 않습니다.</p></details>
+<details><summary>입력한 설정은 어디에 저장되나요?</summary><p>이 브라우저의 로컬 저장소에만 저장되며 서버로 보내지 않습니다. ‘설정 초기화’를 누르면 지워집니다.</p></details>
+</section>
+<section>
+<h2>다른 도구</h2>
+<ul class="cards">
+<li><a class="card" href="../../tools/stl-inspector/"><h3>STL/3MF 검사·수리</h3><p>구멍이나 뒤집힌 면 같은 메시 문제를 찾아 위치를 보여 주고, 고를 것만 골라 고칩니다. 크기와 베드 적합 여부를 확인하고 다른 형식이나 엑셀로 저장할 수 있습니다.</p><p class="formats">입력 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../tools/stl-cutter/"><h3>STL 분할기</h3><p>베드보다 큰 모델을 출력할 수 있는 크기로 나누고, 조립할 때 잘 맞도록 핑거 조인트를 넣어 줍니다.</p><p class="formats">입력 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../tools/gcode-analyzer/"><h3>G-code 분석기</h3><p>G-code에서 출력 시간과 필라멘트 사용량을 읽어 기능별, 필라멘트별로 나누어 보여 줍니다.</p><p class="formats">입력 · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../tools/infill-recommender/"><h3>채움(인필) 설정 추천</h3><p>출력물의 용도와 하중에 맞춰 Bambu Studio의 채움 패턴, 채움 밀도, 벽 수, 윗면·아랫면 층 수를 추천합니다.</p><p class="formats">입력 · 파일 불필요</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>파일은 서버로 전송되지 않습니다. 모든 계산은 이 브라우저 안에서만 이루어집니다.</p>
+
+</main>
+<footer class="site-footer"><p>가입도, 업로드도, 추적도 없는 무료 도구입니다.</p></footer>
+<script>window.T={"lang":"ko","js_err_empty":"{name}: 파일이 비어 있습니다(0바이트).","js_err_wrong_type":"{name}: 지원하지 않는 형식입니다. 사용할 수 있는 형식: {types}","js_err_not_mesh":"{name}: 읽을 수 있는 G-code나 3D 모델을 찾지 못했습니다. 파일이 손상되었거나 지원하지 않는 형식입니다.","js_err_truncated":"{name}: 파일이 중간에 잘려 있습니다. 삼각형 {declared}개 중 {present}개만 들어 있습니다.","js_err_truncated_unknown":"{name}: 파일이 중간에 잘려 있습니다. 온전한 삼각형은 {present}개입니다.","js_load_partial":"온전한 부분만 불러오기","js_err_too_large":"{name}: 파일이 너무 커서 이 기기의 메모리로는 열 수 없습니다. 다른 탭을 닫거나 데스크톱 브라우저에서 다시 시도해 주세요.","js_err_no_triangles":"{name}: 삼각형이 하나도 없습니다.","js_err_unknown":"{name}: 파일을 처리하지 못했습니다. ({detail})","js_bad_triangles":"좌표가 숫자가 아닌(NaN·무한대) 삼각형 {n}개는 제외했습니다.","js_reading":"{name} 읽는 중… {percent}%","js_working":"처리하는 중…","js_num_required":"값을 입력해 주세요.","js_num_invalid":"숫자만 입력해 주세요.","js_num_min":"{min} 이상으로 입력해 주세요.","js_num_max":"{max} 이하로 입력해 주세요.","js_unit_h":"시간","js_unit_m":"분","js_unit_s":"초","js_col_item":"항목","js_col_basis":"계산 근거","js_col_amount":"금액","js_row_filament":"재료비","js_row_electricity":"전기요금","js_row_wear":"장비 비용","js_row_failure":"실패 여유분","js_row_labour":"인건비","js_row_total":"총 원가","js_row_margin":"마진","js_row_fee":"판매 수수료","js_row_price":"판매가","js_from_gcode":"{name}: 이 파일의 필라멘트 무게를 가져왔습니다. 출력 시간: {time}.","js_from_gcode_volume":"{name}: 파일에 무게가 없어 필라멘트 부피 {volume} cm³에 선택한 재료의 밀도를 곱해 계산했습니다. 출력 시간: {time}.","js_no_time":"파일에 없음","js_from_mesh":"{name}: 부피 {volume} cm³, 표면적 {area} cm²인 모델에서 대략 추정한 무게입니다.","js_from_analyzer":"G-code 분석기에서 넘겨받은 수치를 채웠습니다.","js_err_not_text":"{name}: G-code 텍스트 파일이 아닙니다. 슬라이서에서 G-code로 내보낸 파일인지 확인해 주세요.","js_err_bgcode":"{name}: 바이너리 G-code(.bgcode)는 읽을 수 없습니다. 슬라이서에서 일반 G-code(.gcode)로 내보내 주세요.","js_err_no_moves":"{name}: 이동 명령(G0/G1)이 하나도 없습니다. G-code 파일이 아닌 것 같습니다.","js_err_no_plate":"{name}: 슬라이스된 G-code가 들어 있지 않습니다."}</script>
+<script type="module" src="../../assets/tools/print-cost-calculator/main.js"></script>
+</body>
+</html>

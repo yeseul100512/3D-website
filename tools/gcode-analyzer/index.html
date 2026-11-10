@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G-code 분석기 – 출력 시간, 필라멘트 사용량, 기능별 내역 | BENCH</title>
+<meta name="description" content="G-code나 .gcode.3mf 파일에서 예상 출력 시간, 필라멘트 길이·무게, 레이어 수를 읽고 벽·채움·서포트별 사용량을 보여 줍니다. 가입 없이 브라우저에서 무료로 쓰며 파일은 서버로 전송되지 않습니다.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="G-code 분석기 – 출력 시간, 필라멘트 사용량, 기능별 내역 | BENCH">
+<meta property="og:description" content="G-code나 .gcode.3mf 파일에서 예상 출력 시간, 필라멘트 길이·무게, 레이어 수를 읽고 벽·채움·서포트별 사용량을 보여 줍니다. 가입 없이 브라우저에서 무료로 쓰며 파일은 서버로 전송되지 않습니다.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/tools/gcode-analyzer/">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"G-code 분석기","url":"https://yeseul100512.github.io/3D-website/tools/gcode-analyzer/","description":"G-code나 .gcode.3mf 파일에서 예상 출력 시간, 필라멘트 길이·무게, 레이어 수를 읽고 벽·채움·서포트별 사용량을 보여 줍니다. 가입 없이 브라우저에서 무료로 쓰며 파일은 서버로 전송되지 않습니다.","inLanguage":"ko","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"슬라이서가 알려 준 시간과 실제 출력 시간이 왜 다른가요?","acceptedAnswer":{"@type":"Answer","text":"슬라이서는 가속과 감속을 가정해 이동 시간을 추정하지만, 프린터 펌웨어가 실제로 움직이는 방식과 완전히 같지는 않습니다. 예열, 베드 레벨링, 필라멘트 교체와 퍼지에 걸리는 시간도 기기와 상황에 따라 달라집니다. 이 도구는 슬라이서보다 정확하게 예측한다고 주장하지 않으며, 슬라이서가 적은 값을 그대로 보여 줍니다."}},{"@type":"Question","name":"헤더 값과 ‘E 이동 합산’이 조금 다른 이유는 무엇인가요?","acceptedAnswer":{"@type":"Answer","text":"헤더는 슬라이서가 계산해 적은 값이고, 합산은 파일에 실제로 들어 있는 압출 명령을 더한 값입니다. 시작 G-code의 퍼지 라인이나 반올림 때문에 보통 1% 안쪽으로 차이가 납니다. 5% 넘게 다르면 파일이 편집되었거나 중간에 잘렸을 수 있어 경고를 표시합니다."}},{"@type":"Question","name":"여러 플레이트의 합계를 낼 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"네. 플레이트별 G-code 파일을 한꺼번에 선택하거나, 여러 플레이트가 들어 있는 .gcode.3mf를 넣으면 플레이트마다 결과가 나오고 맨 아래에 시간과 필라멘트 합계가 표시됩니다."}},{"@type":"Question","name":"파일이 서버로 전송되나요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 파일은 이 브라우저 안에서만 읽고 계산하며, 네트워크로 보내지 않습니다. 비용 계산기로 넘길 때도 무게와 시간 숫자만 주소의 # 뒤에 붙여 전달하므로 서버에는 전달되지 않습니다."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+<a class="brand" href="../../"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="언어">
+<a href="../../tools/gcode-analyzer/" lang="ko" hreflang="ko" aria-current="page">한국어</a>
+<a href="../../en/tools/gcode-analyzer/" lang="en" hreflang="en">English</a>
+<a href="../../ja/tools/gcode-analyzer/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../zh/tools/gcode-analyzer/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../"><span aria-hidden="true">←</span> 모든 도구</a></p>
+<h1>G-code 분석기</h1>
+<p class="lead">슬라이스한 파일을 넣으면 출력 시간과 필라멘트 사용량을 읽고, 압출 이동을 직접 더해 헤더 값이 맞는지 확인해 줍니다.</p>
+<noscript><p class="notice warn">이 도구를 사용하려면 브라우저에서 자바스크립트를 켜야 합니다.</p></noscript>
+<div class="tool">
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".gcode,.gco,.g,.bgcode,.3mf" multiple>
+<strong>G-code 파일을 끌어다 놓거나 눌러서 선택해 주세요</strong>
+<span>.gcode · .gco · .g · .gcode.3mf, 여러 개 선택 가능</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errors" style="white-space:pre-line" hidden></p>
+</div>
+<div id="out" style="display:grid;gap:16px;margin-top:16px"></div>
+<div class="panel" id="actions" style="margin-top:16px" hidden>
+<h2>합계와 내보내기</h2>
+<div id="totals"></div>
+<p style="display:flex;flex-wrap:wrap;gap:8px">
+<a class="button" id="cost" href="../print-cost-calculator/">이 수치로 비용 계산</a>
+<button type="button" class="button secondary" id="copy">결과 복사</button>
+<button type="button" class="button secondary" id="csv">CSV 저장</button>
+<button type="button" class="button secondary" id="xlsx">xlsx 저장</button>
+</p>
+<p class="notice" id="copied" hidden></p>
+</div>
+
+</div>
+<section class="doc">
+<h2>이 도구가 하는 일</h2>
+<p>슬라이서가 만든 G-code(.gcode, .gco, .g)나 Bambu Studio·OrcaSlicer의 .gcode.3mf 파일을 열어, 슬라이서가 파일에 적어 둔 예상 출력 시간, 필라멘트 길이·부피·무게, 레이어 수와 높이, 노즐·베드 온도, 필라멘트 교체 횟수를 한 화면에 정리합니다.</p>
+<p>헤더만 믿지 않고 모든 압출(E) 이동을 직접 더해 필라멘트 길이를 다시 계산하고, 외벽·내벽·채움·서포트 같은 기능별로 필라멘트가 어디에 쓰였는지 보여 줍니다. 헤더 값과 차이가 크거나 헤더가 채워지지 않은 파일은 경고합니다.</p>
+<p>여러 파일이나 여러 플레이트를 함께 넣으면 합계를 내고, 결과를 복사하거나 CSV·xlsx로 저장하거나 비용 계산기로 넘길 수 있습니다.</p>
+</section>
+<section class="doc">
+<h2>사용 방법</h2>
+<ol>
+<li>슬라이서에서 G-code 또는 .gcode.3mf로 내보낸 파일을 위 영역에 끌어다 놓거나, 영역을 눌러서 선택합니다. 여러 개를 한 번에 선택할 수 있습니다.</li>
+<li>파일마다 요약, 필라멘트별 표, 기능별 표가 나타납니다. 확인이 필요한 점이 있으면 표 위에 경고로 표시됩니다.</li>
+<li>아래 버튼으로 결과를 복사하거나 CSV·xlsx로 저장합니다. ‘이 수치로 비용 계산’을 누르면 무게와 시간이 비용 계산기에 채워집니다.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>한계와 주의할 점</h2>
+<ul>
+<li>출력 시간은 슬라이서가 파일에 적은 값을 그대로 보여 줍니다. 이 도구가 따로 예측하지는 않습니다. 실제 시간은 필라멘트 교체에 걸리는 시간, 프린터의 가속도 한계, 예열·베드 레벨링 같은 펌웨어 동작에 따라 슬라이서 값과 달라집니다.</li>
+<li>무게는 파일에 무게나 밀도가 적혀 있을 때만 표시합니다. Cura처럼 길이만 적는 슬라이서의 파일은 길이와 부피만 나오며, 필라멘트 지름이 파일에 없으면 1.75 mm로 가정합니다.</li>
+<li>기능별 내역은 ;TYPE: 또는 ; FEATURE: 주석이 있는 파일(Bambu Studio, OrcaSlicer, PrusaSlicer, Cura 등)에서만 나옵니다. 시작 G-code의 퍼지 라인은 슬라이서 헤더에 들어가지 않는 경우가 많아, 합산 값이 헤더보다 조금 클 수 있습니다.</li>
+<li>PrusaSlicer의 바이너리 G-code(.bgcode)는 읽지 못합니다. 슬라이서에서 일반 G-code로 내보내 주세요. 펌웨어 리트랙션(G10/G11)이나 부피 단위 압출(M200)을 쓰는 파일은 합산 길이가 맞지 않을 수 있습니다.</li>
+<li>일반 G-code는 조각 단위로 읽으므로 수십 MB 파일도 화면이 멈추지 않습니다. .gcode.3mf는 압축을 풀어 메모리에 올리기 때문에 아주 큰 파일은 휴대폰에서 열리지 않을 수 있습니다.</li>
+</ul>
+</section>
+<section class="doc"><h2>자주 묻는 질문</h2>
+<details><summary>슬라이서가 알려 준 시간과 실제 출력 시간이 왜 다른가요?</summary><p>슬라이서는 가속과 감속을 가정해 이동 시간을 추정하지만, 프린터 펌웨어가 실제로 움직이는 방식과 완전히 같지는 않습니다. 예열, 베드 레벨링, 필라멘트 교체와 퍼지에 걸리는 시간도 기기와 상황에 따라 달라집니다. 이 도구는 슬라이서보다 정확하게 예측한다고 주장하지 않으며, 슬라이서가 적은 값을 그대로 보여 줍니다.</p></details>
+<details><summary>헤더 값과 ‘E 이동 합산’이 조금 다른 이유는 무엇인가요?</summary><p>헤더는 슬라이서가 계산해 적은 값이고, 합산은 파일에 실제로 들어 있는 압출 명령을 더한 값입니다. 시작 G-code의 퍼지 라인이나 반올림 때문에 보통 1% 안쪽으로 차이가 납니다. 5% 넘게 다르면 파일이 편집되었거나 중간에 잘렸을 수 있어 경고를 표시합니다.</p></details>
+<details><summary>여러 플레이트의 합계를 낼 수 있나요?</summary><p>네. 플레이트별 G-code 파일을 한꺼번에 선택하거나, 여러 플레이트가 들어 있는 .gcode.3mf를 넣으면 플레이트마다 결과가 나오고 맨 아래에 시간과 필라멘트 합계가 표시됩니다.</p></details>
+<details><summary>파일이 서버로 전송되나요?</summary><p>아니요. 파일은 이 브라우저 안에서만 읽고 계산하며, 네트워크로 보내지 않습니다. 비용 계산기로 넘길 때도 무게와 시간 숫자만 주소의 # 뒤에 붙여 전달하므로 서버에는 전달되지 않습니다.</p></details>
+</section>
+<section>
+<h2>다른 도구</h2>
+<ul class="cards">
+<li><a class="card" href="../../tools/stl-inspector/"><h3>STL/3MF 검사·수리</h3><p>구멍이나 뒤집힌 면 같은 메시 문제를 찾아 위치를 보여 주고, 고를 것만 골라 고칩니다. 크기와 베드 적합 여부를 확인하고 다른 형식이나 엑셀로 저장할 수 있습니다.</p><p class="formats">입력 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../tools/stl-cutter/"><h3>STL 분할기</h3><p>베드보다 큰 모델을 출력할 수 있는 크기로 나누고, 조립할 때 잘 맞도록 핑거 조인트를 넣어 줍니다.</p><p class="formats">입력 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../tools/print-cost-calculator/"><h3>출력 무게·비용 계산기</h3><p>슬라이스한 G-code나 3D 모델에서 필라멘트 무게를 구해 재료비, 전기요금, 판매가까지 계산합니다.</p><p class="formats">입력 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../tools/infill-recommender/"><h3>채움(인필) 설정 추천</h3><p>출력물의 용도와 하중에 맞춰 Bambu Studio의 채움 패턴, 채움 밀도, 벽 수, 윗면·아랫면 층 수를 추천합니다.</p><p class="formats">입력 · 파일 불필요</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>파일은 서버로 전송되지 않습니다. 모든 계산은 이 브라우저 안에서만 이루어집니다.</p>
+
+</main>
+<footer class="site-footer"><p>가입도, 업로드도, 추적도 없는 무료 도구입니다.</p></footer>
+<script>window.T={"lang":"ko","js_err_empty":"{name}: 파일이 비어 있습니다(0바이트).","js_err_wrong_type":"{name}: 지원하지 않는 형식입니다. 사용할 수 있는 형식: {types}","js_err_not_mesh":"{name}: 파일이 손상되었거나 중간에 잘려 있어 열 수 없습니다.","js_err_truncated":"{name}: 파일이 중간에 잘려 있습니다. 삼각형 {declared}개 중 {present}개만 들어 있습니다.","js_err_truncated_unknown":"{name}: 파일이 중간에 잘려 있습니다. 온전한 삼각형은 {present}개입니다.","js_load_partial":"온전한 부분만 불러오기","js_err_too_large":"{name}: 파일이 너무 커서 이 기기의 메모리로는 열 수 없습니다. 다른 탭을 닫거나 데스크톱 브라우저에서 다시 시도해 주세요.","js_err_no_triangles":"{name}: 삼각형이 하나도 없습니다.","js_err_unknown":"{name}: 파일을 처리하지 못했습니다. ({detail})","js_bad_triangles":"좌표가 숫자가 아닌(NaN·무한대) 삼각형 {n}개는 제외했습니다.","js_reading":"{name} 읽는 중… {percent}%","js_working":"처리하는 중…","js_num_required":"값을 입력해 주세요.","js_num_invalid":"숫자만 입력해 주세요.","js_num_min":"{min} 이상으로 입력해 주세요.","js_num_max":"{max} 이하로 입력해 주세요.","js_unit_h":"시간","js_unit_m":"분","js_unit_s":"초","js_status":"{name} 분석 중… {percent}% ({i}/{n})","js_err_not_text":"{name}: G-code 텍스트 파일이 아닙니다. 슬라이서에서 G-code로 내보낸 파일인지 확인해 주세요.","js_err_bgcode":"{name}: 바이너리 G-code(.bgcode)는 읽을 수 없습니다. 슬라이서에서 일반 G-code(.gcode)로 내보내 주세요.","js_err_no_moves":"{name}: 이동 명령(G0/G1)이 하나도 없습니다. G-code 파일이 아닌 것 같습니다.","js_err_no_plate":"{name}: 이 3MF에는 슬라이스된 G-code가 없습니다. 슬라이서에서 ‘플레이트 슬라이스 파일 내보내기’(.gcode.3mf)로 저장한 파일을 넣어 주세요.","js_plate":"플레이트 {n}","js_summary":"요약","js_unknown":"파일에 없음","js_slicer":"슬라이서","js_printer":"프린터","js_time":"예상 출력 시간(슬라이서)","js_time_model":"모델 출력만 {t}","js_filament":"필라멘트 사용량","js_esum":"E 이동 합산","js_esum_diff":"헤더 대비 {diff}%","js_layers":"레이어 수","js_layers_z":"Z 높이 변화로 센 값","js_layer_height":"레이어 높이","js_max_z":"최대 출력 높이(Z)","js_nozzle":"노즐 온도","js_bed":"베드 온도","js_changes":"필라멘트 교체 횟수","js_slice_info":"3MF 안의 slice_info.config","js_fil_caption":"필라멘트별","js_slot":"슬롯","js_type":"종류","js_colour":"색","js_length":"길이","js_volume":"부피","js_weight":"무게","js_feat_caption":"기능별(E 이동 합산 기준)","js_feature":"기능","js_share":"비율","js_feat_outer_wall":"외벽","js_feat_inner_wall":"내벽","js_feat_overhang_wall":"오버행 벽","js_feat_sparse_infill":"내부 채움","js_feat_solid_infill":"내부 솔리드 채움","js_feat_top_surface":"윗면","js_feat_bottom_surface":"바닥면","js_feat_skin":"윗면·바닥면(스킨)","js_feat_bridge":"브리지","js_feat_gap_infill":"틈새 채움","js_feat_support":"서포트","js_feat_support_interface":"서포트 접촉면","js_feat_skirt_brim":"스커트·브림","js_feat_prime_tower":"프라임 타워","js_feat_ironing":"아이어닝","js_feat_custom":"시작·종료 G-code","js_feat_unlabelled":"구분 없음","js_warn_time_placeholder":"헤더의 출력 시간(;TIME:{value})은 슬라이서가 채우지 않은 자리표시 값으로 보여 사용하지 않았습니다. 파일에 ;TIME_ELAPSED가 있으면 그 마지막 값을 표시합니다.","js_warn_filament_placeholder":"헤더에는 필라멘트 사용량이 0으로 적혀 있습니다. 표시한 수치는 E 이동을 직접 합산한 값입니다.","js_warn_mismatch":"헤더의 필라멘트 길이({header})와 E 이동 합산({measured})이 5% 넘게 다릅니다. 파일이 편집되었거나 중간에 잘렸을 수 있습니다.","js_warn_no_time":"이 파일에는 슬라이서가 적은 예상 출력 시간이 없습니다.","js_warn_no_density":"파일에 필라멘트 밀도가 없어 무게는 계산하지 않았습니다. 비용 계산기로 넘겨 재료를 고르면 무게가 계산됩니다.","js_warn_no_features":"기능 구분 주석(;TYPE: 또는 ; FEATURE:)이 없어 기능별 내역은 나눌 수 없습니다.","js_total_caption":"전체 합계({n}개)","js_total_partial":"시간이 없는 파일이 있어 합산하지 않았습니다","js_file":"파일","js_copied":"결과를 클립보드에 복사했습니다. 스프레드시트에 바로 붙여 넣을 수 있습니다.","js_copy_failed":"브라우저가 클립보드 접근을 막아 복사하지 못했습니다. CSV 저장을 이용해 주세요."}</script>
+<script type="module" src="../../assets/tools/gcode-analyzer/main.js"></script>
+</body>
+</html>

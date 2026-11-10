@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bambu Studio Infill Recommender – pattern, density and walls | BENCH</title>
+<meta name="description" content="Pick what the part is for, how it is loaded and the material, and get a Bambu Studio sparse infill pattern, density, wall loops and shell layers with the reason for each. Free, no sign-up, runs in your browser.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/infill-recommender/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/infill-recommender/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/infill-recommender/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="Bambu Studio Infill Recommender – pattern, density and walls | BENCH">
+<meta property="og:description" content="Pick what the part is for, how it is loaded and the material, and get a Bambu Studio sparse infill pattern, density, wall loops and shell layers with the reason for each. Free, no sign-up, runs in your browser.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Infill Recommender","url":"https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/","description":"Pick what the part is for, how it is loaded and the material, and get a Bambu Studio sparse infill pattern, density, wall loops and shell layers with the reason for each. Free, no sign-up, runs in your browser.","inLanguage":"en","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does a higher infill density make the part stronger?","acceptedAnswer":{"@type":"Answer","text":"Somewhat, but for the same amount of filament, adding wall loops first usually does more. That is why this tool starts density at the low end of its range and tells you to add walls first when the part is too weak."}},{"@type":"Question","name":"What if I want 100 % infill?","acceptedAnswer":{"@type":"Answer","text":"According to the Bambu wiki, only six patterns support 100 % density: Concentric, Rectilinear, Aligned Rectilinear, Hilbert Curve, Archimedean Chords and Octagram Spiral. In practice, a large number of wall loops is usually the better choice."}},{"@type":"Question","name":"The recommended pattern is not in my Bambu Studio list.","acceptedAnswer":{"@type":"Answer","text":"2D Lattice and Locked Zag were added in fairly recent versions. Update Bambu Studio, or use the alternative pattern shown with the result."}},{"@type":"Question","name":"Which pattern is the strongest?","acceptedAnswer":{"@type":"Answer","text":"It depends on the load. Tri-hexagon suits side shear, 2D Lattice with a small angle suits compression from above, and Gyroid or Cubic suit loads from several directions. We do not give percentage differences between patterns because we have no data for them."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="brand" href="../../../en/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="Language">
+<a href="../../../tools/infill-recommender/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/infill-recommender/" lang="en" hreflang="en" aria-current="page">English</a>
+<a href="../../../ja/tools/infill-recommender/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../../zh/tools/infill-recommender/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../en/"><span aria-hidden="true">←</span> All tools</a></p>
+<h1>Infill Recommender</h1>
+<p class="lead">Answer a few questions and get an infill pattern, density, wall loops and top/bottom layers you can type straight into Bambu Studio, each with its reason. These are rules of thumb, not measurements, and more walls usually add more strength than more infill.</p>
+<noscript><p class="notice warn">This tool needs JavaScript. Please enable it in your browser.</p></noscript>
+<div class="tool">
+<form class="panel" id="q">
+<h2>Tell us about the part</h2>
+<div style="display:grid;gap:12px;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))">
+<div class="field"><label for="use">What is it for?</label>
+<select id="use" name="use">
+<option value="display">Display or decoration</option>
+<option value="visible">Transparent, or infill left visible</option>
+<option value="household" selected>Everyday household item</option>
+<option value="functional">Functional, load-bearing part</option>
+<option value="heavy">Heavy load or screw joints</option>
+</select></div>
+<div class="field"><label for="load">Load</label>
+<select id="load" name="load" aria-describedby="load-hint">
+<option value="none">Hardly any</option>
+<option value="all">Several directions, or not sure</option>
+<option value="side">Pushed or pulled sideways (shear)</option>
+<option value="top">Pressed from above (compression)</option>
+<option value="impact">Impact, or must stay stiff</option>
+<option value="z">Pulled so the layers separate</option>
+</select><small id="load-hint">Directions are relative to how the part sits on the plate; &quot;above&quot; is the direction the layers stack.</small></div>
+<div class="field"><label for="material">Material</label>
+<select id="material" name="material">
+<option value="pla">PLA</option>
+<option value="abs">ABS · ASA</option>
+<option value="cf">Carbon-fibre reinforced (CF)</option>
+<option value="other">Something else</option>
+</select></div>
+<div class="field"><label for="priority">Top priority</label>
+<select id="priority" name="priority">
+<option value="strength">Strength</option>
+<option value="speed">Print time</option>
+<option value="weight">Low weight, less filament</option>
+<option value="surface">Surface quality</option>
+</select></div>
+<div class="field"><label for="size">Size and shape</label>
+<select id="size" name="size">
+<option value="normal">Small or medium</option>
+<option value="large">Large, with a lot of interior</option>
+<option value="flat">Large with a wide, flat top</option>
+</select></div>
+</div>
+<label class="check"><input type="checkbox" id="topq" name="topq"> The top surface must look smooth</label>
+</form>
+<div class="panel" id="out" hidden>
+<h2>Recommended settings</h2>
+<div class="table-scroll">
+<table class="result">
+<thead><tr><th scope="col">Bambu Studio setting</th><th scope="col">Value and reason</th></tr></thead>
+<tbody id="rows">
+<tr><th scope="row">Sparse infill pattern</th><td></td></tr>
+<tr><th scope="row">Sparse infill density</th><td></td></tr>
+<tr><th scope="row">Wall loops</th><td></td></tr>
+<tr><th scope="row">Top shell layers</th><td></td></tr>
+<tr><th scope="row">Bottom shell layers</th><td></td></tr>
+<tr><th scope="row">Top surface pattern</th><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small id="path" style="color:var(--muted)">Where to find them: Process → Strength in Bambu Studio</small></p>
+<p id="alt"></p>
+<div id="notes-box"><h3>Cautions</h3><ul id="notes" style="margin:0;padding-left:1.4em"></ul></div>
+<div><h3>If it does not work out</h3><ul id="fixes" style="margin:0;padding-left:1.4em"></ul></div>
+<p class="notice">Rules of thumb for Bambu Studio, not measurements. They assume a 0.4 mm nozzle and 0.2 mm layers, and more walls usually add more strength than more infill.</p>
+<div><button class="button secondary" type="button" id="copy">Copy result</button></div>
+<p class="notice" id="msg" role="status" hidden></p>
+</div>
+
+</div>
+<section class="doc">
+<h2>What this tool does</h2>
+<p>Based on what the part is for, which way it is loaded, the material and your priority, the tool recommends one Bambu Studio sparse infill pattern plus an alternative, a sparse infill density, wall loops and top/bottom shell layers. Every value comes with its reason and with what to change first if the print does not turn out well.</p>
+<p>Pattern characteristics follow the Bambu Lab wiki page on fill patterns. The density, wall and layer numbers are widely used starting points for a 0.4 mm nozzle and 0.2 mm layers. Pattern and setting names are the ones shown in the Bambu Studio interface.</p>
+</section>
+<section class="doc">
+<h2>How to use it</h2>
+<ol>
+<li>Choose what the part is for. Display piece, household item or load-bearing part: this sets the range for density and walls.</li>
+<li>Choose the direction and kind of load, relative to how the part sits on the build plate. If you are not sure, pick &quot;several directions&quot;.</li>
+<li>Choose the material, your priority and the size, and tick the box if the top surface must look smooth. The recommendation updates with every change.</li>
+<li>Enter the values under Process → Strength in Bambu Studio. &quot;Copy result&quot; copies everything, reasons and cautions included, as plain text.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>Limits and caveats</h2>
+<ul>
+<li>These are rules of thumb for Bambu Studio. Nothing here calculates or guarantees strength, and we give no &quot;X % stronger&quot; figures because we have no data to back them. If an exact comparison matters, print test pieces under the same conditions and test them.</li>
+<li>Strength usually depends more on wall loops and print orientation than on infill density. If the load pulls the layers apart, no infill setting will fix it: change the orientation first.</li>
+<li>The density, wall and layer numbers are not from the Bambu wiki; they are common FDM starting points for a 0.4 mm nozzle and 0.2 mm layers. With another layer height, aim for a top thickness of roughly 0.8–1.2 mm instead of a layer count.</li>
+<li>Pattern characteristics come from the Bambu Lab wiki page <a href="https://wiki.bambulab.com/en/software/bambu-studio/fill-patterns" rel="noopener">Fill Pattern Introduction</a> (also read in its <a href="https://wiki.bambulab.com/zh/software/bambu-studio/fill-patterns" rel="noopener">Chinese edition</a>). Which pattern suits which use is our reading of that page, not an official Bambu Lab recommendation.</li>
+<li>Pattern and setting names were checked against Bambu Studio 02.08.02.61. Names can differ between versions. Material notes cover PLA, ABS/ASA and carbon-fibre filaments only, and other slicers are not covered.</li>
+</ul>
+</section>
+<section class="doc"><h2>Frequently asked questions</h2>
+<details><summary>Does a higher infill density make the part stronger?</summary><p>Somewhat, but for the same amount of filament, adding wall loops first usually does more. That is why this tool starts density at the low end of its range and tells you to add walls first when the part is too weak.</p></details>
+<details><summary>What if I want 100 % infill?</summary><p>According to the Bambu wiki, only six patterns support 100 % density: Concentric, Rectilinear, Aligned Rectilinear, Hilbert Curve, Archimedean Chords and Octagram Spiral. In practice, a large number of wall loops is usually the better choice.</p></details>
+<details><summary>The recommended pattern is not in my Bambu Studio list.</summary><p>2D Lattice and Locked Zag were added in fairly recent versions. Update Bambu Studio, or use the alternative pattern shown with the result.</p></details>
+<details><summary>Which pattern is the strongest?</summary><p>It depends on the load. Tri-hexagon suits side shear, 2D Lattice with a small angle suits compression from above, and Gyroid or Cubic suit loads from several directions. We do not give percentage differences between patterns because we have no data for them.</p></details>
+</section>
+<section>
+<h2>Other tools</h2>
+<ul class="cards">
+<li><a class="card" href="../../../en/tools/stl-inspector/"><h3>STL/3MF Check &amp; Repair</h3><p>Find holes, flipped faces and other mesh problems, see where they are, and fix only what you choose. Also checks size and bed fit and saves to another format or to Excel.</p><p class="formats">Input · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../en/tools/stl-cutter/"><h3>STL Splitter</h3><p>Split a model that is larger than your bed into printable pieces, with finger joints so the parts line up.</p><p class="formats">Input · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../en/tools/print-cost-calculator/"><h3>Print Weight &amp; Cost Calculator</h3><p>Get filament weight from sliced G-code or a 3D model, then work out material cost, electricity and a selling price.</p><p class="formats">Input · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../en/tools/gcode-analyzer/"><h3>G-code Analyzer</h3><p>Read print time and filament use from G-code, broken down by feature and by filament.</p><p class="formats">Input · .gcode · .gcode.3mf</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Your files never leave your browser. Everything is calculated on this device.</p>
+
+</main>
+<footer class="site-footer"><p>Free to use. No sign-up, no uploads, no tracking.</p></footer>
+<script>window.T={"lang":"en","js_err_empty":"{name} is empty (0 bytes).","js_err_wrong_type":"{name} is not a supported file type. Supported: {types}","js_err_not_mesh":"{name} does not contain a 3D model we can read. Check that it is an STL, 3MF or OBJ file.","js_err_truncated":"{name} is cut off: it holds only {present} of the {declared} triangles it declares.","js_err_truncated_unknown":"{name} is cut off: only {present} complete triangles were found.","js_load_partial":"Load the intact part","js_err_too_large":"{name} is too large for this device's memory. Close other tabs or try a desktop browser.","js_err_no_triangles":"{name} contains no triangles.","js_err_unknown":"Could not process {name}. ({detail})","js_bad_triangles":"{n} triangles with invalid coordinates (NaN or infinity) were left out.","js_reading":"Reading {name}… {percent}%","js_working":"Working…","js_num_required":"Enter a value.","js_num_invalid":"Enter a number.","js_num_min":"Enter {min} or more.","js_num_max":"Enter {max} or less.","js_unit_h":"h","js_unit_m":"m","js_unit_s":"s","js_copy_title":"Recommended Bambu Studio infill settings","js_copied":"Result copied.","js_copy_failed":"Could not copy. Please select the result and copy it yourself.","js_start":"start at {v}","js_alt":"Alternative: {name}. {why}","js_monotonic":"Monotonic","js_default":"Leave the default","js_r_monotonic":"Printed with even lines in one direction, so a large flat top comes out smoother than with Rectilinear.","js_r_default":"No need to change it when the look of the top surface does not matter.","js_r_density":"A common starting range for this kind of part. Begin at the low end.","js_r_walls":"A common starting range for this kind of part. Walls usually matter more for strength than infill density.","js_r_walls_strength":"Strength comes first, so start at the top of the range. Adding walls gives more strength per gram than adding infill.","js_r_top":"For 0.2 mm layers. With another layer height, aim for a top thickness of roughly 0.8–1.2 mm.","js_r_top_extra":"Includes 1–2 extra layers because the sparse infill gives the top little support. For 0.2 mm layers.","js_r_bottom":"A common starting value for this kind of part. For 0.2 mm layers.","js_p_gyroid":"Gyroid","js_p_cubic":"Cubic","js_p_adaptivecubic":"Adaptive Cubic","js_p_lightning":"Lightning","js_p_concentric":"Concentric","js_p_lockedzag":"Locked Zag","js_p_grid":"Grid","js_p_crosshatch":"Cross Hatch","js_p_trihexagon":"Tri-hexagon","js_p_lattice_small":"2D Lattice, lattice angles 1 and 2 at 0–45°","js_p_lattice_large":"2D Lattice, lattice angles 1 and 2 at 45–75°","js_p_honeycomb":"Honeycomb","js_p_honeycomb3d":"3D Honeycomb","js_why_gyroid":"Supports the part well in every direction, and with no crossing lines inside a layer it prints fairly fast. Slicing takes longer and the G-code file is larger.","js_why_cubic":"Gives fairly even strength along X, Y and Z, with a good balance between strength and print efficiency.","js_why_adaptivecubic":"Like Cubic, but it lowers the density automatically away from the walls. It saves filament and time while still supporting the top so it does not sag.","js_why_lightning":"Fills only what is needed to hold up the top surface, saving a lot of time and filament. The density you set applies only to the layer just below the top.","js_why_concentric":"Fills with loops that follow the walls inward, which looks good in transparent filament. It is weak against horizontal loads.","js_why_lockedzag":"A texture designed for prints where the infill is the outer surface; it balances appearance and structural strength.","js_why_grid":"One of the simplest and fastest patterns, though a little material builds up where the lines cross.","js_why_crosshatch":"Keeps the same direction over a range of layers, so there are fewer direction changes and the print is quick. Suited to non-load-bearing parts and fast prints.","js_why_trihexagon":"Three sets of crossing lines resist shear very well in every horizontal direction, and the short lines to the walls reduce warping from poor cooling.","js_why_lattice_small":"Small lattice angles make the internal structure stand more upright, which resists weight pressing down from above.","js_why_lattice_large":"Large lattice angles make the internal structure flatter, which resists being pushed or pulled from the side.","js_why_honeycomb":"Hexagonal cells without crossings greatly improve rigidity and impact resistance. It uses about 25 % more material than other patterns and takes longer.","js_why_honeycomb3d":"Less dense than Honeycomb, so it prints faster, and its path shifts along Z, which improves the bond between layers.","js_n_z":"Infill cannot fix a load that pulls the layers apart. Reorient the part first so the force runs along the layers.","js_n_concentric_weak":"Concentric is weak against horizontal loads, so it is listed only as the alternative for a loaded part.","js_n_lightning_weak":"Lightning has practically no strength. If the part takes any force at all, use Adaptive Cubic.","js_n_honeycomb_cost":"Honeycomb uses about 25 % more material and takes longer to print. 3D Honeycomb is the lighter alternative.","js_n_new_pattern":"2D Lattice and Locked Zag were added in fairly recent versions. If they are missing from the list, update Bambu Studio.","js_n_modifier":"Where force concentrates, such as around screw holes and inserts, do not raise the density of the whole part: use a modifier to add walls or infill there only. With vibration or repeated fastening, heat-set inserts are worth using too.","js_n_abs":"ABS and ASA warp easily. An open-frame printer raises the risk of warping and layer splitting, so an enclosed printer is recommended. Gyroid has no crossings, which makes the nozzle less likely to catch on curled infill.","js_n_abs_flat":"On a large, flat ABS or ASA part, too much infill can increase internal shrinkage stress. Keep the density low and get the strength from walls.","js_n_cf":"Carbon-fibre filament is abrasive: check that you are using a hardened steel nozzle. Its layer bonding is relatively weak, so check the orientation first and keep the load from crossing the layers.","js_n_gyroid_vibration":"Gyroid can cause strong vibration at high density and high speed.","js_n_grid_scrape":"Grid builds up material at its crossings, so the nozzle may scrape and make noise at high speed.","js_f_weak":"Too weak: add wall loops before infill. If that is still not enough, raise the density toward the top of its range.","js_f_display_force":"The part dents or breaks: switch the pattern to Adaptive Cubic.","js_f_top_sag":"The top surface sags or shows holes: add 1–2 top shell layers.","js_f_noise":"Vibration or scraping noise: lower only the sparse infill speed first (Speed tab, Sparse infill).","js_f_warp":"Corners lift or layers split: print in an enclosed printer, lower the infill density and get the strength from walls.","js_f_layer_split":"The part splits along the layers: change the print orientation, not the infill."}</script>
+<script type="module" src="../../../assets/tools/infill-recommender/main.js"></script>
+</body>
+</html>

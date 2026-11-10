@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STL 分割ツール – ベッドより大きいモデルをジョイント付きで分割 | BENCH</title>
+<meta name="description" content="プリンターに入らない STL・3MF・OBJ モデルを、印刷できる大きさのパーツに分割してフィンガージョイントを付けます。各パーツの実寸とベッドに収まるかどうかを表示し、組み立て図と一緒に ZIP で保存できます。ファイルはサーバーに送信されません。">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-cutter/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/stl-cutter/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-cutter/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/stl-cutter/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="STL 分割ツール – ベッドより大きいモデルをジョイント付きで分割 | BENCH">
+<meta property="og:description" content="プリンターに入らない STL・3MF・OBJ モデルを、印刷できる大きさのパーツに分割してフィンガージョイントを付けます。各パーツの実寸とベッドに収まるかどうかを表示し、組み立て図と一緒に ZIP で保存できます。ファイルはサーバーに送信されません。">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/ja/tools/stl-cutter/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"STL 分割ツール","url":"https://yeseul100512.github.io/3D-website/ja/tools/stl-cutter/","description":"プリンターに入らない STL・3MF・OBJ モデルを、印刷できる大きさのパーツに分割してフィンガージョイントを付けます。各パーツの実寸とベッドに収まるかどうかを表示し、組み立て図と一緒に ZIP で保存できます。ファイルはサーバーに送信されません。","inLanguage":"ja","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"パーツは本当にベッドに収まりますか？","acceptedAnswer":{"@type":"Answer","text":"パーツ数を「自動」にしておくと、歯の出っ張りまで含めて格子を決め、分割後に各パーツの実寸を測り直して表に「収まる」または「超過」と表示します。パーツ数を手動で指定した場合は超過することがあるので、表をご確認ください。"}},{"@type":"Question","name":"薄い板状のモデルが立てられてしまうことはありますか？","acceptedAnswer":{"@type":"Answer","text":"初期設定は「今の向きのまま」なので、モデルは回転しません。「パーツ数が最も少なくなるように回転」を選んだときだけ 90° 単位で回転し、その場合はどの軸がどこへ移ったかを結果に表示します。"}},{"@type":"Question","name":"3MF や OBJ ファイルも分割できますか？","acceptedAnswer":{"@type":"Answer","text":"はい。STL（バイナリ・ASCII）、3MF、OBJ を読み込めます。ファイルに複数のオブジェクトがある場合は 1 つのモデルとしてまとめて分割し、結果は STL で保存します。色やスライサーの設定は引き継がれません。"}},{"@type":"Question","name":"クリアランスはどこに適用されますか？","acceptedAnswer":{"@type":"Answer","text":"歯の両側面に、それぞれ入力した値のすき間を設けます。歯の先端と溝の底はすき間なく接するので、組み立てたときの全長は元のモデルと同じです。"}},{"@type":"Question","name":"ファイルはアップロードされますか？","acceptedAnswer":{"@type":"Answer","text":"いいえ。読み込みから分割、ZIP の作成まで、すべてこのブラウザー内で処理します。ダウンロードされるのは、3D 表示と分割に使う公開ライブラリだけです。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+<header class="site-header">
+<a class="brand" href="../../../ja/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="言語">
+<a href="../../../tools/stl-cutter/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/stl-cutter/" lang="en" hreflang="en">English</a>
+<a href="../../../ja/tools/stl-cutter/" lang="ja" hreflang="ja" aria-current="page">日本語</a>
+<a href="../../../zh/tools/stl-cutter/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../ja/"><span aria-hidden="true">←</span> すべてのツール</a></p>
+<h1>STL 分割ツール</h1>
+<p class="lead">プリンターの造形サイズを入力すると、その中に収まるパーツにモデルを分割します。ジョイントの出っ張りも含めてパーツの大きさを決めます。</p>
+<noscript><p class="notice warn">このツールを使うには、ブラウザーの JavaScript を有効にしてください。</p></noscript>
+<div class="tool">
+<link rel="stylesheet" href="../../../assets/tools/stl-cutter/cutter.css">
+<div class="tool-grid">
+<div class="viewer" id="viewer"><p id="viewer-empty">モデルを読み込むと、ここに 3D プレビューが表示されます。</p></div>
+<div class="controls">
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.3mf,.obj">
+<strong>STL・3MF・OBJ ファイルをここにドロップ、またはクリックして選択</strong>
+<span>ファイルはこの端末の中だけで処理されます。</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<button class="button secondary" id="partial" type="button" hidden>読み込める部分だけ開く</button>
+<p id="info" hidden></p>
+<p class="notice warn" id="open" hidden><span id="open-text"></span> <a href="../stl-inspector/">STL/3MF チェック・修復ツールで確認する</a></p>
+</div>
+<form class="panel" id="form" novalidate>
+<fieldset class="cut-set">
+<legend>プリンターの造形サイズ</legend>
+<div class="fields">
+<div class="field"><label for="bed-x">幅 X (mm)</label><input id="bed-x" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+<div class="field"><label for="bed-y">奥行き Y (mm)</label><input id="bed-y" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+<div class="field"><label for="bed-z">高さ Z (mm)</label><input id="bed-z" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+</div>
+<div class="field"><label for="margin">周囲の余白 (mm)</label><input id="margin" type="number" inputmode="decimal" value="2" min="0" max="1000" step="any" required><small>各方向で余白の 2 倍を引いた大きさに収まるように分割します。</small></div>
+</fieldset>
+<fieldset class="cut-set">
+<legend>モデルの向き</legend>
+<label class="check"><input type="radio" name="orient" value="keep" checked> 今の向きのまま</label>
+<label class="check"><input type="radio" name="orient" value="auto"> パーツ数が最も少なくなるように回転</label>
+<small>回転を選ぶと 90° 単位で向きを試すため、薄い板が立った向きになることがあります。</small>
+</fieldset>
+<fieldset class="cut-set">
+<legend>パーツ数</legend>
+<label class="check"><input type="radio" name="count" value="auto" checked> 自動（造形サイズに合わせる）</label>
+<label class="check"><input type="radio" name="count" value="manual"> 手動で指定</label>
+<div class="fields" id="manual" hidden>
+<div class="field"><label for="n-x">X 方向のパーツ数</label><input id="n-x" type="number" inputmode="numeric" value="2" min="1" max="20" step="1" required></div>
+<div class="field"><label for="n-y">Y 方向のパーツ数</label><input id="n-y" type="number" inputmode="numeric" value="1" min="1" max="20" step="1" required></div>
+<div class="field"><label for="n-z">Z 方向のパーツ数</label><input id="n-z" type="number" inputmode="numeric" value="1" min="1" max="20" step="1" required></div>
+</div>
+</fieldset>
+<fieldset class="cut-set">
+<legend>切断面</legend>
+<label class="check"><input type="radio" name="joint" value="teeth" checked> フィンガージョイント（かみ合わせ）</label>
+<label class="check"><input type="radio" name="joint" value="flat"> 平面（接着して組み立て）</label>
+<div id="teeth" class="cut-set">
+<div class="fields">
+<div class="field"><label for="tooth-w">歯の幅 (mm)</label><input id="tooth-w" type="number" inputmode="decimal" value="15" min="0" max="500" step="any" required></div>
+<div class="field"><label for="tooth-d">歯の深さ (mm)</label><input id="tooth-d" type="number" inputmode="decimal" value="4" min="0.5" max="50" step="any" required></div>
+<div class="field"><label for="tooth-gap">クリアランス (mm)</label><input id="tooth-gap" type="number" inputmode="decimal" value="0.3" min="0" max="2" step="any" required></div>
+</div>
+<small>クリアランスは歯の側面 1 つごとのすき間です。歯の幅を 0 にすると平面で切ります。</small>
+</div>
+</fieldset>
+<div class="cut-actions">
+<button class="button" id="run" type="submit" disabled>分割する</button>
+<button class="button secondary" id="cancel" type="button" hidden>キャンセル</button>
+</div>
+<p class="notice" id="status" hidden></p>
+</form>
+</div>
+</div>
+<div class="panel cut-out" id="out" hidden>
+<h2>結果</h2>
+<p id="summary"></p>
+<p class="notice warn" id="warn" hidden></p>
+<label class="check" id="explode-row"><input type="checkbox" id="explode"> パーツを離して表示（ファイルには影響しません）</label>
+<h3>組み立て図</h3>
+<p class="lead">上から見た配置です。マスに書かれた名前が、そのままファイル名の末尾になります。</p>
+<div class="cut-map" id="map"></div>
+<div class="table-scroll">
+<table class="result">
+<caption>パーツ一覧</caption>
+<thead><tr><th scope="col">パーツ</th><th scope="col">実寸 (mm)</th><th scope="col">造形サイズに収まるか</th><th scope="col">ファイル</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+<div class="cut-actions">
+<button class="button" id="zip" type="button">すべて ZIP で保存</button>
+<button class="button secondary" id="map-save" type="button">組み立て図を保存 (SVG)</button>
+</div>
+</div>
+
+</div>
+<section class="doc">
+<h2>このツールでできること</h2>
+<p>モデルを X・Y・Z 方向に等間隔の格子で切り分けます。パーツ数は、造形サイズから周囲の余白とジョイントの深さを引いた値をもとに決めるため、ジョイントを含めたパーツが造形サイズを超えることはありません。分割後は各パーツの実寸を測り直し、収まるかどうかを表に示します。</p>
+<p>切断面は、かみ合うフィンガージョイント（あられ組み）か平面から選べます。歯の幅・深さ・クリアランスを指定でき、複数の方向に分割する場合は、切断面が交わる部分の隣の歯を省くため、歯どうしが重なったり、細片が切り離されたりしません。</p>
+<p>パーツのファイル名には X1-Y2 のように格子上の位置が入り、同じ名前を書いた組み立て図も付きます。パーツは 1 つずつ STL で、またはまとめて ZIP で保存できます。</p>
+</section>
+<section class="doc">
+<h2>使い方</h2>
+<ol>
+<li>STL・3MF・OBJ ファイルをドラッグ＆ドロップするか、クリックして選びます。サイズと三角形の数が表示され、メッシュに穴があれば警告が出ます。</li>
+<li>プリンターの造形サイズ（X・Y・Z）と周囲の余白を入力します。</li>
+<li>モデルの向きをそのままにするか、パーツ数が減るように回転するかを選びます。パーツ数を自分で決めたいときは「手動で指定」を選びます。</li>
+<li>切断面の種類を選んで「分割する」を押します。進み具合が表示され、いつでもキャンセルできます。</li>
+<li>表で各パーツの実寸と適合を確認してから、STL または ZIP で保存します。組み立てるときは、組み立て図の名前どおりに並べてください。</li>
+</ol>
+</section>
+<section class="doc">
+<h2>制限と注意点</h2>
+<ul>
+<li>切る位置は選べません。常に軸に平行な平面で、等間隔に切ります。大事なディテールを避けたり斜めに切ったりしたい場合は、CAD やスライサーのカット機能をお使いください。</li>
+<li>モデルは穴のない閉じたメッシュである必要があります。開いたエッジがあると警告を出したうえで分割しますが、パーツが空洞になったり面が欠けたりすることがあります。分割後のパーツには片側だけが分割されたエッジ（T 字接合）が残ることが多く、このサイトの検査ツールを含むメッシュチェッカーでは開いたエッジとして表示されます。隙間の幅はゼロなのでスライサーが自動でつなぐのが普通ですが、印刷前に必ずスライサーのプレビューでご確認ください。</li>
+<li>フィンガージョイントが止めるのは、切断面に沿った一方向のずれだけです。引っ張る力には耐えないので、接着剤で固定してください。上下（Z）に分割すると上側パーツの歯が下向きになり、サポートが必要になります。その場合は平面カットをおすすめします。</li>
+<li>クリアランス 0.3 mm は一般的な FDM プリンター向けの目安です。プリンターや材料によってきつくなったり緩くなったりするので、まず小さなパーツで試してください。歯の幅は、辺の長さをちょうど割り切れるように少し調整されます。</li>
+<li>パーツは組み立てた位置のまま保存されます。ベッドへの配置や向きの調整はスライサーで行ってください。単位は mm として扱います。</li>
+<li>三角形が数百万個あるファイルは、分割に数十秒から数分かかり、メモリを数 GB 使うことがあります。スマートフォンでは大きなファイルが失敗する場合があります。3D プレビューと分割用ライブラリは初回利用時に CDN から読み込むため、インターネット接続が必要です（モデルのファイルは送信されません）。</li>
+</ul>
+</section>
+<section class="doc"><h2>よくある質問</h2>
+<details><summary>パーツは本当にベッドに収まりますか？</summary><p>パーツ数を「自動」にしておくと、歯の出っ張りまで含めて格子を決め、分割後に各パーツの実寸を測り直して表に「収まる」または「超過」と表示します。パーツ数を手動で指定した場合は超過することがあるので、表をご確認ください。</p></details>
+<details><summary>薄い板状のモデルが立てられてしまうことはありますか？</summary><p>初期設定は「今の向きのまま」なので、モデルは回転しません。「パーツ数が最も少なくなるように回転」を選んだときだけ 90° 単位で回転し、その場合はどの軸がどこへ移ったかを結果に表示します。</p></details>
+<details><summary>3MF や OBJ ファイルも分割できますか？</summary><p>はい。STL（バイナリ・ASCII）、3MF、OBJ を読み込めます。ファイルに複数のオブジェクトがある場合は 1 つのモデルとしてまとめて分割し、結果は STL で保存します。色やスライサーの設定は引き継がれません。</p></details>
+<details><summary>クリアランスはどこに適用されますか？</summary><p>歯の両側面に、それぞれ入力した値のすき間を設けます。歯の先端と溝の底はすき間なく接するので、組み立てたときの全長は元のモデルと同じです。</p></details>
+<details><summary>ファイルはアップロードされますか？</summary><p>いいえ。読み込みから分割、ZIP の作成まで、すべてこのブラウザー内で処理します。ダウンロードされるのは、3D 表示と分割に使う公開ライブラリだけです。</p></details>
+</section>
+<section>
+<h2>ほかのツール</h2>
+<ul class="cards">
+<li><a class="card" href="../../../ja/tools/stl-inspector/"><h3>STL/3MF チェック・修復</h3><p>穴や裏返った面などメッシュの問題を見つけて場所を表示し、選んだものだけを修復します。サイズやベッドに収まるかも確認でき、別形式や Excel に保存できます。</p><p class="formats">入力 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../ja/tools/print-cost-calculator/"><h3>造形重量・コスト計算</h3><p>スライス済みの G-code や 3D モデルからフィラメント重量を求め、材料費・電気代・販売価格まで計算します。</p><p class="formats">入力 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../ja/tools/gcode-analyzer/"><h3>G-code 解析</h3><p>G-code から造形時間とフィラメント使用量を読み取り、フィーチャー別・フィラメント別の内訳を表示します。</p><p class="formats">入力 · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../../ja/tools/infill-recommender/"><h3>インフィル設定おすすめ</h3><p>造形物の用途と荷重に合わせて、Bambu Studio の充填パターン・充填密度・壁面層数・トップ面/底面層数をおすすめします。</p><p class="formats">入力 · ファイル不要</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>ファイルはサーバーに送信されません。すべての処理はこのブラウザー内で行われます。</p>
+
+</main>
+<footer class="site-footer"><p>登録不要・アップロードなし・トラッキングなしの無料ツールです。</p></footer>
+<script>window.T={"lang":"ja","js_err_empty":"{name} は空のファイルです（0 バイト）。","js_err_wrong_type":"{name} は対応していない形式です。対応形式: {types}","js_err_not_mesh":"{name} から 3D モデルを読み取れませんでした。STL・3MF・OBJ ファイルかどうかご確認ください。","js_err_truncated":"{name} は途中で切れています。{declared} 個の三角形のうち {present} 個しか含まれていません。","js_err_truncated_unknown":"{name} は途中で切れています。完全な三角形は {present} 個です。","js_load_partial":"読み込める部分だけ開く","js_err_too_large":"{name} は大きすぎて、この端末のメモリでは開けません。ほかのタブを閉じるか、パソコンのブラウザーでお試しください。","js_err_no_triangles":"{name} には三角形が 1 つもありません。","js_err_unknown":"{name} を処理できませんでした。（{detail}）","js_bad_triangles":"座標が不正（NaN・無限大）な三角形 {n} 個を除外しました。","js_reading":"{name} を読み込み中… {percent}%","js_working":"処理中…","js_num_required":"値を入力してください。","js_num_invalid":"数値を入力してください。","js_num_min":"{min} 以上の値を入力してください。","js_num_max":"{max} 以下の値を入力してください。","js_unit_h":"時間","js_unit_m":"分","js_unit_s":"秒","js_viewer_fail":"3D プレビューを表示できませんでした（接続または WebGL の問題）。分割と保存はそのままお使いいただけます。","js_model_info":"{name}: {size} mm、三角形 {n} 個","js_open_warn":"このメッシュは閉じていません。開いている、または 3 つ以上の面が接しているエッジが {n} 本あり、分割したパーツが空洞になったり面が欠けたりすることがあります。","js_err_fields":"赤く表示された入力欄をご確認ください。","js_err_count_int":"パーツ数は整数で入力してください。","js_err_margin":"余白を引くと使える大きさが残りません。造形サイズを大きくするか、余白を小さくしてください。","js_err_no_fit":"この造形サイズでは、歯の深さを含めると収まるパーツを作れません。歯の深さを小さくするか、平面カットを選んでください。","js_err_too_long":"この造形サイズでは、1 方向に 50 個を超えるパーツが必要になります。モデルの単位（mm）と造形サイズをご確認ください。","js_err_too_many":"パーツが {n} 個になり、多すぎます（上限 {max} 個）。造形サイズまたはパーツ数をご確認ください。","js_err_tooth_small":"クリアランスに対して歯の幅が狭すぎます。歯の幅を広げるか、クリアランスを小さくしてください。","js_err_tooth_deep":"パーツの厚みに対して歯が深すぎます。歯の深さを小さくするか、パーツ数を減らしてください。","js_stage_lib":"分割用ライブラリを読み込み中…","js_stage_prep":"モデルを準備中…","js_stage_cut":"分割中… {done}/{total}","js_err_lib":"分割に必要なライブラリを読み込めませんでした。インターネット接続を確認して、もう一度お試しください。（{detail}）","js_err_cut":"{name} の分割中にエラーが発生しました。メッシュが閉じていないか、面どうしが交差している可能性があります。（{detail}）","js_err_no_pieces":"分割結果が空でした。メッシュが閉じているかご確認ください。","js_sum_nocut":"分割しなくても造形サイズに収まります。","js_sum_grid":"パーツ {total} 個（X {x} × Y {y} × Z {z}）、{mode}。","js_mode_teeth":"フィンガージョイント","js_mode_flat":"平面カット","js_flat_zero":"歯の幅が 0 のため、平面で切りました。","js_flat_short":"切断面が歯 2 つ分より狭いため、平面で切りました。","js_sum_rotated":"モデルを回転しました。元の {x} 軸が X、{y} 軸が Y、{z} 軸が Z 方向になっています。","js_sum_usable":"余白を除いた使用可能サイズ: {size} mm。","js_fit_yes":"収まる","js_fit_no":"超過","js_warn_nofit":"{n} 個のパーツが使用可能サイズを超えています。パーツ数を増やすか、「自動」を選んでください。","js_warn_volume":"パーツの体積の合計が元のモデルと {percent}% 異なります。分割に問題がある可能性があるため、スライサーでパーツをご確認ください。","js_warn_open_result":"元のメッシュが閉じていないため、パーツが正しくない可能性があります。スライサーのプレビューでご確認ください。","js_cancelled":"キャンセルしました。"}</script>
+<script type="module" src="../../../assets/tools/stl-cutter/main.js"></script>
+</body>
+</html>

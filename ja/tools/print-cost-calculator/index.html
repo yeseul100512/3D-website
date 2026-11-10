@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D プリント重量・コスト計算 – G-code や STL から材料別に算出 | BENCH</title>
+<meta name="description" content="G-code から読み取ったフィラメント重量と造形時間をもとに、材料費、電気代、機器の損耗、失敗分の上乗せ、作業費、販売価格を計算します。STL からのおおよその重量見積もりにも対応。登録不要・無料で、ファイルはサーバーに送信されません。">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/ja/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="3D プリント重量・コスト計算 – G-code や STL から材料別に算出 | BENCH">
+<meta property="og:description" content="G-code から読み取ったフィラメント重量と造形時間をもとに、材料費、電気代、機器の損耗、失敗分の上乗せ、作業費、販売価格を計算します。STL からのおおよその重量見積もりにも対応。登録不要・無料で、ファイルはサーバーに送信されません。">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/ja/tools/print-cost-calculator/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"造形重量・コスト計算","url":"https://yeseul100512.github.io/3D-website/ja/tools/print-cost-calculator/","description":"G-code から読み取ったフィラメント重量と造形時間をもとに、材料費、電気代、機器の損耗、失敗分の上乗せ、作業費、販売価格を計算します。STL からのおおよその重量見積もりにも対応。登録不要・無料で、ファイルはサーバーに送信されません。","inLanguage":"ja","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"STL からの見積もりとスライサーの重量が違うのはなぜですか？","acceptedAnswer":{"@type":"Answer","text":"STL からの見積もりは、モデルの体積と表面積しか見ていません。実際の造形物は、壁の数、上面・底面の層数、インフィルパターン、サポート、ブリムによってフィラメント量が変わり、これはスライスして初めて分かります。正確な値が必要な場合は、スライス済みの G-code を読み込んでください。"}},{"@type":"Question","name":"販売価格はどのように計算されますか？","acceptedAnswer":{"@type":"Answer","text":"総原価に上乗せ率（%）を上乗せし、販売手数料が販売価格の一定割合として引かれても、その金額が手元に残るように割り戻します。販売価格 = 総原価 ×（1 + 上乗せ率）÷（1 − 手数料率）です。"}},{"@type":"Question","name":"失敗分の上乗せは、どの費用にかかりますか？","acceptedAnswer":{"@type":"Answer","text":"材料費・電気代・機器費用の合計に、入力した割合を掛けます。たとえば 10 回に 1 回失敗するなら 10% と入力します。作業費にはかかりません。"}},{"@type":"Question","name":"入力した設定はどこに保存されますか？","acceptedAnswer":{"@type":"Answer","text":"このブラウザーのローカルストレージにのみ保存され、サーバーには送信されません。「設定をリセット」を押すと消去されます。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+<header class="site-header">
+<a class="brand" href="../../../ja/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="言語">
+<a href="../../../tools/print-cost-calculator/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/print-cost-calculator/" lang="en" hreflang="en">English</a>
+<a href="../../../ja/tools/print-cost-calculator/" lang="ja" hreflang="ja" aria-current="page">日本語</a>
+<a href="../../../zh/tools/print-cost-calculator/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../ja/"><span aria-hidden="true">←</span> すべてのツール</a></p>
+<h1>造形重量・コスト計算</h1>
+<p class="lead">スライス済みのファイルを読み込むと、スライサーが計算した重量と時間から造形コストを計算します。まだスライスしていない場合は、3D モデルからおおよその重量を見積もれます。</p>
+<noscript><p class="notice warn">このツールを使うには、ブラウザーの JavaScript を有効にしてください。</p></noscript>
+<div class="tool">
+<div class="panel">
+<h2>重量と時間</h2>
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".gcode,.gco,.g,.bgcode,.3mf,.stl,.obj">
+<strong>スライス済みの G-code ファイルをここにドロップ、またはクリックして選択</strong>
+<span>.gcode · .gcode.3mf は正確な値（推奨）、STL · OBJ · 3MF モデルはおおよその見積もり</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice warn" id="open-mesh" role="alert" hidden>このモデルには穴があるか、面の向きが揃っていないため、体積が信頼できません。そのため重量は見積もっていません。<a href="../stl-inspector/">モデル検査ツール</a>で問題を確認するか、スライス済みの G-code を読み込んでください。</p>
+<div id="estimate" hidden>
+<p class="notice warn">スライス前のおおよその見積もりです。サポート、ブリム、パージは含まず、スライサーの結果とは異なる場合があります。</p>
+<div class="fields" style="margin-top:12px">
+<div class="field"><label for="wall">壁（シェル）の厚さ (mm)</label><input type="number" id="wall" value="1.2" min="0" max="20" step="0.1" required inputmode="decimal"></div>
+<div class="field"><label for="infill">インフィル率 (%)</label><input type="number" id="infill" value="15" min="0" max="100" step="1" required inputmode="decimal"></div>
+</div>
+</div>
+<div class="fields">
+<div class="field"><label for="weight">フィラメント重量 (g)</label><input type="number" id="weight" min="0" max="1000000" step="any" inputmode="decimal"></div>
+<div class="field"><label for="hours">造形時間 (時間)</label><input type="number" id="hours" min="0" max="100000" step="any" inputmode="decimal"><small>電気代と機器費用の計算に使います。1 時間 30 分は 1.5 と入力します。</small></div>
+</div>
+</div>
+<div class="panel">
+<h2>材料</h2>
+<div class="fields">
+<div class="field"><label for="material">材料</label><select id="material"></select></div>
+<div class="field"><label for="density">密度 (g/cm³)</label><input type="number" id="density" min="0.1" max="25" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="price">1 kg あたりの価格</label><input type="number" id="price" min="0" max="100000000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="currency">通貨</label><select id="currency"><option>KRW</option><option>USD</option><option>EUR</option><option>JPY</option><option>CNY</option><option>GBP</option></select></div>
+</div>
+<p><small style="color:var(--muted)">密度と価格は一般的な値の初期値です。修正した値は材料ごとに記憶されます。通貨は記号を切り替えるだけで、換算は行いません。</small></p>
+</div>
+<div class="panel">
+<h2>追加費用（任意）</h2>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">電気代</summary>
+<div class="fields">
+<div class="field"><label for="watts">プリンターの平均消費電力 (W)</label><input type="number" id="watts" min="0" max="100000" step="any" inputmode="decimal"><small>造形中の平均値です。家庭用プリンターは一般に 80〜200 W 程度です。</small></div>
+<div class="field"><label for="kwh">1 kWh あたりの料金</label><input type="number" id="kwh" min="0" max="1000000" step="any" inputmode="decimal"><small>電気料金の明細にある単価を入力します。例: 31</small></div>
+</div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">機器費用（減価償却・消耗品）</summary>
+<div class="field"><label for="wear">1 時間あたりの機器費用</label><input type="number" id="wear" min="0" max="100000000" step="any" inputmode="decimal"><small>プリンター本体と消耗品の費用を、見込まれる稼働時間で割った値です。</small></div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">失敗分の上乗せ</summary>
+<div class="field"><label for="fail">失敗分の上乗せ (%)</label><input type="number" id="fail" min="0" max="1000" step="any" inputmode="decimal"><small>材料費・電気代・機器費用の合計に上乗せします。10 回に 1 回失敗するなら 10 と入力します。</small></div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">作業費</summary>
+<div class="fields">
+<div class="field"><label for="labour-rate">時給</label><input type="number" id="labour-rate" min="0" max="100000000" step="any" inputmode="decimal"></div>
+<div class="field"><label for="labour-min">作業時間 (分)</label><input type="number" id="labour-min" min="0" max="100000" step="any" inputmode="decimal"><small>スライス、造形の準備、サポート除去、梱包など、実際に手を動かす時間です。</small></div>
+</div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">販売価格</summary>
+<div class="fields">
+<div class="field"><label for="margin">上乗せ率 (%)</label><input type="number" id="margin" min="0" max="100000" step="any" inputmode="decimal"><small>総原価に上乗せする割合です。</small></div>
+<div class="field"><label for="fee">販売手数料 (%)</label><input type="number" id="fee" min="0" max="99" step="any" inputmode="decimal"><small>販売価格から差し引かれる、販売サイトや決済の手数料です。</small></div>
+</div>
+</details>
+</div>
+<div class="panel">
+<h2>計算結果</h2>
+<p id="empty" style="color:var(--muted)">ファイルを読み込むか、フィラメント重量を入力すると、ここに結果が表示されます。赤く表示された入力欄がある場合は、先に修正してください。</p>
+<div class="table-scroll" id="result" aria-live="polite" hidden></div>
+<p class="notice warn" id="need-hours" hidden>造形時間が未入力のため、電気代と機器費用は 0 として計算しています。上の欄に造形時間を入力してください。</p>
+<p style="display:flex;flex-wrap:wrap;gap:8px">
+<button type="button" class="button secondary" id="csv" disabled>CSV で保存</button>
+<button type="button" class="button secondary" id="xlsx" disabled>xlsx で保存</button>
+<button type="button" class="button secondary" id="reset">設定をリセット</button>
+</p>
+</div>
+
+</div>
+<section class="doc">
+<h2>このツールでできること</h2>
+<p>フィラメントの重量と 1 kg あたりの価格から材料費を計算します。重量は、スライス済みの G-code や .gcode.3mf から読み取るのが最も正確です。G-code 解析ツールから引き継ぐことも、直接入力することもできます。</p>
+<p>まだスライスしていない STL・OBJ・3MF モデルは、体積と表面積からおおよその重量を見積もります。表面全体に一定の厚みの壁があり、残りがインフィル率の分だけ埋まると仮定した単純な計算なので、スライサーの結果とは差が出ます。</p>
+<p>必要に応じて電気代、1 時間あたりの機器費用、失敗分の上乗せ、作業費を加え、上乗せ率と販売手数料を入れて販売価格を求められます。設定はこのブラウザーに保存され、内訳は CSV・xlsx で書き出せます。</p>
+</section>
+<section class="doc">
+<h2>使い方</h2>
+<ol>
+<li>スライサーから書き出した G-code または .gcode.3mf を読み込みます。重量と造形時間が自動で入力されます。ファイルがない場合は、重量を直接入力してもかまいません。</li>
+<li>材料を選び、お使いのフィラメントに合わせて密度と 1 kg あたりの価格を修正します。</li>
+<li>電気代、機器費用、失敗分の上乗せ、作業費、販売価格が必要な場合は、該当する項目を開いて値を入力します。空欄の項目は計算に含めません。</li>
+<li>下の表で項目ごとの金額と合計を確認し、必要に応じて CSV や xlsx で保存します。</li>
+</ol>
+</section>
+<section class="doc">
+<h2>制限と注意点</h2>
+<ul>
+<li>3D モデルから求めた重量は、スライス前のおおよその見積もりです。サポート、ブリム、パージ、上面・底面の層数などは反映されないため、見積もりにはスライス済みの G-code をお使いください。</li>
+<li>穴があるモデルや面の向きが揃っていないモデルは体積が信頼できないため、重量を見積もりません。<a href="../stl-inspector/">モデル検査ツール</a>で状態をご確認ください。</li>
+<li>材料の密度と価格は、一般的な値を入れた初期値です。同じ材料でもメーカーや色によって異なるため、フィラメントの仕様に合わせて修正してください。</li>
+<li>通貨は記号と小数点以下の桁数を切り替えるだけです。為替レートによる換算は行いません。</li>
+<li>電気代は「平均消費電力 × 造形時間」という単純な計算です。造形時間はスライサーの予想値のため、実際とは異なる場合があります。税金と送料は含みません。</li>
+</ul>
+</section>
+<section class="doc"><h2>よくある質問</h2>
+<details><summary>STL からの見積もりとスライサーの重量が違うのはなぜですか？</summary><p>STL からの見積もりは、モデルの体積と表面積しか見ていません。実際の造形物は、壁の数、上面・底面の層数、インフィルパターン、サポート、ブリムによってフィラメント量が変わり、これはスライスして初めて分かります。正確な値が必要な場合は、スライス済みの G-code を読み込んでください。</p></details>
+<details><summary>販売価格はどのように計算されますか？</summary><p>総原価に上乗せ率（%）を上乗せし、販売手数料が販売価格の一定割合として引かれても、その金額が手元に残るように割り戻します。販売価格 = 総原価 ×（1 + 上乗せ率）÷（1 − 手数料率）です。</p></details>
+<details><summary>失敗分の上乗せは、どの費用にかかりますか？</summary><p>材料費・電気代・機器費用の合計に、入力した割合を掛けます。たとえば 10 回に 1 回失敗するなら 10% と入力します。作業費にはかかりません。</p></details>
+<details><summary>入力した設定はどこに保存されますか？</summary><p>このブラウザーのローカルストレージにのみ保存され、サーバーには送信されません。「設定をリセット」を押すと消去されます。</p></details>
+</section>
+<section>
+<h2>ほかのツール</h2>
+<ul class="cards">
+<li><a class="card" href="../../../ja/tools/stl-inspector/"><h3>STL/3MF チェック・修復</h3><p>穴や裏返った面などメッシュの問題を見つけて場所を表示し、選んだものだけを修復します。サイズやベッドに収まるかも確認でき、別形式や Excel に保存できます。</p><p class="formats">入力 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../ja/tools/stl-cutter/"><h3>STL 分割ツール</h3><p>ベッドより大きいモデルを印刷できるサイズに分割し、組み立てやすいようにフィンガージョイントを付けます。</p><p class="formats">入力 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../ja/tools/gcode-analyzer/"><h3>G-code 解析</h3><p>G-code から造形時間とフィラメント使用量を読み取り、フィーチャー別・フィラメント別の内訳を表示します。</p><p class="formats">入力 · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../../ja/tools/infill-recommender/"><h3>インフィル設定おすすめ</h3><p>造形物の用途と荷重に合わせて、Bambu Studio の充填パターン・充填密度・壁面層数・トップ面/底面層数をおすすめします。</p><p class="formats">入力 · ファイル不要</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>ファイルはサーバーに送信されません。すべての処理はこのブラウザー内で行われます。</p>
+
+</main>
+<footer class="site-footer"><p>登録不要・アップロードなし・トラッキングなしの無料ツールです。</p></footer>
+<script>window.T={"lang":"ja","js_err_empty":"{name} は空のファイルです（0 バイト）。","js_err_wrong_type":"{name} は対応していない形式です。対応形式: {types}","js_err_not_mesh":"{name} から、読み取れる G-code や 3D モデルが見つかりませんでした。ファイルが破損しているか、対応していない形式です。","js_err_truncated":"{name} は途中で切れています。{declared} 個の三角形のうち {present} 個しか含まれていません。","js_err_truncated_unknown":"{name} は途中で切れています。完全な三角形は {present} 個です。","js_load_partial":"読み込める部分だけ開く","js_err_too_large":"{name} は大きすぎて、この端末のメモリでは開けません。ほかのタブを閉じるか、パソコンのブラウザーでお試しください。","js_err_no_triangles":"{name} には三角形が 1 つもありません。","js_err_unknown":"{name} を処理できませんでした。（{detail}）","js_bad_triangles":"座標が不正（NaN・無限大）な三角形 {n} 個を除外しました。","js_reading":"{name} を読み込み中… {percent}%","js_working":"処理中…","js_num_required":"値を入力してください。","js_num_invalid":"数値を入力してください。","js_num_min":"{min} 以上の値を入力してください。","js_num_max":"{max} 以下の値を入力してください。","js_unit_h":"時間","js_unit_m":"分","js_unit_s":"秒","js_col_item":"項目","js_col_basis":"計算の根拠","js_col_amount":"金額","js_row_filament":"材料費","js_row_electricity":"電気代","js_row_wear":"機器費用","js_row_failure":"失敗分の上乗せ","js_row_labour":"作業費","js_row_total":"総原価","js_row_margin":"上乗せ分","js_row_fee":"販売手数料","js_row_price":"販売価格","js_from_gcode":"{name}: このファイルのフィラメント重量を読み込みました。造形時間: {time}。","js_from_gcode_volume":"{name}: ファイルに重量の記録がないため、フィラメント体積 {volume} cm³ に、選択した材料の密度を掛けて計算しました。造形時間: {time}。","js_no_time":"ファイルに記録なし","js_from_mesh":"{name}: 体積 {volume} cm³、表面積 {area} cm² のモデルから見積もったおおよその重量です。","js_from_analyzer":"G-code 解析ツールから引き継いだ数値を入力しました。","js_err_not_text":"{name} は G-code のテキストファイルではありません。スライサーから G-code として書き出したファイルかご確認ください。","js_err_bgcode":"{name} はバイナリ G-code（.bgcode）のため読み込めません。スライサーで通常の G-code（.gcode）として書き出してください。","js_err_no_moves":"{name} には移動命令（G0/G1）が 1 つもありません。G-code ファイルではないようです。","js_err_no_plate":"{name} にはスライス済みの G-code が含まれていません。"}</script>
+<script type="module" src="../../../assets/tools/print-cost-calculator/main.js"></script>
+</body>
+</html>

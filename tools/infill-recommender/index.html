@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bambu Studio 채움 설정 추천 – 패턴, 밀도, 벽 수 | BENCH</title>
+<meta name="description" content="출력물의 용도, 하중 방향, 재료를 고르면 Bambu Studio의 내부채움 패턴, 밀도, 벽 수, 윗면·아랫면 층 수와 그 이유를 바로 알려 드립니다. 가입 없이 브라우저에서 무료로 쓸 수 있습니다.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/tools/infill-recommender/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/infill-recommender/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/infill-recommender/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/infill-recommender/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="Bambu Studio 채움 설정 추천 – 패턴, 밀도, 벽 수 | BENCH">
+<meta property="og:description" content="출력물의 용도, 하중 방향, 재료를 고르면 Bambu Studio의 내부채움 패턴, 밀도, 벽 수, 윗면·아랫면 층 수와 그 이유를 바로 알려 드립니다. 가입 없이 브라우저에서 무료로 쓸 수 있습니다.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/tools/infill-recommender/">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"채움(인필) 설정 추천","url":"https://yeseul100512.github.io/3D-website/tools/infill-recommender/","description":"출력물의 용도, 하중 방향, 재료를 고르면 Bambu Studio의 내부채움 패턴, 밀도, 벽 수, 윗면·아랫면 층 수와 그 이유를 바로 알려 드립니다. 가입 없이 브라우저에서 무료로 쓸 수 있습니다.","inLanguage":"ko","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"채움 밀도를 올리면 더 튼튼해지나요?","acceptedAnswer":{"@type":"Answer","text":"어느 정도는 그렇지만, 같은 재료를 쓴다면 벽 수를 먼저 늘리는 편이 대개 효과가 큽니다. 그래서 이 도구는 밀도를 범위의 낮은 쪽에서 시작하고, 강도가 부족하면 벽 수부터 늘리도록 안내합니다."}},{"@type":"Question","name":"100%로 꽉 채우고 싶으면 어떻게 하나요?","acceptedAnswer":{"@type":"Answer","text":"Bambu 위키에 따르면 100% 밀도는 동심(Concentric), 직선(Rectilinear), 정렬된 직선(Aligned Rectilinear), 힐베르트 곡선(Hilbert Curve), 아르키메데스 코드(Archimedean Chords), 옥타그램 나선형(Octagram Spiral)의 여섯 가지 패턴만 지원합니다. 다만 실제로는 100%로 채우는 것보다 벽 수를 크게 늘리는 편이 대부분 낫습니다."}},{"@type":"Question","name":"추천된 패턴이 Bambu Studio 목록에 없습니다.","acceptedAnswer":{"@type":"Answer","text":"2D 격자(2D Lattice)와 잠긴 재그(Locked Zag)는 비교적 최근 버전에 추가된 패턴입니다. Bambu Studio를 최신 버전으로 업데이트하거나, 함께 표시되는 대안 패턴을 사용해 주세요."}},{"@type":"Question","name":"어느 패턴이 가장 강한가요?","acceptedAnswer":{"@type":"Answer","text":"하중 방향에 따라 다릅니다. 옆에서 미는 힘에는 삼육각형(Tri-hexagon), 위에서 누르는 힘에는 각도를 작게 잡은 2D 격자(2D Lattice), 여러 방향의 힘에는 자이로이드(Gyroid)나 큐빅(Cubic)이 맞습니다. 패턴끼리 몇 퍼센트 차이가 나는지는 근거 자료가 없어 제시하지 않습니다."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+<a class="brand" href="../../"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="언어">
+<a href="../../tools/infill-recommender/" lang="ko" hreflang="ko" aria-current="page">한국어</a>
+<a href="../../en/tools/infill-recommender/" lang="en" hreflang="en">English</a>
+<a href="../../ja/tools/infill-recommender/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../zh/tools/infill-recommender/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../"><span aria-hidden="true">←</span> 모든 도구</a></p>
+<h1>채움(인필) 설정 추천</h1>
+<p class="lead">질문 몇 가지에 답하면 Bambu Studio에 바로 입력할 수 있는 채움 패턴, 밀도, 벽 수, 윗면·아랫면 층 수를 이유와 함께 알려 드립니다. 측정값이 아니라 경험칙이며, 강도는 대개 채움 밀도보다 벽 수를 늘리는 쪽이 더 잘 올라갑니다.</p>
+<noscript><p class="notice warn">이 도구를 사용하려면 브라우저에서 자바스크립트를 켜야 합니다.</p></noscript>
+<div class="tool">
+<form class="panel" id="q">
+<h2>출력물에 대해 알려 주세요</h2>
+<div style="display:grid;gap:12px;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))">
+<div class="field"><label for="use">용도</label>
+<select id="use" name="use">
+<option value="display">전시·장식용</option>
+<option value="visible">투명 재료이거나 채움이 겉으로 보임</option>
+<option value="household" selected>일반 생활용품</option>
+<option value="functional">힘을 받는 기능 부품</option>
+<option value="heavy">고하중 부품·나사 체결부</option>
+</select></div>
+<div class="field"><label for="load">받는 힘</label>
+<select id="load" name="load" aria-describedby="load-hint">
+<option value="none">거의 받지 않음</option>
+<option value="all">여러 방향, 또는 잘 모름</option>
+<option value="side">옆에서 밀거나 당김(전단)</option>
+<option value="top">위에서 누름(압축)</option>
+<option value="impact">충격, 또는 휘지 않아야 함</option>
+<option value="z">층을 떼어 내는 방향으로 당김</option>
+</select><small id="load-hint">방향은 출력할 때 놓는 자세가 기준입니다. &#x27;위&#x27;는 층이 쌓이는 방향입니다.</small></div>
+<div class="field"><label for="material">재료</label>
+<select id="material" name="material">
+<option value="pla">PLA</option>
+<option value="abs">ABS · ASA</option>
+<option value="cf">CF(탄소 섬유) 강화 계열</option>
+<option value="other">그 밖의 재료</option>
+</select></div>
+<div class="field"><label for="priority">가장 중요한 것</label>
+<select id="priority" name="priority">
+<option value="strength">강도</option>
+<option value="speed">출력 시간</option>
+<option value="weight">무게·재료 절약</option>
+<option value="surface">표면 품질</option>
+</select></div>
+<div class="field"><label for="size">크기와 형상</label>
+<select id="size" name="size">
+<option value="normal">작거나 보통</option>
+<option value="large">큼(속이 넓음)</option>
+<option value="flat">크고 윗면이 넓고 평평함</option>
+</select></div>
+</div>
+<label class="check"><input type="checkbox" id="topq" name="topq"> 윗면이 매끄러워야 합니다</label>
+</form>
+<div class="panel" id="out" hidden>
+<h2>추천 설정</h2>
+<div class="table-scroll">
+<table class="result">
+<thead><tr><th scope="col">Bambu Studio 설정</th><th scope="col">추천값과 이유</th></tr></thead>
+<tbody id="rows">
+<tr><th scope="row">내부채움 패턴 (Sparse infill pattern)</th><td></td></tr>
+<tr><th scope="row">내부채움 밀도 (Sparse infill density)</th><td></td></tr>
+<tr><th scope="row">벽 수 (Wall loops)</th><td></td></tr>
+<tr><th scope="row">상단 레이어 (Top shell layers)</th><td></td></tr>
+<tr><th scope="row">하단 쉘 레이어 (Bottom shell layers)</th><td></td></tr>
+<tr><th scope="row">상단 표면 패턴 (Top surface pattern)</th><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small id="path" style="color:var(--muted)">설정 위치: Bambu Studio의 프로세스 → 강도 (Process → Strength)</small></p>
+<p id="alt"></p>
+<div id="notes-box"><h3>주의할 점</h3><ul id="notes" style="margin:0;padding-left:1.4em"></ul></div>
+<div><h3>결과가 좋지 않을 때 바꿀 것</h3><ul id="fixes" style="margin:0;padding-left:1.4em"></ul></div>
+<p class="notice">측정값이 아니라 Bambu Studio용 경험칙입니다. 0.4 mm 노즐과 0.2 mm 레이어를 기준으로 하며, 강도는 대개 채움 밀도보다 벽 수를 늘리는 쪽이 더 잘 올라갑니다.</p>
+<div><button class="button secondary" type="button" id="copy">결과 복사</button></div>
+<p class="notice" id="msg" role="status" hidden></p>
+</div>
+
+</div>
+<section class="doc">
+<h2>이 도구가 하는 일</h2>
+<p>출력물이 무엇에 쓰이는지, 어느 방향으로 어떤 힘을 받는지, 재료와 우선순위가 무엇인지에 따라 Bambu Studio의 내부채움 패턴 하나와 대안 하나, 내부채움 밀도, 벽 수, 윗면·아랫면 층 수를 추천합니다. 항목마다 그렇게 고른 이유와, 결과가 마음에 들지 않을 때 무엇부터 바꿔야 하는지도 함께 보여 줍니다.</p>
+<p>패턴의 특성은 Bambu Lab 위키의 채움 패턴 소개 문서를 근거로 삼았고, 밀도·벽 수·층 수는 0.4 mm 노즐과 0.2 mm 레이어에서 널리 쓰이는 출발값입니다. 패턴과 설정 이름은 Bambu Studio의 한국어 화면에 나오는 표기에 영어 이름을 함께 적었습니다.</p>
+</section>
+<section class="doc">
+<h2>사용 방법</h2>
+<ol>
+<li>출력물의 용도를 고릅니다. 전시용인지, 생활용품인지, 힘을 받는 기능 부품인지에 따라 밀도와 벽 수의 범위가 정해집니다.</li>
+<li>힘을 받는 방향과 종류를 고릅니다. 방향은 출력할 때 놓는 자세를 기준으로 하며, 잘 모르겠으면 &#x27;여러 방향&#x27;을 고르면 됩니다.</li>
+<li>재료, 우선순위, 크기를 고르고, 윗면이 매끄러워야 하면 체크합니다. 고를 때마다 추천이 바로 바뀝니다.</li>
+<li>표의 값을 Bambu Studio의 프로세스 → 강도 탭에 입력합니다. &#x27;결과 복사&#x27;를 누르면 이유와 주의할 점까지 글자로 복사됩니다.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>한계와 주의할 점</h2>
+<ul>
+<li>Bambu Studio를 기준으로 한 경험칙이며 강도를 계산하거나 보증하지 않습니다. 어느 패턴이 몇 퍼센트 더 강한지 같은 수치는 근거가 없어 제시하지 않습니다. 정확한 비교가 필요하면 같은 조건으로 시편을 출력해 직접 시험해 주세요.</li>
+<li>강도는 대개 채움 밀도보다 벽 수와 출력 방향의 영향이 더 큽니다. 하중이 층을 가로질러 당기는 방향이면 어떤 채움 설정으로도 해결되지 않으므로 출력 방향부터 바꿔야 합니다.</li>
+<li>밀도·벽 수·층 수는 Bambu 위키에 나온 값이 아니라 FDM 출력에서 널리 쓰이는 출발값이며, 0.4 mm 노즐과 0.2 mm 레이어를 기준으로 합니다. 레이어 높이가 다르면 층 수 대신 윗면 두께 약 0.8~1.2 mm를 기준으로 환산해 주세요.</li>
+<li>패턴 특성의 출처는 Bambu Lab 위키의 <a href="https://wiki.bambulab.com/en/software/bambu-studio/fill-patterns" rel="noopener">Fill Pattern Introduction</a>(영어)과 <a href="https://wiki.bambulab.com/zh/software/bambu-studio/fill-patterns" rel="noopener">填充图案介绍</a>(중국어)입니다. 어떤 용도에 어떤 패턴을 고를지는 그 내용을 바탕으로 정리한 의견이며 Bambu Lab의 공식 추천이 아닙니다.</li>
+<li>패턴과 설정 이름은 Bambu Studio 02.08.02.61의 한국어 번역 파일에서 확인했습니다. 버전에 따라 표기가 다를 수 있어 영어 이름을 함께 적었습니다. PETG나 TPU 같은 다른 재료와 다른 슬라이서에 대한 주의사항은 다루지 않습니다.</li>
+</ul>
+</section>
+<section class="doc"><h2>자주 묻는 질문</h2>
+<details><summary>채움 밀도를 올리면 더 튼튼해지나요?</summary><p>어느 정도는 그렇지만, 같은 재료를 쓴다면 벽 수를 먼저 늘리는 편이 대개 효과가 큽니다. 그래서 이 도구는 밀도를 범위의 낮은 쪽에서 시작하고, 강도가 부족하면 벽 수부터 늘리도록 안내합니다.</p></details>
+<details><summary>100%로 꽉 채우고 싶으면 어떻게 하나요?</summary><p>Bambu 위키에 따르면 100% 밀도는 동심(Concentric), 직선(Rectilinear), 정렬된 직선(Aligned Rectilinear), 힐베르트 곡선(Hilbert Curve), 아르키메데스 코드(Archimedean Chords), 옥타그램 나선형(Octagram Spiral)의 여섯 가지 패턴만 지원합니다. 다만 실제로는 100%로 채우는 것보다 벽 수를 크게 늘리는 편이 대부분 낫습니다.</p></details>
+<details><summary>추천된 패턴이 Bambu Studio 목록에 없습니다.</summary><p>2D 격자(2D Lattice)와 잠긴 재그(Locked Zag)는 비교적 최근 버전에 추가된 패턴입니다. Bambu Studio를 최신 버전으로 업데이트하거나, 함께 표시되는 대안 패턴을 사용해 주세요.</p></details>
+<details><summary>어느 패턴이 가장 강한가요?</summary><p>하중 방향에 따라 다릅니다. 옆에서 미는 힘에는 삼육각형(Tri-hexagon), 위에서 누르는 힘에는 각도를 작게 잡은 2D 격자(2D Lattice), 여러 방향의 힘에는 자이로이드(Gyroid)나 큐빅(Cubic)이 맞습니다. 패턴끼리 몇 퍼센트 차이가 나는지는 근거 자료가 없어 제시하지 않습니다.</p></details>
+</section>
+<section>
+<h2>다른 도구</h2>
+<ul class="cards">
+<li><a class="card" href="../../tools/stl-inspector/"><h3>STL/3MF 검사·수리</h3><p>구멍이나 뒤집힌 면 같은 메시 문제를 찾아 위치를 보여 주고, 고를 것만 골라 고칩니다. 크기와 베드 적합 여부를 확인하고 다른 형식이나 엑셀로 저장할 수 있습니다.</p><p class="formats">입력 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../tools/stl-cutter/"><h3>STL 분할기</h3><p>베드보다 큰 모델을 출력할 수 있는 크기로 나누고, 조립할 때 잘 맞도록 핑거 조인트를 넣어 줍니다.</p><p class="formats">입력 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../tools/print-cost-calculator/"><h3>출력 무게·비용 계산기</h3><p>슬라이스한 G-code나 3D 모델에서 필라멘트 무게를 구해 재료비, 전기요금, 판매가까지 계산합니다.</p><p class="formats">입력 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../tools/gcode-analyzer/"><h3>G-code 분석기</h3><p>G-code에서 출력 시간과 필라멘트 사용량을 읽어 기능별, 필라멘트별로 나누어 보여 줍니다.</p><p class="formats">입력 · .gcode · .gcode.3mf</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>파일은 서버로 전송되지 않습니다. 모든 계산은 이 브라우저 안에서만 이루어집니다.</p>
+
+</main>
+<footer class="site-footer"><p>가입도, 업로드도, 추적도 없는 무료 도구입니다.</p></footer>
+<script>window.T={"lang":"ko","js_err_empty":"{name}: 파일이 비어 있습니다(0바이트).","js_err_wrong_type":"{name}: 지원하지 않는 형식입니다. 사용할 수 있는 형식: {types}","js_err_not_mesh":"{name}: 3D 모델 데이터를 찾지 못했습니다. STL, 3MF, OBJ 파일이 맞는지 확인해 주세요.","js_err_truncated":"{name}: 파일이 중간에 잘려 있습니다. 삼각형 {declared}개 중 {present}개만 들어 있습니다.","js_err_truncated_unknown":"{name}: 파일이 중간에 잘려 있습니다. 온전한 삼각형은 {present}개입니다.","js_load_partial":"온전한 부분만 불러오기","js_err_too_large":"{name}: 파일이 너무 커서 이 기기의 메모리로는 열 수 없습니다. 다른 탭을 닫거나 데스크톱 브라우저에서 다시 시도해 주세요.","js_err_no_triangles":"{name}: 삼각형이 하나도 없습니다.","js_err_unknown":"{name}: 파일을 처리하지 못했습니다. ({detail})","js_bad_triangles":"좌표가 숫자가 아닌(NaN·무한대) 삼각형 {n}개는 제외했습니다.","js_reading":"{name} 읽는 중… {percent}%","js_working":"처리하는 중…","js_num_required":"값을 입력해 주세요.","js_num_invalid":"숫자만 입력해 주세요.","js_num_min":"{min} 이상으로 입력해 주세요.","js_num_max":"{max} 이하로 입력해 주세요.","js_unit_h":"시간","js_unit_m":"분","js_unit_s":"초","js_copy_title":"Bambu Studio 채움 추천 설정","js_copied":"결과를 복사했습니다.","js_copy_failed":"복사하지 못했습니다. 결과를 직접 선택해서 복사해 주세요.","js_start":"{v}에서 시작","js_alt":"대안: {name}. {why}","js_monotonic":"모노토닉 (Monotonic)","js_default":"기본값 그대로","js_r_monotonic":"한 방향으로만 고르게 출력해 넓고 평평한 윗면이 직선 패턴보다 매끄럽게 나옵니다.","js_r_default":"윗면 품질이 중요하지 않다면 바꿀 필요가 없습니다.","js_r_density":"이 용도에서 널리 쓰이는 출발값입니다. 낮은 쪽에서 시작해 주세요.","js_r_walls":"이 용도에서 널리 쓰이는 출발값입니다. 강도는 대개 채움 밀도보다 벽 수의 영향이 큽니다.","js_r_walls_strength":"강도가 우선이므로 범위의 위쪽에서 시작합니다. 채움 밀도보다 벽 수를 늘리는 편이 재료 대비 효과가 큽니다.","js_r_top":"0.2 mm 레이어 기준입니다. 레이어 높이가 다르면 윗면 두께 약 0.8~1.2 mm에 맞춰 환산해 주세요.","js_r_top_extra":"채움이 성겨 윗면 아래를 받쳐 주는 선이 적으므로 1~2층을 더했습니다. 0.2 mm 레이어 기준입니다.","js_r_bottom":"이 용도에서 널리 쓰이는 출발값입니다. 0.2 mm 레이어 기준입니다.","js_p_gyroid":"자이로이드 (Gyroid)","js_p_cubic":"큐빅 (Cubic)","js_p_adaptivecubic":"어댑티브 큐빅 (Adaptive Cubic)","js_p_lightning":"번개 (Lightning)","js_p_concentric":"동심 (Concentric)","js_p_lockedzag":"잠긴 재그 (Locked Zag)","js_p_grid":"그리드 (Grid)","js_p_crosshatch":"크로스 해치 (Cross Hatch)","js_p_trihexagon":"삼육각형 (Tri-hexagon)","js_p_lattice_small":"2D 격자 (2D Lattice), 격자 각도 1·2는 0~45°","js_p_lattice_large":"2D 격자 (2D Lattice), 격자 각도 1·2는 45~75°","js_p_honeycomb":"벌집 (Honeycomb)","js_p_honeycomb3d":"3D 허니컴 (3D Honeycomb)","js_why_gyroid":"모든 방향을 고르게 받쳐 주고, 한 층 안에서 선이 교차하지 않아 비교적 빠르게 출력됩니다. 대신 슬라이싱이 오래 걸리고 G코드 파일이 커집니다.","js_why_cubic":"X·Y·Z 세 방향의 강도가 고르고, 강도와 출력 효율의 균형이 좋습니다.","js_why_adaptivecubic":"큐빅과 비슷하지만 벽에서 먼 안쪽은 밀도를 자동으로 낮춥니다. 재료와 시간을 아끼면서도 윗면 아래는 받쳐 주어 윗면이 꺼지지 않게 합니다.","js_why_lightning":"윗면을 받치는 데 필요한 만큼만 채워 시간과 재료를 크게 아낍니다. 설정한 밀도는 윗면 바로 아래층에만 적용됩니다.","js_why_concentric":"벽을 안쪽으로 줄여 가며 고리 모양으로 채우기 때문에 투명 재료에서 보기 좋습니다. 수평 방향 하중에는 약합니다.","js_why_lockedzag":"채움을 겉면으로 드러내는 경우를 위해 만든 무늬로, 외관과 구조 강도를 함께 고려한 패턴입니다.","js_why_grid":"가장 단순하고 빠른 패턴 가운데 하나입니다. 다만 교차점에 재료가 조금 쌓입니다.","js_why_crosshatch":"일정 높이 동안 같은 방향을 유지해 방향 전환이 적고 출력이 빠릅니다. 힘을 받지 않는 부품과 빠른 출력에 맞습니다.","js_why_trihexagon":"세 방향의 평행선이 교차해 어느 수평 방향으로도 전단에 잘 버팁니다. 벽과 이어지는 선이 짧아 냉각 부족으로 생기는 휨도 줄여 줍니다.","js_why_lattice_small":"격자 각도를 작게 잡으면 내부 구조가 수직에 가깝게 서서, 위에서 누르는 힘에 잘 버팁니다.","js_why_lattice_large":"격자 각도를 크게 잡으면 내부 구조가 납작하게 누워, 옆에서 밀거나 당기는 힘에 잘 버팁니다.","js_why_honeycomb":"육각형 칸으로 교차 없이 채워 강성과 충격 저항을 크게 높입니다. 다른 패턴보다 재료가 약 25% 더 들고 시간도 늘어납니다.","js_why_honeycomb3d":"벌집보다 밀도가 낮아 더 빨리 출력되고, Z 방향으로 경로를 바꿔 가며 쌓아 층간 연결이 좋습니다.","js_n_z":"층을 떼어 내는 방향으로 걸리는 힘은 채움 설정으로 해결되지 않습니다. 힘이 층과 나란히 걸리도록 출력 방향부터 바꿔 주세요.","js_n_concentric_weak":"동심(Concentric)은 수평 방향 하중에 약하므로, 힘을 받는 출력물에는 대안으로만 두었습니다.","js_n_lightning_weak":"번개(Lightning)는 강도가 사실상 없습니다. 조금이라도 힘을 받는다면 어댑티브 큐빅(Adaptive Cubic)을 써 주세요.","js_n_honeycomb_cost":"벌집(Honeycomb)은 재료가 약 25% 더 들고 출력 시간도 늘어납니다. 가볍게 만들려면 3D 허니컴(3D Honeycomb)이 대안입니다.","js_n_new_pattern":"2D 격자(2D Lattice)와 잠긴 재그(Locked Zag)는 비교적 최근 버전에 추가된 패턴입니다. 목록에 없으면 Bambu Studio를 업데이트해 주세요.","js_n_modifier":"나사 구멍이나 인서트 주변처럼 힘이 몰리는 곳은 전체 밀도를 올리지 말고, 수정자(Modifier)로 그 부분만 벽 수나 채움 밀도를 높여 주세요. 진동이나 반복 체결이 있으면 열 압입 인서트도 권합니다.","js_n_abs":"ABS·ASA는 잘 휘는 재료입니다. 개방형 프린터에서는 휨과 층 갈라짐 위험이 커지므로 밀폐형 프린터를 권합니다. 선이 교차하지 않는 자이로이드(Gyroid)는 휜 채움 끝에 노즐이 걸리는 일을 줄여 줍니다.","js_n_abs_flat":"크고 평평한 ABS·ASA 부품은 채움 밀도를 과하게 올리면 내부 수축 응력이 커질 수 있습니다. 밀도는 낮게 두고 벽 수로 강도를 확보해 주세요.","js_n_cf":"CF 강화 필라멘트는 노즐을 마모시키므로 경화강 노즐을 쓰고 있는지 확인해 주세요. 층간 결합이 상대적으로 약하니, 하중이 층을 가로지르지 않도록 출력 방향을 먼저 점검해 주세요.","js_n_gyroid_vibration":"자이로이드(Gyroid)는 밀도가 높고 속도가 빠르면 진동이 커질 수 있습니다.","js_n_grid_scrape":"그리드(Grid)는 교차점에 재료가 쌓여, 고속 출력에서 노즐이 긁히는 소리가 날 수 있습니다.","js_f_weak":"강도가 부족하면 채움 밀도보다 벽 수를 먼저 늘려 주세요. 그래도 부족하면 밀도를 범위의 위쪽으로 올립니다.","js_f_display_force":"출력물이 눌리거나 부서지면 패턴을 어댑티브 큐빅(Adaptive Cubic)으로 바꿔 주세요.","js_f_top_sag":"윗면이 꺼지거나 구멍이 보이면 윗면 층을 1~2층 늘려 주세요.","js_f_noise":"진동이나 긁히는 소리가 나면 다른 설정보다 먼저 내부채움 속도만 낮춰 보세요(속도 탭의 내부채움).","js_f_warp":"모서리가 들뜨거나 층이 갈라지면 밀폐형 프린터에서 출력하고, 채움 밀도는 낮추고 벽 수로 강도를 확보해 주세요.","js_f_layer_split":"층을 따라 쪼개지면 채움 설정이 아니라 출력 방향을 바꿔야 합니다."}</script>
+<script type="module" src="../../assets/tools/infill-recommender/main.js"></script>
+</body>
+</html>

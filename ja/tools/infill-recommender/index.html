@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bambu Studio インフィル設定おすすめ – パターン・密度・壁面層数 | BENCH</title>
+<meta name="description" content="用途・荷重の向き・材料を選ぶだけで、Bambu Studio の充填パターン、密度、壁面層数、トップ面/底面層数とその理由がすぐに分かります。登録不要、ブラウザーだけで無料で使えます。">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/ja/tools/infill-recommender/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/infill-recommender/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/infill-recommender/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/infill-recommender/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="Bambu Studio インフィル設定おすすめ – パターン・密度・壁面層数 | BENCH">
+<meta property="og:description" content="用途・荷重の向き・材料を選ぶだけで、Bambu Studio の充填パターン、密度、壁面層数、トップ面/底面層数とその理由がすぐに分かります。登録不要、ブラウザーだけで無料で使えます。">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/ja/tools/infill-recommender/">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"インフィル設定おすすめ","url":"https://yeseul100512.github.io/3D-website/ja/tools/infill-recommender/","description":"用途・荷重の向き・材料を選ぶだけで、Bambu Studio の充填パターン、密度、壁面層数、トップ面/底面層数とその理由がすぐに分かります。登録不要、ブラウザーだけで無料で使えます。","inLanguage":"ja","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"充填密度を上げれば丈夫になりますか？","acceptedAnswer":{"@type":"Answer","text":"ある程度は丈夫になりますが、同じ量の材料を使うなら、先に壁面層数を増やすほうがたいてい効果的です。そのためこのツールでは、密度は範囲の低いほうから始め、強度が足りなければまず壁面層数を増やすよう案内しています。"}},{"@type":"Question","name":"100 % で完全に埋めたい場合は？","acceptedAnswer":{"@type":"Answer","text":"Bambu Wiki によると、密度 100 % に対応しているのは、同心（Concentric）、直線（Rectilinear）、整列直線（Aligned Rectilinear）、ヒルベルト曲線（Hilbert Curve）、アルキメデス螺旋（Archimedean Chords）、オクタグラムスパイラル（Octagram Spiral）の 6 種類だけです。ただし実際には、100 % で埋めるより壁面層数を大きく増やすほうがよい場合がほとんどです。"}},{"@type":"Question","name":"おすすめされたパターンが Bambu Studio の一覧にありません。","acceptedAnswer":{"@type":"Answer","text":"2Dラティス（2D Lattice）とロックされたザグ（Locked Zag）は比較的新しいバージョンで追加されたパターンです。Bambu Studio を最新版に更新するか、あわせて表示される代替パターンをお使いください。"}},{"@type":"Question","name":"いちばん強いパターンはどれですか？","acceptedAnswer":{"@type":"Answer","text":"力のかかる向きによって変わります。横からのせん断には六角形（Tri-hexagon）、上からの圧縮には角度を小さくした 2Dラティス（2D Lattice）、いろいろな方向からの力にはジャイロイド（Gyroid）やキュービック（Cubic）が向いています。パターン同士で何 % 差があるかは、根拠となるデータがないため示していません。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">本文へスキップ</a>
+<header class="site-header">
+<a class="brand" href="../../../ja/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="言語">
+<a href="../../../tools/infill-recommender/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/infill-recommender/" lang="en" hreflang="en">English</a>
+<a href="../../../ja/tools/infill-recommender/" lang="ja" hreflang="ja" aria-current="page">日本語</a>
+<a href="../../../zh/tools/infill-recommender/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../ja/"><span aria-hidden="true">←</span> すべてのツール</a></p>
+<h1>インフィル設定おすすめ</h1>
+<p class="lead">いくつかの質問に答えると、Bambu Studio にそのまま入力できる充填パターン、密度、壁面層数、トップ面/底面層数を理由つきで表示します。実測値ではなく経験則で、強度はたいてい充填密度より壁面層数を増やすほうがよく上がります。</p>
+<noscript><p class="notice warn">このツールを使うには、ブラウザーの JavaScript を有効にしてください。</p></noscript>
+<div class="tool">
+<form class="panel" id="q">
+<h2>造形物について教えてください</h2>
+<div style="display:grid;gap:12px;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))">
+<div class="field"><label for="use">用途</label>
+<select id="use" name="use">
+<option value="display">展示・装飾用</option>
+<option value="visible">透明材料、または充填を見せる</option>
+<option value="household" selected>一般的な日用品</option>
+<option value="functional">力のかかる機能部品</option>
+<option value="heavy">高荷重部品・ねじ締結部</option>
+</select></div>
+<div class="field"><label for="load">かかる力</label>
+<select id="load" name="load" aria-describedby="load-hint">
+<option value="none">ほとんどかからない</option>
+<option value="all">いろいろな方向、または不明</option>
+<option value="side">横から押す・引く（せん断）</option>
+<option value="top">上から押さえる（圧縮）</option>
+<option value="impact">衝撃、またはたわませたくない</option>
+<option value="z">積層をはがす方向に引っ張る</option>
+</select><small id="load-hint">向きは造形時の置き方が基準です。「上」は層が積み重なる方向です。</small></div>
+<div class="field"><label for="material">材料</label>
+<select id="material" name="material">
+<option value="pla">PLA</option>
+<option value="abs">ABS · ASA</option>
+<option value="cf">CF（カーボンファイバー）強化系</option>
+<option value="other">その他の材料</option>
+</select></div>
+<div class="field"><label for="priority">いちばん重視すること</label>
+<select id="priority" name="priority">
+<option value="strength">強度</option>
+<option value="speed">造形時間</option>
+<option value="weight">軽さ・材料の節約</option>
+<option value="surface">表面の仕上がり</option>
+</select></div>
+<div class="field"><label for="size">大きさと形</label>
+<select id="size" name="size">
+<option value="normal">小さめ～ふつう</option>
+<option value="large">大きい（内部が広い）</option>
+<option value="flat">大きく、上面が広くて平ら</option>
+</select></div>
+</div>
+<label class="check"><input type="checkbox" id="topq" name="topq"> 上面をきれいに仕上げたい</label>
+</form>
+<div class="panel" id="out" hidden>
+<h2>おすすめ設定</h2>
+<div class="table-scroll">
+<table class="result">
+<thead><tr><th scope="col">Bambu Studio の設定</th><th scope="col">おすすめの値と理由</th></tr></thead>
+<tbody id="rows">
+<tr><th scope="row">充填パターン (Sparse infill pattern)</th><td></td></tr>
+<tr><th scope="row">充填密度 (Sparse infill density)</th><td></td></tr>
+<tr><th scope="row">壁面層数 (Wall loops)</th><td></td></tr>
+<tr><th scope="row">トップ面層数 (Top shell layers)</th><td></td></tr>
+<tr><th scope="row">底面層数 (Bottom shell layers)</th><td></td></tr>
+<tr><th scope="row">トップ面パターン (Top surface pattern)</th><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small id="path" style="color:var(--muted)">設定の場所: Bambu Studio の「プロセス → 強度」(Process → Strength)</small></p>
+<p id="alt"></p>
+<div id="notes-box"><h3>注意点</h3><ul id="notes" style="margin:0;padding-left:1.4em"></ul></div>
+<div><h3>うまくいかないときに変える設定</h3><ul id="fixes" style="margin:0;padding-left:1.4em"></ul></div>
+<p class="notice">実測値ではなく、Bambu Studio 向けの経験則です。0.4 mm ノズルと積層ピッチ 0.2 mm を前提にしており、強度はたいてい充填密度より壁面層数を増やすほうがよく上がります。</p>
+<div><button class="button secondary" type="button" id="copy">結果をコピー</button></div>
+<p class="notice" id="msg" role="status" hidden></p>
+</div>
+
+</div>
+<section class="doc">
+<h2>このツールでできること</h2>
+<p>造形物の用途、力のかかる向きと種類、材料、優先したいことに応じて、Bambu Studio の充填パターンを 1 つと代替案を 1 つ、充填密度、壁面層数、トップ面/底面層数をおすすめします。それぞれの値を選んだ理由と、うまくいかなかったときに最初に変えるべき設定もあわせて表示します。</p>
+<p>パターンの特徴は Bambu Lab Wiki の充填パターン紹介ページに基づいています。密度・壁面層数・層数は、0.4 mm ノズルと積層ピッチ 0.2 mm で広く使われている出発点の値です。パターン名と設定名は Bambu Studio の日本語画面の表記に英語名を添えています。</p>
+</section>
+<section class="doc">
+<h2>使い方</h2>
+<ol>
+<li>造形物の用途を選びます。展示用か、日用品か、力のかかる機能部品かによって、密度と壁面層数の範囲が決まります。</li>
+<li>力のかかる向きと種類を選びます。向きは造形時の置き方が基準です。分からないときは「いろいろな方向」を選んでください。</li>
+<li>材料、優先したいこと、大きさを選び、上面をきれいに仕上げたい場合はチェックを入れます。選ぶたびにおすすめがすぐ更新されます。</li>
+<li>表の値を Bambu Studio の「プロセス → 強度」タブに入力します。「結果をコピー」を押すと、理由と注意点も含めてテキストでコピーされます。</li>
+</ol>
+</section>
+<section class="doc">
+<h2>制限と注意点</h2>
+<ul>
+<li>Bambu Studio を前提にした経験則であり、強度を計算したり保証したりするものではありません。「どのパターンが何 % 強い」といった数値は根拠がないため示していません。正確な比較が必要な場合は、同じ条件で試験片を造形して確かめてください。</li>
+<li>強度はたいてい充填密度よりも壁面層数と造形の向きに左右されます。積層を引きはがす方向に力がかかる場合、どの充填設定でも解決できないため、まず造形の向きを変える必要があります。</li>
+<li>密度・壁面層数・層数は Bambu Wiki に載っている値ではなく、FDM で広く使われている出発点で、0.4 mm ノズルと積層ピッチ 0.2 mm を前提にしています。積層ピッチが違う場合は、層数ではなく上面の厚さ約 0.8～1.2 mm を目安に換算してください。</li>
+<li>パターンの特徴の出典は、Bambu Lab Wiki の <a href="https://wiki.bambulab.com/en/software/bambu-studio/fill-patterns" rel="noopener">Fill Pattern Introduction</a>（英語）と <a href="https://wiki.bambulab.com/zh/software/bambu-studio/fill-patterns" rel="noopener">填充图案介绍</a>（中国語）です。どの用途にどのパターンを選ぶかは、その内容をもとにまとめた見解であり、Bambu Lab の公式な推奨ではありません。</li>
+<li>パターン名と設定名は Bambu Studio 02.08.02.61 の日本語翻訳ファイルで確認しました。バージョンによって表記が異なることがあるため、英語名を併記しています。PETG や TPU などほかの材料や、ほかのスライサーについての注意点は扱っていません。</li>
+</ul>
+</section>
+<section class="doc"><h2>よくある質問</h2>
+<details><summary>充填密度を上げれば丈夫になりますか？</summary><p>ある程度は丈夫になりますが、同じ量の材料を使うなら、先に壁面層数を増やすほうがたいてい効果的です。そのためこのツールでは、密度は範囲の低いほうから始め、強度が足りなければまず壁面層数を増やすよう案内しています。</p></details>
+<details><summary>100 % で完全に埋めたい場合は？</summary><p>Bambu Wiki によると、密度 100 % に対応しているのは、同心（Concentric）、直線（Rectilinear）、整列直線（Aligned Rectilinear）、ヒルベルト曲線（Hilbert Curve）、アルキメデス螺旋（Archimedean Chords）、オクタグラムスパイラル（Octagram Spiral）の 6 種類だけです。ただし実際には、100 % で埋めるより壁面層数を大きく増やすほうがよい場合がほとんどです。</p></details>
+<details><summary>おすすめされたパターンが Bambu Studio の一覧にありません。</summary><p>2Dラティス（2D Lattice）とロックされたザグ（Locked Zag）は比較的新しいバージョンで追加されたパターンです。Bambu Studio を最新版に更新するか、あわせて表示される代替パターンをお使いください。</p></details>
+<details><summary>いちばん強いパターンはどれですか？</summary><p>力のかかる向きによって変わります。横からのせん断には六角形（Tri-hexagon）、上からの圧縮には角度を小さくした 2Dラティス（2D Lattice）、いろいろな方向からの力にはジャイロイド（Gyroid）やキュービック（Cubic）が向いています。パターン同士で何 % 差があるかは、根拠となるデータがないため示していません。</p></details>
+</section>
+<section>
+<h2>ほかのツール</h2>
+<ul class="cards">
+<li><a class="card" href="../../../ja/tools/stl-inspector/"><h3>STL/3MF チェック・修復</h3><p>穴や裏返った面などメッシュの問題を見つけて場所を表示し、選んだものだけを修復します。サイズやベッドに収まるかも確認でき、別形式や Excel に保存できます。</p><p class="formats">入力 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../ja/tools/stl-cutter/"><h3>STL 分割ツール</h3><p>ベッドより大きいモデルを印刷できるサイズに分割し、組み立てやすいようにフィンガージョイントを付けます。</p><p class="formats">入力 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../ja/tools/print-cost-calculator/"><h3>造形重量・コスト計算</h3><p>スライス済みの G-code や 3D モデルからフィラメント重量を求め、材料費・電気代・販売価格まで計算します。</p><p class="formats">入力 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../ja/tools/gcode-analyzer/"><h3>G-code 解析</h3><p>G-code から造形時間とフィラメント使用量を読み取り、フィーチャー別・フィラメント別の内訳を表示します。</p><p class="formats">入力 · .gcode · .gcode.3mf</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>ファイルはサーバーに送信されません。すべての処理はこのブラウザー内で行われます。</p>
+
+</main>
+<footer class="site-footer"><p>登録不要・アップロードなし・トラッキングなしの無料ツールです。</p></footer>
+<script>window.T={"lang":"ja","js_err_empty":"{name} は空のファイルです（0 バイト）。","js_err_wrong_type":"{name} は対応していない形式です。対応形式: {types}","js_err_not_mesh":"{name} から 3D モデルを読み取れませんでした。STL・3MF・OBJ ファイルかどうかご確認ください。","js_err_truncated":"{name} は途中で切れています。{declared} 個の三角形のうち {present} 個しか含まれていません。","js_err_truncated_unknown":"{name} は途中で切れています。完全な三角形は {present} 個です。","js_load_partial":"読み込める部分だけ開く","js_err_too_large":"{name} は大きすぎて、この端末のメモリでは開けません。ほかのタブを閉じるか、パソコンのブラウザーでお試しください。","js_err_no_triangles":"{name} には三角形が 1 つもありません。","js_err_unknown":"{name} を処理できませんでした。（{detail}）","js_bad_triangles":"座標が不正（NaN・無限大）な三角形 {n} 個を除外しました。","js_reading":"{name} を読み込み中… {percent}%","js_working":"処理中…","js_num_required":"値を入力してください。","js_num_invalid":"数値を入力してください。","js_num_min":"{min} 以上の値を入力してください。","js_num_max":"{max} 以下の値を入力してください。","js_unit_h":"時間","js_unit_m":"分","js_unit_s":"秒","js_copy_title":"Bambu Studio インフィルおすすめ設定","js_copied":"結果をコピーしました。","js_copy_failed":"コピーできませんでした。結果を選択して手動でコピーしてください。","js_start":"まずは {v} から","js_alt":"代替案: {name}。{why}","js_monotonic":"単調 (Monotonic)","js_default":"既定値のまま","js_r_monotonic":"一方向に均一な線で造形するため、広く平らな上面が直線パターンよりなめらかに仕上がります。","js_r_default":"上面の仕上がりを重視しないなら、変更する必要はありません。","js_r_density":"この用途で広く使われている出発点です。低いほうから始めてください。","js_r_walls":"この用途で広く使われている出発点です。強度はたいてい充填密度より壁面層数の影響が大きくなります。","js_r_walls_strength":"強度を優先するため、範囲の上限から始めます。充填密度を上げるより壁面層数を増やすほうが、材料あたりの効果が大きくなります。","js_r_top":"積層ピッチ 0.2 mm が前提です。積層ピッチが違う場合は、上面の厚さ約 0.8～1.2 mm を目安に換算してください。","js_r_top_extra":"充填がまばらで上面を支える線が少ないため、1～2 層多くしています。積層ピッチ 0.2 mm が前提です。","js_r_bottom":"この用途で広く使われている出発点です。積層ピッチ 0.2 mm が前提です。","js_p_gyroid":"ジャイロイド (Gyroid)","js_p_cubic":"キュービック (Cubic)","js_p_adaptivecubic":"アダプティブ キュービック (Adaptive Cubic)","js_p_lightning":"ライトニング (Lightning)","js_p_concentric":"同心 (Concentric)","js_p_lockedzag":"ロックされたザグ (Locked Zag)","js_p_grid":"グリッド (Grid)","js_p_crosshatch":"クロスハッチ (Cross Hatch)","js_p_trihexagon":"六角形 (Tri-hexagon)","js_p_lattice_small":"2Dラティス (2D Lattice)、ラティス角度 1・2 は 0～45°","js_p_lattice_large":"2Dラティス (2D Lattice)、ラティス角度 1・2 は 45～75°","js_p_honeycomb":"ハニカム (Honeycomb)","js_p_honeycomb3d":"3D ハニカム (3D Honeycomb)","js_why_gyroid":"あらゆる方向をしっかり支え、同じ層の中で線が交差しないため比較的速く造形できます。そのかわりスライスに時間がかかり、G コードのファイルが大きくなります。","js_why_cubic":"X・Y・Z の 3 方向で強度が均一に近く、強度と造形効率のバランスに優れています。","js_why_adaptivecubic":"キュービックに似ていますが、壁から離れた内側ほど密度を自動的に下げます。材料と時間を節約しながら上面の下はしっかり支え、上面の落ち込みを防ぎます。","js_why_lightning":"上面を支えるのに必要な分だけを充填するため、時間と材料を大きく節約できます。設定した密度は上面のすぐ下の層にだけ適用されます。","js_why_concentric":"壁を内側へ縮めた輪の形で充填するため、透明材料できれいに見えます。水平方向の荷重には弱くなります。","js_why_lockedzag":"充填を外側の面として見せる場合のために作られた模様で、見た目と構造強度の両方を考慮したパターンです。","js_why_grid":"もっとも単純で速いパターンのひとつです。ただし交点に材料が少したまります。","js_why_crosshatch":"一定の高さのあいだ同じ向きを保つため、方向転換が少なく速く造形できます。力のかからない部品や手早い造形に向いています。","js_why_trihexagon":"3 方向の平行線が交差し、水平のどの方向のせん断にもよく耐えます。壁につながる線が短いため、冷却不足による反りも抑えられます。","js_why_lattice_small":"ラティス角度を小さくすると内部構造が垂直に近くなり、上から押さえる力によく耐えます。","js_why_lattice_large":"ラティス角度を大きくすると内部構造が寝た形になり、横から押したり引いたりする力によく耐えます。","js_why_honeycomb":"六角形のセルを交差なしで並べ、剛性と耐衝撃性を大きく高めます。ほかのパターンより材料が約 25 % 多く必要で、時間も長くなります。","js_why_honeycomb3d":"ハニカムより密度が低いぶん速く造形でき、Z 方向に経路を変えながら積むため層間のつながりがよくなります。","js_n_z":"積層をはがす方向の力は、充填の設定では解決できません。力が層に沿ってかかるよう、まず造形の向きを変えてください。","js_n_concentric_weak":"同心（Concentric）は水平方向の荷重に弱いため、力のかかる造形物では代替案にとどめています。","js_n_lightning_weak":"ライトニング（Lightning）には強度がほとんどありません。少しでも力がかかるなら、アダプティブ キュービック（Adaptive Cubic）を使ってください。","js_n_honeycomb_cost":"ハニカム（Honeycomb）は材料が約 25 % 多く必要で、造形時間も長くなります。軽くしたい場合は 3D ハニカム（3D Honeycomb）が代替案です。","js_n_new_pattern":"2Dラティス（2D Lattice）とロックされたザグ（Locked Zag）は比較的新しいバージョンで追加されたパターンです。一覧にない場合は Bambu Studio を更新してください。","js_n_modifier":"ねじ穴やインサートの周囲など力が集中する場所は、全体の密度を上げるのではなく、モディファイア（Modifier）でその部分だけ壁面層数や充填密度を上げてください。振動や繰り返しの締結がある場合は、熱圧入インサートもおすすめです。","js_n_abs":"ABS・ASA は反りやすい材料です。開放型のプリンターでは反りや層割れの危険が大きくなるため、密閉型のプリンターをおすすめします。線が交差しないジャイロイド（Gyroid）なら、反った充填の端にノズルが引っかかりにくくなります。","js_n_abs_flat":"大きく平らな ABS・ASA の部品では、充填密度を上げすぎると内部の収縮応力が大きくなることがあります。密度は低めにして、壁面層数で強度を確保してください。","js_n_cf":"CF 強化フィラメントはノズルを摩耗させるため、焼入れ鋼ノズルを使っているか確認してください。層間の結合が比較的弱いので、荷重が層を横切らないよう、まず造形の向きを見直してください。","js_n_gyroid_vibration":"ジャイロイド（Gyroid）は、密度が高く速度が速いと振動が大きくなることがあります。","js_n_grid_scrape":"グリッド（Grid）は交点に材料がたまるため、高速造形ではノズルがこすれる音がすることがあります。","js_f_weak":"強度が足りない場合は、充填密度より先に壁面層数を増やしてください。それでも足りなければ、密度を範囲の上限に近づけます。","js_f_display_force":"造形物がへこんだり割れたりする場合は、パターンをアダプティブ キュービック（Adaptive Cubic）に変えてください。","js_f_top_sag":"上面が落ち込んだり穴が見えたりする場合は、トップ面層数を 1～2 層増やしてください。","js_f_noise":"振動やこすれる音がする場合は、ほかの設定より先に充填の速度だけを下げてみてください（「速度」タブの「スパース インフィル」）。","js_f_warp":"角が浮いたり層が割れたりする場合は、密閉型のプリンターで造形し、充填密度を下げて壁面層数で強度を確保してください。","js_f_layer_split":"層に沿って割れる場合は、充填の設定ではなく造形の向きを変える必要があります。"}</script>
+<script type="module" src="../../../assets/tools/infill-recommender/main.js"></script>
+</body>
+</html>

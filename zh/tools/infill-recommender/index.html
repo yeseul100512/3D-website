@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bambu Studio 填充设置推荐 – 图案、密度与墙层数 | BENCH</title>
+<meta name="description" content="选择打印件的用途、受力方向和材料，即可得到 Bambu Studio 的稀疏填充图案、密度、墙层数、顶部/底部层数以及每项的理由。免费、无需注册，在浏览器中运行。">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/zh/tools/infill-recommender/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/infill-recommender/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/infill-recommender/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/infill-recommender/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/infill-recommender/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="Bambu Studio 填充设置推荐 – 图案、密度与墙层数 | BENCH">
+<meta property="og:description" content="选择打印件的用途、受力方向和材料，即可得到 Bambu Studio 的稀疏填充图案、密度、墙层数、顶部/底部层数以及每项的理由。免费、无需注册，在浏览器中运行。">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/zh/tools/infill-recommender/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"填充设置推荐","url":"https://yeseul100512.github.io/3D-website/zh/tools/infill-recommender/","description":"选择打印件的用途、受力方向和材料，即可得到 Bambu Studio 的稀疏填充图案、密度、墙层数、顶部/底部层数以及每项的理由。免费、无需注册，在浏览器中运行。","inLanguage":"zh-Hans","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"提高填充密度就能更结实吗？","acceptedAnswer":{"@type":"Answer","text":"有一定作用，但在耗材用量相同的情况下，先增加墙层数通常更有效。因此本工具让密度从范围的低端起步，强度不够时建议先加墙层数。"}},{"@type":"Question","name":"想用 100% 填充怎么办？","acceptedAnswer":{"@type":"Answer","text":"根据 Bambu Wiki，只有六种图案支持 100% 密度：同心（Concentric）、直线（Rectilinear）、直线排列（Aligned Rectilinear）、希尔伯特曲线（Hilbert Curve）、阿基米德螺旋（Archimedean Chords）和八角螺旋（Octagram Spiral）。不过实际打印中，大幅增加墙层数通常比 100% 填充更好。"}},{"@type":"Question","name":"推荐的图案在我的 Bambu Studio 列表里找不到。","acceptedAnswer":{"@type":"Answer","text":"二维晶格（2D Lattice）和 Locked Zag 是较新版本才加入的图案。请将 Bambu Studio 更新到最新版本，或使用结果中给出的备选图案。"}},{"@type":"Question","name":"哪种图案最结实？","acceptedAnswer":{"@type":"Answer","text":"要看受力方向。侧向剪切适合内六边形（Tri-hexagon），自上而下的压缩适合小角度的二维晶格（2D Lattice），多个方向受力则适合螺旋体（Gyroid）或立方体（Cubic）。各图案之间相差百分之几，因为没有数据依据，这里不提供。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+<a class="brand" href="../../../zh/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="语言">
+<a href="../../../tools/infill-recommender/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/infill-recommender/" lang="en" hreflang="en">English</a>
+<a href="../../../ja/tools/infill-recommender/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../../zh/tools/infill-recommender/" lang="zh-Hans" hreflang="zh-Hans" aria-current="page">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../zh/"><span aria-hidden="true">←</span> 全部工具</a></p>
+<h1>填充设置推荐</h1>
+<p class="lead">回答几个问题，即可得到能直接填入 Bambu Studio 的填充图案、密度、墙层数和顶部/底部层数，并附上每项的理由。这些是经验法则而非实测数据；想提高强度，增加墙层数通常比提高填充密度更有效。</p>
+<noscript><p class="notice warn">使用此工具需要在浏览器中启用 JavaScript。</p></noscript>
+<div class="tool">
+<form class="panel" id="q">
+<h2>请描述您的打印件</h2>
+<div style="display:grid;gap:12px;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))">
+<div class="field"><label for="use">用途</label>
+<select id="use" name="use">
+<option value="display">展示、装饰</option>
+<option value="visible">透明材料或填充外露</option>
+<option value="household" selected>普通日用品</option>
+<option value="functional">受力的功能件</option>
+<option value="heavy">高负载件、螺丝连接处</option>
+</select></div>
+<div class="field"><label for="load">受力情况</label>
+<select id="load" name="load" aria-describedby="load-hint">
+<option value="none">几乎不受力</option>
+<option value="all">多个方向，或不确定</option>
+<option value="side">侧向推拉（剪切）</option>
+<option value="top">自上而下受压（压缩）</option>
+<option value="impact">冲击，或要求不易变形</option>
+<option value="z">沿层间分离方向拉扯</option>
+</select><small id="load-hint">方向以打印时的摆放姿态为准，“上”指层叠加的方向。</small></div>
+<div class="field"><label for="material">材料</label>
+<select id="material" name="material">
+<option value="pla">PLA</option>
+<option value="abs">ABS · ASA</option>
+<option value="cf">CF（碳纤维）增强类</option>
+<option value="other">其他材料</option>
+</select></div>
+<div class="field"><label for="priority">最看重的一点</label>
+<select id="priority" name="priority">
+<option value="strength">强度</option>
+<option value="speed">打印时间</option>
+<option value="weight">轻量、节省耗材</option>
+<option value="surface">表面质量</option>
+</select></div>
+<div class="field"><label for="size">尺寸与形状</label>
+<select id="size" name="size">
+<option value="normal">较小或中等</option>
+<option value="large">较大（内部空间大）</option>
+<option value="flat">较大且顶面宽而平</option>
+</select></div>
+</div>
+<label class="check"><input type="checkbox" id="topq" name="topq"> 顶面需要平滑美观</label>
+</form>
+<div class="panel" id="out" hidden>
+<h2>推荐设置</h2>
+<div class="table-scroll">
+<table class="result">
+<thead><tr><th scope="col">Bambu Studio 设置</th><th scope="col">推荐值与理由</th></tr></thead>
+<tbody id="rows">
+<tr><th scope="row">稀疏填充图案 (Sparse infill pattern)</th><td></td></tr>
+<tr><th scope="row">稀疏填充密度 (Sparse infill density)</th><td></td></tr>
+<tr><th scope="row">墙层数 (Wall loops)</th><td></td></tr>
+<tr><th scope="row">顶部壳体层数 (Top shell layers)</th><td></td></tr>
+<tr><th scope="row">底部壳体层数 (Bottom shell layers)</th><td></td></tr>
+<tr><th scope="row">顶面图案 (Top surface pattern)</th><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small id="path" style="color:var(--muted)">设置位置：Bambu Studio 的“工艺 → 强度”(Process → Strength)</small></p>
+<p id="alt"></p>
+<div id="notes-box"><h3>注意事项</h3><ul id="notes" style="margin:0;padding-left:1.4em"></ul></div>
+<div><h3>效果不理想时该改什么</h3><ul id="fixes" style="margin:0;padding-left:1.4em"></ul></div>
+<p class="notice">这些是针对 Bambu Studio 的经验法则，并非实测数据。以 0.4 mm 喷嘴和 0.2 mm 层高为前提；想提高强度，增加墙层数通常比提高填充密度更有效。</p>
+<div><button class="button secondary" type="button" id="copy">复制结果</button></div>
+<p class="notice" id="msg" role="status" hidden></p>
+</div>
+
+</div>
+<section class="doc">
+<h2>这个工具能做什么</h2>
+<p>工具会根据打印件的用途、受力的方向和类型、材料以及您的优先目标，推荐一种 Bambu Studio 稀疏填充图案和一种备选图案，以及稀疏填充密度、墙层数和顶部/底部壳体层数。每一项都附有理由，并说明打印效果不理想时应先改哪一项。</p>
+<p>图案特性依据 Bambu Lab Wiki 的《填充图案介绍》；密度、墙层数和层数则是 0.4 mm 喷嘴、0.2 mm 层高下常用的起始值。图案和设置名称采用 Bambu Studio 中文界面的写法，并附上英文名称。</p>
+</section>
+<section class="doc">
+<h2>使用方法</h2>
+<ol>
+<li>选择打印件的用途。展示件、日用品还是受力的功能件，决定了密度和墙层数的范围。</li>
+<li>选择受力的方向和类型，方向以打印时的摆放姿态为准。不确定时请选“多个方向”。</li>
+<li>选择材料、优先目标和尺寸；如果顶面需要平滑，请勾选对应选项。每次更改后推荐结果都会立即更新。</li>
+<li>把表中的数值填入 Bambu Studio 的“工艺 → 强度”选项卡。点击“复制结果”可将理由和注意事项一并复制为纯文本。</li>
+</ol>
+</section>
+<section class="doc">
+<h2>限制与注意事项</h2>
+<ul>
+<li>这些是针对 Bambu Studio 的经验法则，不计算也不保证强度。由于没有数据支持，这里不给出“某图案强百分之几”之类的数字。如需精确比较，请在相同条件下打印试样并实际测试。</li>
+<li>强度通常更多取决于墙层数和打印方向，而不是填充密度。如果受力方向会把层与层拉开，任何填充设置都无法解决，必须先调整打印方向。</li>
+<li>密度、墙层数和层数并非出自 Bambu Wiki，而是 FDM 打印中常用的起始值，以 0.4 mm 喷嘴和 0.2 mm 层高为前提。层高不同时，请按顶面厚度约 0.8～1.2 mm 来换算，而不是照搬层数。</li>
+<li>图案特性出自 Bambu Lab Wiki 的<a href="https://wiki.bambulab.com/zh/software/bambu-studio/fill-patterns" rel="noopener">《填充图案介绍》</a>（另参考了<a href="https://wiki.bambulab.com/en/software/bambu-studio/fill-patterns" rel="noopener">英文版</a>）。哪种用途选哪种图案，是依据该页面内容整理出的看法，并非 Bambu Lab 的官方推荐。</li>
+<li>图案和设置名称已对照 Bambu Studio 02.08.02.61 的简体中文翻译文件核实。不同版本的写法可能不同，因此同时标注了英文名称。PETG、TPU 等其他材料以及其他切片软件的注意事项不在本工具范围内。</li>
+</ul>
+</section>
+<section class="doc"><h2>常见问题</h2>
+<details><summary>提高填充密度就能更结实吗？</summary><p>有一定作用，但在耗材用量相同的情况下，先增加墙层数通常更有效。因此本工具让密度从范围的低端起步，强度不够时建议先加墙层数。</p></details>
+<details><summary>想用 100% 填充怎么办？</summary><p>根据 Bambu Wiki，只有六种图案支持 100% 密度：同心（Concentric）、直线（Rectilinear）、直线排列（Aligned Rectilinear）、希尔伯特曲线（Hilbert Curve）、阿基米德螺旋（Archimedean Chords）和八角螺旋（Octagram Spiral）。不过实际打印中，大幅增加墙层数通常比 100% 填充更好。</p></details>
+<details><summary>推荐的图案在我的 Bambu Studio 列表里找不到。</summary><p>二维晶格（2D Lattice）和 Locked Zag 是较新版本才加入的图案。请将 Bambu Studio 更新到最新版本，或使用结果中给出的备选图案。</p></details>
+<details><summary>哪种图案最结实？</summary><p>要看受力方向。侧向剪切适合内六边形（Tri-hexagon），自上而下的压缩适合小角度的二维晶格（2D Lattice），多个方向受力则适合螺旋体（Gyroid）或立方体（Cubic）。各图案之间相差百分之几，因为没有数据依据，这里不提供。</p></details>
+</section>
+<section>
+<h2>其他工具</h2>
+<ul class="cards">
+<li><a class="card" href="../../../zh/tools/stl-inspector/"><h3>STL/3MF 检查与修复</h3><p>找出孔洞、翻转面等网格问题并显示位置，只修复您选中的部分；还能检查尺寸、确认打印机能否放下，并另存为其他格式或 Excel。</p><p class="formats">输入 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../zh/tools/stl-cutter/"><h3>STL 模型分割</h3><p>把比热床大的模型切成能打印的小块，并加上指接榫，方便拼装对位。</p><p class="formats">输入 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../zh/tools/print-cost-calculator/"><h3>打印重量与成本计算器</h3><p>根据切片后的 G-code 或 3D 模型得出耗材重量，再算出材料费、电费和售价。</p><p class="formats">输入 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../zh/tools/gcode-analyzer/"><h3>G-code 分析器</h3><p>从 G-code 中读取打印时间和耗材用量，并按特征类型和耗材分别统计。</p><p class="formats">输入 · .gcode · .gcode.3mf</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>文件不会上传到服务器，所有计算都在您的浏览器中完成。</p>
+
+</main>
+<footer class="site-footer"><p>免费使用，无需注册，不上传文件，不做追踪。</p></footer>
+<script>window.T={"lang":"zh-Hans","js_err_empty":"{name} 是空文件（0 字节）。","js_err_wrong_type":"不支持 {name} 的文件格式。支持的格式：{types}","js_err_not_mesh":"无法从 {name} 中读取 3D 模型。请确认它是 STL、3MF 或 OBJ 文件。","js_err_truncated":"{name} 文件不完整：声明了 {declared} 个三角形，实际只有 {present} 个。","js_err_truncated_unknown":"{name} 文件不完整：只找到 {present} 个完整的三角形。","js_load_partial":"仅加载完整的部分","js_err_too_large":"{name} 太大，此设备内存不足，无法打开。请关闭其他标签页，或改用电脑浏览器重试。","js_err_no_triangles":"{name} 中没有任何三角形。","js_err_unknown":"无法处理 {name}。（{detail}）","js_bad_triangles":"已排除 {n} 个坐标无效（NaN 或无穷大）的三角形。","js_reading":"正在读取 {name}… {percent}%","js_working":"正在处理…","js_num_required":"请输入数值。","js_num_invalid":"请输入数字。","js_num_min":"请输入不小于 {min} 的数值。","js_num_max":"请输入不大于 {max} 的数值。","js_unit_h":"小时","js_unit_m":"分钟","js_unit_s":"秒","js_copy_title":"Bambu Studio 填充推荐设置","js_copied":"结果已复制。","js_copy_failed":"复制失败，请手动选中结果后复制。","js_start":"先从 {v} 开始","js_alt":"备选：{name}。{why}","js_monotonic":"单调 (Monotonic)","js_default":"保持默认","js_r_monotonic":"以均匀的线条单向打印，宽而平的顶面比直线图案更平滑。","js_r_default":"如果不在意顶面效果，无需更改。","js_r_density":"这是此类用途常用的起始范围，请从低端开始。","js_r_walls":"这是此类用途常用的起始范围。对强度而言，墙层数的影响通常大于填充密度。","js_r_walls_strength":"以强度为先，因此从范围的上限开始。与提高填充密度相比，增加墙层数在同样耗材下效果更好。","js_r_top":"以 0.2 mm 层高为前提。层高不同时，请按顶面厚度约 0.8～1.2 mm 换算。","js_r_top_extra":"填充稀疏，对顶面的支撑较少，因此多加了 1～2 层。以 0.2 mm 层高为前提。","js_r_bottom":"这是此类用途常用的起始值。以 0.2 mm 层高为前提。","js_p_gyroid":"螺旋体 (Gyroid)","js_p_cubic":"立方体 (Cubic)","js_p_adaptivecubic":"自适应立方体 (Adaptive Cubic)","js_p_lightning":"闪电 (Lightning)","js_p_concentric":"同心 (Concentric)","js_p_lockedzag":"Locked Zag","js_p_grid":"网格 (Grid)","js_p_crosshatch":"交叉层叠 (Cross Hatch)","js_p_trihexagon":"内六边形 (Tri-hexagon)","js_p_lattice_small":"二维晶格 (2D Lattice)，晶格角度 1、2 取 0～45°","js_p_lattice_large":"二维晶格 (2D Lattice)，晶格角度 1、2 取 45～75°","js_p_honeycomb":"蜂窝 (Honeycomb)","js_p_honeycomb3d":"3D 蜂窝 (3D Honeycomb)","js_why_gyroid":"各个方向都有良好支撑，同一层内线条不交叉，打印速度较快；但切片时间更长，G-code 文件也更大。","js_why_cubic":"X、Y、Z 三个方向的强度较为均匀，在强度和打印效率之间取得了良好平衡。","js_why_adaptivecubic":"与立方体类似，但会自动降低远离外墙区域的密度。既节省耗材和时间，又能稳定支撑顶面，避免顶面塌陷。","js_why_lightning":"只填充支撑顶面所需的部分，可大幅节省时间和耗材。所设密度仅作用于顶面正下方的那一层。","js_why_concentric":"以外墙向内收缩形成的环状线条填充，用透明材料打印时效果美观；但对水平方向的受力较弱。","js_why_lockedzag":"专为把填充当作外表面的场景设计的纹理图案，兼顾外观和结构强度。","js_why_grid":"最简单、最快的图案之一，不过交叉点处会有少量材料堆积。","js_why_crosshatch":"在一定层高范围内保持同一填充方向，减少换向，打印更快。适合非承重零件和快速打印。","js_why_trihexagon":"三组平行线相互交叉，在各个水平方向上都有出色的抗剪能力；与外墙相连的线段较短，也能减少冷却不足引起的翘曲。","js_why_lattice_small":"晶格角度取小值时，内部结构更接近直立，更能承受自上而下的压力。","js_why_lattice_large":"晶格角度取大值时，内部结构更趋扁平，更能抵抗侧向的推拉。","js_why_honeycomb":"以无交叉的六边形单元填充，可显著提高刚性和抗冲击性；但耗材比其他图案多约 25%，耗时也更长。","js_why_honeycomb3d":"密度低于蜂窝，打印更快；路径沿 Z 轴不断变化，层间连接更好。","js_n_z":"会把层与层拉开的受力无法靠填充设置解决。请先调整打印方向，让受力沿着层的方向。","js_n_concentric_weak":"同心（Concentric）对水平方向受力较弱，因此对受力的打印件只作为备选。","js_n_lightning_weak":"闪电（Lightning）几乎没有强度。只要打印件会受到一点力，就请改用自适应立方体（Adaptive Cubic）。","js_n_honeycomb_cost":"蜂窝（Honeycomb）耗材多约 25%，打印时间也更长。想更轻便，可改用 3D 蜂窝（3D Honeycomb）。","js_n_new_pattern":"二维晶格（2D Lattice）和 Locked Zag 是较新版本才加入的图案。如果列表中没有，请更新 Bambu Studio。","js_n_modifier":"螺丝孔、嵌件周围等受力集中的部位，不要提高整体密度，而应使用修改器（Modifier）只增加该处的墙层数或填充密度。若存在振动或需要反复拆装，建议同时使用热熔螺母。","js_n_abs":"ABS、ASA 容易翘曲。开放式打印机上翘曲和层间开裂的风险更高，建议使用封闭式打印机。螺旋体（Gyroid）线条不交叉，可减少喷嘴刮到翘起填充的情况。","js_n_abs_flat":"又大又平的 ABS、ASA 零件，填充密度过高可能使内部收缩应力增大。请保持较低密度，靠墙层数来保证强度。","js_n_cf":"CF 增强耗材会磨损喷嘴，请确认使用的是硬化钢喷嘴。其层间结合相对较弱，请先检查打印方向，避免受力横穿各层。","js_n_gyroid_vibration":"螺旋体（Gyroid）在高密度、高速打印时可能产生明显振动。","js_n_grid_scrape":"网格（Grid）的交叉点会堆积材料，高速打印时喷嘴可能刮擦并发出异响。","js_f_weak":"强度不够：先增加墙层数，而不是填充密度。仍然不够时，再把密度调向范围的上限。","js_f_display_force":"打印件被压凹或碎裂：请把图案改为自适应立方体（Adaptive Cubic）。","js_f_top_sag":"顶面塌陷或出现孔洞：将顶部壳体层数增加 1～2 层。","js_f_noise":"出现振动或刮擦声：先只降低稀疏填充的速度（“速度”选项卡中的“稀疏填充”）。","js_f_warp":"边角翘起或层间开裂：请在封闭式打印机中打印，降低填充密度，并靠墙层数保证强度。","js_f_layer_split":"沿层间裂开：需要调整的是打印方向，而不是填充设置。"}</script>
+<script type="module" src="../../../assets/tools/infill-recommender/main.js"></script>
+</body>
+</html>

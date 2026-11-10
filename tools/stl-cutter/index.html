@@ -1,583 +1,177 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="STL 모델을 프린터 출력 가능 크기에 맞춰 자동으로 여러 조각으로 절단합니다. 톱니(핑거 조인트) 절단면 지원, 브라우저에서 바로 실행.">
-<title>STL 분할 프로그램 (프린터 크기 자동 절단)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
-<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --color-bg: #161826; --color-surface: #232532; --color-text: #e9e9ed;
-    --color-accent: #9184d9; --color-accent-300: #d2cefd; --color-accent-400: #b5abfc;
-    --color-accent-700: #5d5294; --color-accent-900: #2b2741;
-    --color-divider: color-mix(in srgb, #e9e9ed 16%, transparent);
-    --color-neutral-400: #b2b6ca; --color-neutral-500: #9397ab; --color-neutral-600: #75798c;
-    --color-neutral-700: #595d6c; --color-neutral-800: #3f424d;
-    --font-heading: 'Gowun Batang', 'Hiragino Mincho ProN', 'Songti SC', 'Inter', serif;
-    --font-body: 'Inter', system-ui, sans-serif;
-    --radius-sm: 4px; --radius-md: 8px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; min-height: 100%; font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 22.4px 22.4px 33.6px; }
-  .back { display: inline-flex; align-items: center; gap: 5.6px; margin-bottom: 16.8px; font-size: 12px; color: var(--color-neutral-500); text-decoration: none; }
-  .back:hover { color: var(--color-accent-300); }
-  .head { display: flex; align-items: flex-start; gap: 11.2px; margin-bottom: 16.8px; }
-  .head i { font-size: 24px; color: var(--color-accent-400); margin-top: 2px; }
-  .head h1 { flex: 1; margin: 0; font-family: var(--font-heading); font-weight: 700; font-size: 20px; letter-spacing: -0.005em; }
-  .badge { display: flex; align-items: center; gap: 5.6px; padding: 4px 10px; border: 1px solid var(--color-neutral-800); border-radius: 999px; background: var(--color-surface); }
-  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 6px #4ade80; }
-  .badge span { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-neutral-500); }
-
-  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16.8px; align-items: start; }
-  .viewer-frame { position: relative; min-height: 460px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); background: radial-gradient(120% 90% at 50% 0%, #1c1f31 0%, #14162200 70%), var(--color-bg); overflow: hidden; }
-  .viewer-frame .vgrid { position: absolute; inset: 0; background-image: linear-gradient(color-mix(in srgb, var(--color-text) 5%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--color-text) 5%, transparent) 1px, transparent 1px); background-size: 40px 40px; mask-image: radial-gradient(70% 70% at 50% 45%, #000 0%, transparent 100%); }
-  .viewer-frame .vplaceholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8.4px; color: var(--color-neutral-600); }
-  .viewer-frame .vplaceholder i { font-size: 32px; }
-  .viewer-frame .vplaceholder span { font-size: 12px; }
-  .orbit-hint { position: absolute; left: 11.2px; bottom: 11.2px; display: flex; align-items: center; gap: 5.6px; padding: 4px 9px; background: color-mix(in srgb, var(--color-surface) 85%, transparent); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); font-size: 11px; color: var(--color-neutral-500); }
-  .viewer-frame canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; display: block; }
-
-  .panel { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; align-items: start; gap: 16.8px 22.4px; padding: 16.8px; background: var(--color-surface); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-md); overflow-y: auto; max-height: 700px; }
-  .section { display: flex; flex-direction: column; gap: 8.4px; }
-  .section h2 { margin: 0; padding-bottom: 5.6px; border-bottom: 1px solid var(--color-divider); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent-300); font-weight: 500; }
-
-  .upload { display: flex; align-items: center; gap: 11.2px; padding: 14px; border: 1px dashed var(--color-neutral-700); border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-bg) 60%, transparent); cursor: pointer; }
-  .upload:hover { border-color: var(--color-accent-700); }
-  .upload i { font-size: 18px; color: var(--color-accent-400); flex-shrink: 0; }
-  .upload .t { font-size: 13px; }
-  .upload .n { font-size: 11px; color: var(--color-neutral-600); margin-top: 2px; }
-  input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
-
-  .numrow { display: flex; align-items: center; gap: 11.2px; }
-  .numrow label { flex: 1; font-size: 12px; color: var(--color-neutral-400); }
-  .numrow .field { display: flex; align-items: center; gap: 5.6px; }
-  .numrow input[type=number] { width: 76px; padding: 5px 8px; text-align: right; background: var(--color-bg); border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); color: var(--color-text); font-family: var(--font-body); font-size: 13px; outline: none; }
-  .numrow input[type=number]:focus { border-color: var(--color-accent); }
-  .numrow .unit { width: 42px; font-size: 11px; color: var(--color-neutral-600); }
-
-  .choice { display: flex; align-items: flex-start; gap: 8.4px; padding: 9px 11.2px; border: 1px solid var(--color-neutral-800); border-radius: var(--radius-sm); cursor: pointer; }
-  .choice:has(input:checked) { border-color: var(--color-accent-700); background: color-mix(in srgb, var(--color-accent-900) 55%, transparent); }
-  .choice input { position: absolute; opacity: 0; width: 0; height: 0; }
-  .choice i { font-size: 15px; color: var(--color-accent-400); margin-top: 1px; }
-  .choice .t { font-size: 12.5px; }
-  .choice .n { font-size: 11px; color: var(--color-neutral-600); line-height: 1.4; }
-
-  .hint { margin: 0; font-size: 11px; line-height: 1.5; color: var(--color-neutral-600); }
-  .empty { padding: 14px; text-align: center; font-size: 12px; color: var(--color-neutral-700); border: 1px solid var(--color-divider); border-radius: var(--radius-sm); }
-
-  button.primary, button.ghost { width: 100%; display: flex; align-items: center; justify-content: center; gap: 5.6px; padding: 9px; border-radius: var(--radius-md); font-size: 13px; cursor: pointer; font-family: var(--font-body); }
-  button.primary { background: transparent; color: var(--color-accent); border: 1px solid var(--color-accent); }
-  button.primary:hover:not(:disabled) { background: color-mix(in srgb, var(--color-accent) 14%, transparent); }
-  button.primary:disabled { color: var(--color-neutral-600); border-color: var(--color-neutral-800); cursor: not-allowed; }
-  button.ghost { background: transparent; color: var(--color-neutral-400); border: 1px solid var(--color-neutral-800); }
-  button.ghost:hover:not(:disabled) { border-color: var(--color-neutral-600); color: var(--color-text); }
-
-  #status { font-size: 12px; color: var(--color-accent-300); min-height: 16px; white-space: pre-wrap; }
-  #summary { font-size: 12px; color: var(--color-neutral-400); line-height: 1.6; white-space: pre-wrap; }
-  .checkrow { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-neutral-400); }
-  .piece-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--color-divider); }
-  .piece-row span { color: var(--color-neutral-500); }
-  .piece-row button { width: auto; padding: 4px 10px; font-size: 11px; }
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STL 분할기 – 베드보다 큰 모델을 핑거 조인트로 나누기 | BENCH</title>
+<meta name="description" content="베드보다 큰 STL·3MF·OBJ 모델을 출력 가능한 크기의 조각으로 나누고 핑거 조인트를 넣어 줍니다. 조각마다 실제 크기와 베드 적합 여부를 보여 주고, 조립 지도와 함께 ZIP으로 받을 수 있습니다. 파일은 서버로 전송되지 않습니다.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/tools/stl-cutter/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/stl-cutter/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-cutter/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/stl-cutter/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/stl-cutter/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="STL 분할기 – 베드보다 큰 모델을 핑거 조인트로 나누기 | BENCH">
+<meta property="og:description" content="베드보다 큰 STL·3MF·OBJ 모델을 출력 가능한 크기의 조각으로 나누고 핑거 조인트를 넣어 줍니다. 조각마다 실제 크기와 베드 적합 여부를 보여 주고, 조립 지도와 함께 ZIP으로 받을 수 있습니다. 파일은 서버로 전송되지 않습니다.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/tools/stl-cutter/">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"STL 분할기","url":"https://yeseul100512.github.io/3D-website/tools/stl-cutter/","description":"베드보다 큰 STL·3MF·OBJ 모델을 출력 가능한 크기의 조각으로 나누고 핑거 조인트를 넣어 줍니다. 조각마다 실제 크기와 베드 적합 여부를 보여 주고, 조립 지도와 함께 ZIP으로 받을 수 있습니다. 파일은 서버로 전송되지 않습니다.","inLanguage":"ko","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"조각이 정말 베드에 들어가나요?","acceptedAnswer":{"@type":"Answer","text":"조각 수를 '자동'으로 두면 이빨이 튀어나온 길이까지 포함해서 격자를 정하고, 자른 뒤 조각의 실제 크기를 다시 재서 표에 '맞음' 또는 '초과'로 표시합니다. 조각 수를 직접 지정했다면 초과가 나올 수 있으니 표를 확인해 주세요."}},{"@type":"Question","name":"얇은 판 모델이 세워져서 잘리지는 않나요?","acceptedAnswer":{"@type":"Answer","text":"기본값은 '지금 방향 그대로'라서 모델을 돌리지 않습니다. '조각 수가 가장 적어지도록 회전'을 직접 켰을 때만 90° 단위로 돌리며, 돌렸다면 어느 축이 어디로 갔는지 결과에 적어 드립니다."}},{"@type":"Question","name":"3MF나 OBJ 파일도 자를 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"네. STL(바이너리·ASCII), 3MF, OBJ를 읽습니다. 파일에 물체가 여러 개 있으면 하나의 모델로 합쳐서 자르고, 결과는 STL로 저장합니다. 색상이나 슬라이서 설정은 유지되지 않습니다."}},{"@type":"Question","name":"조립 여유는 어디에 적용되나요?","acceptedAnswer":{"@type":"Answer","text":"이빨의 양쪽 옆면에 각각 입력한 값만큼 틈을 둡니다. 이빨 끝과 홈 바닥은 틈 없이 맞닿으므로 조립했을 때 전체 길이는 원본과 같습니다."}},{"@type":"Question","name":"파일이 서버로 올라가나요?","acceptedAnswer":{"@type":"Answer","text":"아니요. 읽기, 자르기, ZIP 만들기까지 모두 이 브라우저 안에서 처리합니다. 내려받는 것은 3D 표시와 절단에 쓰는 공개 라이브러리뿐입니다."}}]}]}</script>
 </head>
 <body>
-<div class="wrap">
-  <a class="back" href="../../"><i class="ph ph-arrow-left"></i><span>전체 도구</span></a>
-
-  <div class="head">
-    <i class="ph ph-scissors"></i>
-    <h1>STL 분할</h1>
-    <div class="badge"><span class="dot"></span><span>프린터 크기 자동 절단</span></div>
-  </div>
-
-  <div class="grid">
-    <div class="viewer-frame">
-      <div class="vgrid"></div>
-      <div class="vplaceholder" id="viewerPlaceholder"><i class="ph ph-cube"></i><span>3D 미리보기 영역</span></div>
-      <div id="viewer" style="position:absolute; inset:0;"></div>
-      <div class="orbit-hint"><i class="ph ph-arrows-clockwise"></i><span>드래그로 회전</span></div>
-    </div>
-
-    <div class="panel">
-      <div class="section">
-        <label class="upload" for="fileInput">
-          <i class="ph ph-upload-simple"></i>
-          <div>
-            <div class="t">STL 파일 선택</div>
-            <div class="n" id="origInfo">선택하면 원본 치수가 표시됩니다</div>
-          </div>
-        </label>
-        <input type="file" id="fileInput" accept=".stl">
-      </div>
-
-      <div class="section">
-        <h2>프린터 출력 가능 크기</h2>
-        <div class="numrow"><label>베드 가로 (X)</label><div class="field"><input type="number" id="pX" value="200" min="1"><span class="unit">mm</span></div></div>
-        <div class="numrow"><label>베드 세로 (Y)</label><div class="field"><input type="number" id="pY" value="200" min="1"><span class="unit">mm</span></div></div>
-        <div class="numrow"><label>최대 높이 (Z)</label><div class="field"><input type="number" id="pZ" value="200" min="1"><span class="unit">mm</span></div></div>
-        <div class="numrow"><label>안전 여백</label><div class="field"><input type="number" id="margin" value="2" min="0"><span class="unit">mm</span></div></div>
-        <p class="hint">베드 가장자리 여유. 실제 사용 크기 = 입력값 − 여백×2</p>
-      </div>
-
-      <div class="section">
-        <h2>절단면 방식</h2>
-        <label class="choice">
-          <input type="radio" name="jointMode" id="modeTeeth" value="teeth" checked>
-          <i class="ph ph-puzzle-piece"></i>
-          <div><div class="t">톱니 (핑거 조인트)</div><div class="n">서로 맞물려 조립 시 정렬됨</div></div>
-        </label>
-        <label class="choice">
-          <input type="radio" name="jointMode" id="modeFlat" value="flat">
-          <i class="ph ph-minus"></i>
-          <div><div class="t">직선 단면</div><div class="n">평평하게만 자름 (접착 전제)</div></div>
-        </label>
-        <div id="toothParams">
-          <div class="numrow"><label>이빨 폭</label><div class="field"><input type="number" id="toothWidth" value="15" min="2" step="0.5"><span class="unit">mm</span></div></div>
-          <div class="numrow"><label>이빨 깊이</label><div class="field"><input type="number" id="toothDepth" value="4" min="0.5" step="0.5"><span class="unit">mm</span></div></div>
-          <div class="numrow"><label>조립 여유</label><div class="field"><input type="number" id="clearance" value="0.3" min="0" step="0.05"><span class="unit">mm</span></div></div>
-        </div>
-        <p class="hint">절단면 자체를 톱니(핑거 조인트) 모양으로 잘라 서로 맞물리게 합니다. 레이저 커터의 박스 조인트와 같은 방식이라 속이 빈 얇은 벽에도 그대로 적용됩니다.</p>
-      </div>
-
-      <div class="section">
-        <button class="primary" id="runBtn" disabled><i class="ph ph-scissors"></i><span>분석 후 절단 실행</span></button>
-        <div id="status"></div>
-        <div id="summary"></div>
-      </div>
-
-      <div class="section">
-        <div class="checkrow" id="explodeRow" style="display:none">
-          <input type="checkbox" id="explodeChk">
-          <label for="explodeChk">분해 보기 (조각 간격 벌려서 미리보기, 실제 파일엔 영향 없음)</label>
-        </div>
-        <h2 id="piecesHeader" style="display:none">조각 목록</h2>
-        <button class="ghost" id="zipBtn" style="display:none"><i class="ph ph-file-zip"></i><span>전체 ZIP으로 다운로드</span></button>
-        <div id="pieceList"></div>
-      </div>
-    </div>
-  </div>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header">
+<a class="brand" href="../../"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="언어">
+<a href="../../tools/stl-cutter/" lang="ko" hreflang="ko" aria-current="page">한국어</a>
+<a href="../../en/tools/stl-cutter/" lang="en" hreflang="en">English</a>
+<a href="../../ja/tools/stl-cutter/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../zh/tools/stl-cutter/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../"><span aria-hidden="true">←</span> 모든 도구</a></p>
+<h1>STL 분할기</h1>
+<p class="lead">프린터 출력 크기를 입력하면 모델을 그 안에 들어가는 조각으로 나눠 드립니다. 이빨이 튀어나온 만큼까지 계산해서 조각 크기를 정합니다.</p>
+<noscript><p class="notice warn">이 도구를 사용하려면 브라우저에서 자바스크립트를 켜야 합니다.</p></noscript>
+<div class="tool">
+<link rel="stylesheet" href="../../assets/tools/stl-cutter/cutter.css">
+<div class="tool-grid">
+<div class="viewer" id="viewer"><p id="viewer-empty">모델을 불러오면 여기에 3D 미리보기가 나타납니다.</p></div>
+<div class="controls">
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.3mf,.obj">
+<strong>STL · 3MF · OBJ 파일을 끌어다 놓거나 눌러서 선택해 주세요</strong>
+<span>파일은 이 기기 안에서만 처리됩니다.</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<button class="button secondary" id="partial" type="button" hidden>온전한 부분만 불러오기</button>
+<p id="info" hidden></p>
+<p class="notice warn" id="open" hidden><span id="open-text"></span> <a href="../stl-inspector/">STL/3MF 검사·수리 도구에서 확인하기</a></p>
+</div>
+<form class="panel" id="form" novalidate>
+<fieldset class="cut-set">
+<legend>프린터 출력 크기</legend>
+<div class="fields">
+<div class="field"><label for="bed-x">가로 X (mm)</label><input id="bed-x" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+<div class="field"><label for="bed-y">세로 Y (mm)</label><input id="bed-y" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+<div class="field"><label for="bed-z">높이 Z (mm)</label><input id="bed-z" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+</div>
+<div class="field"><label for="margin">가장자리 여백 (mm)</label><input id="margin" type="number" inputmode="decimal" value="2" min="0" max="1000" step="any" required><small>각 방향에서 여백의 두 배를 뺀 크기 안에 조각이 들어가도록 자릅니다.</small></div>
+</fieldset>
+<fieldset class="cut-set">
+<legend>모델 방향</legend>
+<label class="check"><input type="radio" name="orient" value="keep" checked> 지금 방향 그대로</label>
+<label class="check"><input type="radio" name="orient" value="auto"> 조각 수가 가장 적어지도록 회전</label>
+<small>회전을 켜면 90° 단위로 돌려 보므로 얇은 판이 세워질 수 있습니다.</small>
+</fieldset>
+<fieldset class="cut-set">
+<legend>조각 수</legend>
+<label class="check"><input type="radio" name="count" value="auto" checked> 자동 (출력 크기에 맞춤)</label>
+<label class="check"><input type="radio" name="count" value="manual"> 직접 지정</label>
+<div class="fields" id="manual" hidden>
+<div class="field"><label for="n-x">X 방향 조각 수</label><input id="n-x" type="number" inputmode="numeric" value="2" min="1" max="20" step="1" required></div>
+<div class="field"><label for="n-y">Y 방향 조각 수</label><input id="n-y" type="number" inputmode="numeric" value="1" min="1" max="20" step="1" required></div>
+<div class="field"><label for="n-z">Z 방향 조각 수</label><input id="n-z" type="number" inputmode="numeric" value="1" min="1" max="20" step="1" required></div>
+</div>
+</fieldset>
+<fieldset class="cut-set">
+<legend>절단면</legend>
+<label class="check"><input type="radio" name="joint" value="teeth" checked> 핑거 조인트 (서로 맞물림)</label>
+<label class="check"><input type="radio" name="joint" value="flat"> 평면 (접착해서 조립)</label>
+<div id="teeth" class="cut-set">
+<div class="fields">
+<div class="field"><label for="tooth-w">이빨 폭 (mm)</label><input id="tooth-w" type="number" inputmode="decimal" value="15" min="0" max="500" step="any" required></div>
+<div class="field"><label for="tooth-d">이빨 깊이 (mm)</label><input id="tooth-d" type="number" inputmode="decimal" value="4" min="0.5" max="50" step="any" required></div>
+<div class="field"><label for="tooth-gap">조립 여유 (mm)</label><input id="tooth-gap" type="number" inputmode="decimal" value="0.3" min="0" max="2" step="any" required></div>
+</div>
+<small>조립 여유는 이빨 옆면 한쪽마다 두는 틈입니다. 이빨 폭을 0으로 하면 평면으로 자릅니다.</small>
+</div>
+</fieldset>
+<div class="cut-actions">
+<button class="button" id="run" type="submit" disabled>자르기</button>
+<button class="button secondary" id="cancel" type="button" hidden>취소</button>
+</div>
+<p class="notice" id="status" hidden></p>
+</form>
+</div>
+</div>
+<div class="panel cut-out" id="out" hidden>
+<h2>결과</h2>
+<p id="summary"></p>
+<p class="notice warn" id="warn" hidden></p>
+<label class="check" id="explode-row"><input type="checkbox" id="explode"> 조각을 벌려서 보기 (파일에는 영향 없음)</label>
+<h3>조립 지도</h3>
+<p class="lead">위에서 내려다본 배치입니다. 칸에 적힌 이름이 파일 이름 끝에 그대로 들어갑니다.</p>
+<div class="cut-map" id="map"></div>
+<div class="table-scroll">
+<table class="result">
+<caption>조각 목록</caption>
+<thead><tr><th scope="col">조각</th><th scope="col">실제 크기 (mm)</th><th scope="col">출력 크기 적합</th><th scope="col">파일</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+<div class="cut-actions">
+<button class="button" id="zip" type="button">전체 ZIP으로 받기</button>
+<button class="button secondary" id="map-save" type="button">조립 지도 저장 (SVG)</button>
+</div>
 </div>
 
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.179.0/build/three.module.js",
-    "three/examples/jsm/": "https://cdn.jsdelivr.net/npm/three@0.179.0/examples/jsm/",
-    "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.9.7/build/index.module.js",
-    "three-bvh-csg": "https://cdn.jsdelivr.net/npm/three-bvh-csg@0.0.18/src/index.js"
-  }
-}
-</script>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+</div>
+<section class="doc">
+<h2>이 도구가 하는 일</h2>
+<p>모델을 X·Y·Z 방향의 격자로 똑같은 간격으로 자릅니다. 조각 수는 출력 크기에서 가장자리 여백과 이빨 깊이를 뺀 값을 기준으로 정하므로, 이빨까지 포함한 조각이 출력 크기를 넘지 않습니다. 자른 뒤에는 조각마다 실제 크기를 다시 재서 맞는지 아닌지를 표로 보여 줍니다.</p>
+<p>절단면은 서로 맞물리는 핑거 조인트(상자 이음)나 평면 중에서 고를 수 있습니다. 이빨 폭과 깊이, 조립 여유를 직접 정할 수 있고, 여러 방향으로 자를 때는 절단면이 만나는 곳 옆의 이빨을 빼서, 이빨끼리 겹치거나 떨어져 나오는 조각이 생기지 않습니다.</p>
+<p>조각 파일 이름에는 X1-Y2처럼 격자 위치가 들어가고, 같은 이름이 적힌 조립 지도를 함께 드립니다. 조각은 하나씩 STL로 받거나 전체를 ZIP으로 받을 수 있습니다.</p>
+</section>
+<section class="doc">
+<h2>사용 방법</h2>
+<ol>
+<li>STL, 3MF, OBJ 파일을 끌어다 놓거나 눌러서 선택합니다. 크기와 삼각형 수가 표시되고, 메시에 구멍이 있으면 경고가 나옵니다.</li>
+<li>프린터 출력 크기(X·Y·Z)와 가장자리 여백을 입력합니다.</li>
+<li>모델 방향을 그대로 둘지, 조각 수가 줄도록 회전할지 고릅니다. 조각 수를 직접 정하고 싶으면 &#x27;직접 지정&#x27;을 선택합니다.</li>
+<li>절단면 방식을 고르고 &#x27;자르기&#x27;를 누릅니다. 진행 상황이 표시되며 언제든 취소할 수 있습니다.</li>
+<li>표에서 조각별 실제 크기와 적합 여부를 확인한 뒤 STL이나 ZIP으로 받습니다. 조립할 때는 조립 지도의 이름 순서대로 맞추면 됩니다.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>한계와 주의할 점</h2>
+<ul>
+<li>자르는 위치는 고를 수 없습니다. 항상 축에 나란한 평면으로, 같은 간격으로 자릅니다. 중요한 디테일을 피해서 자르거나 비스듬히 자르려면 CAD나 슬라이서의 절단 기능을 써야 합니다.</li>
+<li>모델은 구멍 없이 닫힌 메시여야 합니다. 열린 모서리가 있으면 경고를 띄우고 그래도 자르지만, 조각이 비거나 면이 빠질 수 있습니다. 잘린 조각에는 한쪽 면만 쪼개진 모서리(T자 이음)가 남는 경우가 많아, 이 사이트의 검사 도구를 포함한 메시 검사기는 열린 모서리가 있다고 표시합니다. 틈의 폭은 0이라 슬라이서가 대개 스스로 이어 붙이지만, 출력 전에 슬라이서 미리보기로 꼭 확인해 주세요.</li>
+<li>핑거 조인트는 조각이 절단면을 따라 한 방향으로 미끄러지는 것만 막아 줍니다. 잡아당기는 힘은 버티지 못하므로 접착제로 붙여야 합니다. 위아래(Z)로 자르면 위 조각의 이빨이 아래를 향해 서포트가 필요하니, 그럴 때는 평면 절단을 권합니다.</li>
+<li>조립 여유 0.3mm는 일반적인 FDM 프린터를 기준으로 한 시작값입니다. 프린터와 재료에 따라 빡빡하거나 헐거울 수 있으니 작은 조각으로 먼저 시험해 보세요. 이빨 폭은 변 길이에 딱 맞게 나뉘도록 조금 조정됩니다.</li>
+<li>조각은 조립된 위치 그대로 저장됩니다. 베드에 눕히거나 배치하는 일은 슬라이서에서 해야 합니다. 단위는 mm로 가정합니다.</li>
+<li>삼각형이 수백만 개인 파일은 자르는 데 수십 초에서 몇 분이 걸리고 메모리를 몇 GB 쓸 수 있습니다. 휴대폰에서는 큰 파일이 실패할 수 있습니다. 3D 미리보기와 절단 라이브러리는 처음 쓸 때 CDN에서 내려받으므로 인터넷 연결이 필요합니다(모델 파일은 전송되지 않습니다).</li>
+</ul>
+</section>
+<section class="doc"><h2>자주 묻는 질문</h2>
+<details><summary>조각이 정말 베드에 들어가나요?</summary><p>조각 수를 &#x27;자동&#x27;으로 두면 이빨이 튀어나온 길이까지 포함해서 격자를 정하고, 자른 뒤 조각의 실제 크기를 다시 재서 표에 &#x27;맞음&#x27; 또는 &#x27;초과&#x27;로 표시합니다. 조각 수를 직접 지정했다면 초과가 나올 수 있으니 표를 확인해 주세요.</p></details>
+<details><summary>얇은 판 모델이 세워져서 잘리지는 않나요?</summary><p>기본값은 &#x27;지금 방향 그대로&#x27;라서 모델을 돌리지 않습니다. &#x27;조각 수가 가장 적어지도록 회전&#x27;을 직접 켰을 때만 90° 단위로 돌리며, 돌렸다면 어느 축이 어디로 갔는지 결과에 적어 드립니다.</p></details>
+<details><summary>3MF나 OBJ 파일도 자를 수 있나요?</summary><p>네. STL(바이너리·ASCII), 3MF, OBJ를 읽습니다. 파일에 물체가 여러 개 있으면 하나의 모델로 합쳐서 자르고, 결과는 STL로 저장합니다. 색상이나 슬라이서 설정은 유지되지 않습니다.</p></details>
+<details><summary>조립 여유는 어디에 적용되나요?</summary><p>이빨의 양쪽 옆면에 각각 입력한 값만큼 틈을 둡니다. 이빨 끝과 홈 바닥은 틈 없이 맞닿으므로 조립했을 때 전체 길이는 원본과 같습니다.</p></details>
+<details><summary>파일이 서버로 올라가나요?</summary><p>아니요. 읽기, 자르기, ZIP 만들기까지 모두 이 브라우저 안에서 처리합니다. 내려받는 것은 3D 표시와 절단에 쓰는 공개 라이브러리뿐입니다.</p></details>
+</section>
+<section>
+<h2>다른 도구</h2>
+<ul class="cards">
+<li><a class="card" href="../../tools/stl-inspector/"><h3>STL/3MF 검사·수리</h3><p>구멍이나 뒤집힌 면 같은 메시 문제를 찾아 위치를 보여 주고, 고를 것만 골라 고칩니다. 크기와 베드 적합 여부를 확인하고 다른 형식이나 엑셀로 저장할 수 있습니다.</p><p class="formats">입력 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../tools/print-cost-calculator/"><h3>출력 무게·비용 계산기</h3><p>슬라이스한 G-code나 3D 모델에서 필라멘트 무게를 구해 재료비, 전기요금, 판매가까지 계산합니다.</p><p class="formats">입력 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../tools/gcode-analyzer/"><h3>G-code 분석기</h3><p>G-code에서 출력 시간과 필라멘트 사용량을 읽어 기능별, 필라멘트별로 나누어 보여 줍니다.</p><p class="formats">입력 · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../tools/infill-recommender/"><h3>채움(인필) 설정 추천</h3><p>출력물의 용도와 하중에 맞춰 Bambu Studio의 채움 패턴, 채움 밀도, 벽 수, 윗면·아랫면 층 수를 추천합니다.</p><p class="formats">입력 · 파일 불필요</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>파일은 서버로 전송되지 않습니다. 모든 계산은 이 브라우저 안에서만 이루어집니다.</p>
 
-<script type="module">
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
-import { STLExporter } from 'three/examples/jsm/exporters/STLExporter.js';
-import { Brush, Evaluator, ADDITION, SUBTRACTION, INTERSECTION } from 'three-bvh-csg';
-import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh';
-
-THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
-THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
-THREE.Mesh.prototype.raycast = acceleratedRaycast;
-
-// ---------- viewer setup ----------
-const viewerEl = document.getElementById('viewer');
-const viewerPlaceholder = document.getElementById('viewerPlaceholder');
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x161826);
-const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1e6);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-viewerEl.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.2));
-const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-dirLight.position.set(1, 1, 1);
-scene.add(dirLight);
-const orbit = new OrbitControls(camera, renderer.domElement);
-
-function resize() {
-  const w = viewerEl.clientWidth, h = viewerEl.clientHeight;
-  renderer.setSize(w, h);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-}
-window.addEventListener('resize', resize);
-resize();
-(function animate() {
-  requestAnimationFrame(animate);
-  orbit.update();
-  renderer.render(scene, camera);
-})();
-
-let displayGroup = new THREE.Group();
-scene.add(displayGroup);
-
-function frameCameraToBox(box) {
-  const size = box.getSize(new THREE.Vector3());
-  const center = box.getCenter(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  const dist = maxDim * 2.2;
-  camera.position.set(center.x + dist, center.y + dist, center.z + dist);
-  orbit.target.copy(center);
-  camera.near = maxDim / 100;
-  camera.far = maxDim * 100;
-  camera.updateProjectionMatrix();
-  orbit.update();
-}
-
-// ---------- state ----------
-let rawGeometry = null;   // as loaded, untouched
-let baseName = 'model';
-let pieces = null;        // Map key "i,j,k" -> { geometry, box:{minX..}, index:[i,j,k] }
-let gridN = [1, 1, 1];
-
-const els = {
-  fileInput: document.getElementById('fileInput'),
-  origInfo: document.getElementById('origInfo'),
-  pX: document.getElementById('pX'), pY: document.getElementById('pY'), pZ: document.getElementById('pZ'),
-  margin: document.getElementById('margin'),
-  toothWidth: document.getElementById('toothWidth'), toothDepth: document.getElementById('toothDepth'),
-  clearance: document.getElementById('clearance'), toothParams: document.getElementById('toothParams'),
-  runBtn: document.getElementById('runBtn'),
-  status: document.getElementById('status'),
-  summary: document.getElementById('summary'),
-  explodeRow: document.getElementById('explodeRow'), explodeChk: document.getElementById('explodeChk'),
-  piecesHeader: document.getElementById('piecesHeader'),
-  zipBtn: document.getElementById('zipBtn'),
-  pieceList: document.getElementById('pieceList'),
-};
-
-els.fileInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  baseName = file.name.replace(/\.stl$/i, '');
-  const reader = new FileReader();
-  reader.onload = (ev) => loadSTL(ev.target.result);
-  reader.readAsArrayBuffer(file);
-});
-
-function loadSTL(arrayBuffer) {
-  viewerPlaceholder.style.display = 'none';
-  rawGeometry = new STLLoader().parse(arrayBuffer);
-  rawGeometry.computeBoundingBox();
-  const bb = rawGeometry.boundingBox;
-  const size = [bb.max.x - bb.min.x, bb.max.y - bb.min.y, bb.max.z - bb.min.z];
-  els.origInfo.textContent = `원본 크기 (mm): 가로 ${size[0].toFixed(1)} x 세로 ${size[1].toFixed(1)} x 높이 ${size[2].toFixed(1)}`;
-
-  displayGroup.clear();
-  const mesh = new THREE.Mesh(rawGeometry, new THREE.MeshStandardMaterial({ color: 0x9184d9, metalness: 0.1, roughness: 0.6 }));
-  displayGroup.add(mesh);
-  frameCameraToBox(new THREE.Box3().setFromObject(mesh));
-
-  els.runBtn.disabled = false;
-  els.summary.textContent = '';
-  els.piecesHeader.style.display = 'none';
-  els.zipBtn.style.display = 'none';
-  els.explodeRow.style.display = 'none';
-  els.pieceList.innerHTML = '';
-  pieces = null;
-}
-
-document.querySelectorAll('input[name=jointMode]').forEach(r => r.addEventListener('change', () => {
-  els.toothParams.style.display = document.querySelector('input[name=jointMode]:checked').value === 'teeth' ? 'block' : 'none';
-}));
-
-els.runBtn.addEventListener('click', () => {
-  els.runBtn.disabled = true;
-  els.status.textContent = '처리 중... (모델이 복잡하면 시간이 걸릴 수 있습니다)';
-  requestAnimationFrame(() => requestAnimationFrame(runCut));
-});
-
-// ---------- orientation search ----------
-const PERMS = [
-  { p: [0, 1, 2], sign: 1 },
-  { p: [0, 2, 1], sign: -1 },
-  { p: [1, 0, 2], sign: -1 },
-  { p: [1, 2, 0], sign: 1 },
-  { p: [2, 0, 1], sign: 1 },
-  { p: [2, 1, 0], sign: -1 },
-];
-const AXIS_NAME = ['가로(X)', '세로(Y)', '높이(Z)'];
-
-function pickBestOrientation(size, effX, effY, effZ) {
-  let best = null;
-  for (const { p, sign } of PERMS) {
-    const rDim = [size[p[0]], size[p[1]], size[p[2]]];
-    const eff = [effX, effY, effZ];
-    const n = rDim.map((d, i) => Math.max(1, Math.ceil(d / eff[i] - 1e-9)));
-    const total = n[0] * n[1] * n[2];
-    const cutAxes = n.filter(v => v > 1).length;
-    const isIdentity = p[0] === 0 && p[1] === 1 && p[2] === 2;
-    const key = { total, cutAxes, isIdentity: isIdentity ? 0 : 1 };
-    if (!best || key.total < best.key.total ||
-        (key.total === best.key.total && key.cutAxes < best.key.cutAxes) ||
-        (key.total === best.key.total && key.cutAxes === best.key.cutAxes && key.isIdentity < best.key.isIdentity)) {
-      best = { p, sign, rDim, n, key };
-    }
-  }
-  return best;
-}
-
-function buildRotationMatrix(p, sign) {
-  const m = new Array(9).fill(0);
-  for (let row = 0; row < 3; row++) m[row * 3 + p[row]] = 1;
-  if (sign === -1) { m[6] *= -1; m[7] *= -1; m[8] *= -1; } // flip row 2 (z)
-  return new THREE.Matrix4().set(
-    m[0], m[1], m[2], 0,
-    m[3], m[4], m[5], 0,
-    m[6], m[7], m[8], 0,
-    0, 0, 0, 1
-  );
-}
-
-// ---------- CSG helpers ----------
-const evaluator = new Evaluator();
-evaluator.attributes = ['position', 'normal']; // STL geometry has no uv attribute
-function brushOf(geom) {
-  const b = new Brush(geom);
-  b.updateMatrixWorld();
-  return b;
-}
-function runCut() {
-  try {
-    rawGeometry.computeBoundingBox();
-    const bb0 = rawGeometry.boundingBox;
-    const size = [bb0.max.x - bb0.min.x, bb0.max.y - bb0.min.y, bb0.max.z - bb0.min.z];
-
-    const margin = parseFloat(els.margin.value) || 0;
-    const printer = [parseFloat(els.pX.value), parseFloat(els.pY.value), parseFloat(els.pZ.value)];
-    const eff = printer.map(v => v - 2 * margin);
-    if (eff.some(v => v <= 0)) { alert('안전 여백을 뺀 실제 사용 크기가 0 이하입니다. 값을 확인하세요.'); els.runBtn.disabled = false; els.status.textContent = ''; return; }
-
-    const best = pickBestOrientation(size, eff[0], eff[1], eff[2]);
-    gridN = best.n;
-
-    // bake rotation into a fresh geometry, then move min corner to origin
-    const geom = rawGeometry.clone();
-    geom.applyMatrix4(buildRotationMatrix(best.p, best.sign));
-    geom.computeBoundingBox();
-    const bb = geom.boundingBox;
-    geom.applyMatrix4(new THREE.Matrix4().makeTranslation(-bb.min.x, -bb.min.y, -bb.min.z));
-    geom.computeBoundingBox();
-    const dims = [geom.boundingBox.max.x, geom.boundingBox.max.y, geom.boundingBox.max.z];
-    geom.computeBoundsTree();
-
-    const mapLines = [0, 1, 2].map(k => `  원본 ${AXIS_NAME[best.p[k]]} (${size[best.p[k]].toFixed(1)}mm) → 프린터 ${AXIS_NAME[k]}`).join('\n');
-
-    if (gridN[0] === 1 && gridN[1] === 1 && gridN[2] === 1) {
-      pieces = new Map();
-      pieces.set('0,0,0', { geometry: geom, index: [0, 0, 0], box: { cx: dims[0] / 2, cy: dims[1] / 2, cz: dims[2] / 2 } });
-      els.summary.textContent = `회전만으로 프린터 크기에 맞습니다. 절단 불필요.\n${mapLines}`;
-    } else {
-      const cellSize = [dims[0] / gridN[0], dims[1] / gridN[1], dims[2] / gridN[2]];
-      const jointMode = document.querySelector('input[name=jointMode]:checked').value;
-      const toothWidth = parseFloat(els.toothWidth.value);
-      const toothDepth = parseFloat(els.toothDepth.value);
-      const clearance = parseFloat(els.clearance.value);
-      pieces = cutIntoGrid(geom, gridN, cellSize, jointMode, toothWidth, toothDepth, clearance);
-      const modeLabel = jointMode === 'teeth' ? '톱니(핑거 조인트)' : '직선 단면';
-      els.summary.textContent =
-        `총 ${pieces.size}개 조각 (X:${gridN[0]}분할 x Y:${gridN[1]}분할 x Z:${gridN[2]}분할, ${modeLabel})\n${mapLines}`;
-    }
-
-    showPieces();
-    els.status.textContent = '완료';
-  } catch (err) {
-    console.error(err);
-    els.status.textContent = '오류: ' + err.message + ' (모델이 완전히 닫힌 solid(watertight)가 아닐 수 있습니다)';
-  } finally {
-    els.runBtn.disabled = false;
-  }
-}
-
-// Builds an axis-aligned box geometry from per-axis [min,max] ranges given as (axis, combAxis, keepAxis) triples.
-function buildAxisBox(axis, combAxis, keepAxis, aMin, aMax, uMin, uMax, vMin, vMax) {
-  const min = [0, 0, 0], max = [0, 0, 0];
-  min[axis] = aMin; max[axis] = aMax;
-  min[combAxis] = uMin; max[combAxis] = uMax;
-  min[keepAxis] = vMin; max[keepAxis] = vMax;
-  const w = max[0] - min[0], h = max[1] - min[1], d = max[2] - min[2];
-  const cx = (min[0] + max[0]) / 2, cy = (min[1] + max[1]) / 2, cz = (min[2] + max[2]) / 2;
-  return new THREE.BoxGeometry(w, h, d).translate(cx, cy, cz);
-}
-
-// One internal face of a cell: alternating tabs (added) / notches (subtracted) along combAxis, full-span along keepAxis.
-// role 'max' = this cell is the lower side of the interface (its box normally ends at `plane`).
-// role 'min' = this cell is the upper side of the interface (its box normally starts at `plane`).
-function addFaceTeeth(ops, axis, combAxis, keepAxis, plane, uMin, uMax, vMin, vMax, toothWidth, toothDepth, clearance, role) {
-  const segStart = Math.floor(uMin / toothWidth);
-  const segEnd = Math.ceil(uMax / toothWidth);
-  for (let s = segStart; s < segEnd; s++) {
-    const su0 = Math.max(uMin, s * toothWidth), su1 = Math.min(uMax, (s + 1) * toothWidth);
-    if (su1 - su0 < 0.5) continue;
-    const even = (((s % 2) + 2) % 2) === 0;
-    let type, aMin, aMax, shrink;
-    if (role === 'max') {
-      if (even) { type = 'add'; aMin = plane; aMax = plane + toothDepth - clearance / 2; shrink = clearance / 2; }
-      else { type = 'sub'; aMin = plane - toothDepth; aMax = plane; shrink = 0; }
-    } else {
-      if (even) { type = 'sub'; aMin = plane; aMax = plane + toothDepth; shrink = 0; }
-      else { type = 'add'; aMin = plane - toothDepth + clearance / 2; aMax = plane; shrink = clearance / 2; }
-    }
-    if (aMax - aMin < 0.2 || su1 - shrink - (su0 + shrink) < 0.2) continue;
-    ops.push({ type, geom: buildAxisBox(axis, combAxis, keepAxis, aMin, aMax, su0 + shrink, su1 - shrink, vMin, vMax) });
-  }
-}
-
-function buildCombOpsForCell(idxArr, n, cellSize, toothWidth, toothDepth, clearance) {
-  const ops = [];
-  for (let axis = 0; axis < 3; axis++) {
-    if (n[axis] < 2) continue;
-    const oa = [0, 1, 2].filter(a => a !== axis);
-    const combLocal = cellSize[oa[0]] >= cellSize[oa[1]] ? 0 : 1; // comb along the wider of the two, for more/sturdier teeth
-    const combAxis = oa[combLocal], keepAxis = oa[1 - combLocal];
-    const uMin = idxArr[combAxis] * cellSize[combAxis], uMax = uMin + cellSize[combAxis];
-    const vMin = idxArr[keepAxis] * cellSize[keepAxis], vMax = vMin + cellSize[keepAxis];
-
-    if (idxArr[axis] > 0) {
-      addFaceTeeth(ops, axis, combAxis, keepAxis, idxArr[axis] * cellSize[axis], uMin, uMax, vMin, vMax, toothWidth, toothDepth, clearance, 'min');
-    }
-    if (idxArr[axis] < n[axis] - 1) {
-      addFaceTeeth(ops, axis, combAxis, keepAxis, (idxArr[axis] + 1) * cellSize[axis], uMin, uMax, vMin, vMax, toothWidth, toothDepth, clearance, 'max');
-    }
-  }
-  return ops;
-}
-
-function cutIntoGrid(geom, n, cellSize, jointMode, toothWidth, toothDepth, clearance) {
-  const meshBrush = brushOf(geom);
-  const out = new Map();
-  const EPS = 0.05;
-  for (let i = 0; i < n[0]; i++) for (let j = 0; j < n[1]; j++) for (let k = 0; k < n[2]; k++) {
-    const idxArr = [i, j, k];
-    const min = [i * cellSize[0], j * cellSize[1], k * cellSize[2]];
-    const max = [(i + 1) * cellSize[0], (j + 1) * cellSize[1], (k + 1) * cellSize[2]];
-    for (let a = 0; a < 3; a++) {
-      if (idxArr[a] === 0) min[a] -= EPS; // outer faces always get a hair of overlap padding
-      if (idxArr[a] === n[a] - 1) max[a] += EPS;
-      if (jointMode === 'flat') { // no teeth to interlock the pieces, so pad internal faces too
-        if (idxArr[a] > 0) min[a] -= EPS;
-        if (idxArr[a] < n[a] - 1) max[a] += EPS;
-      }
-    }
-    const w = max[0] - min[0], h = max[1] - min[1], d = max[2] - min[2];
-    const cx = (min[0] + max[0]) / 2, cy = (min[1] + max[1]) / 2, cz = (min[2] + max[2]) / 2;
-    let cutGeom = new THREE.BoxGeometry(w, h, d).translate(cx, cy, cz);
-
-    const teethOps = jointMode === 'teeth' ? buildCombOpsForCell(idxArr, n, cellSize, toothWidth, toothDepth, clearance) : [];
-    if (teethOps.length) {
-      let current = brushOf(cutGeom);
-      for (const op of teethOps) {
-        const result = evaluator.evaluate(current, brushOf(op.geom), op.type === 'add' ? ADDITION : SUBTRACTION);
-        current = brushOf(result.geometry);
-      }
-      cutGeom = current.geometry;
-    }
-
-    const result = evaluator.evaluate(meshBrush, brushOf(cutGeom), INTERSECTION);
-    const posAttr = result.geometry.attributes.position;
-    if (!posAttr || posAttr.count < 9) continue; // empty cell, skip
-    result.geometry.computeVertexNormals();
-    out.set(`${i},${j},${k}`, { geometry: result.geometry, index: [i, j, k] });
-  }
-  return out;
-}
-
-// ---------- display + export ----------
-const colorCycle = [0x9184d9, 0xff8a3a, 0x4ade80, 0xf472b6, 0xfacc15, 0x38bdf8, 0xb5abfc, 0xfb7185];
-
-function showPieces() {
-  displayGroup.clear();
-  const overallBox = new THREE.Box3();
-  const centers = [];
-  for (const { geometry, index } of pieces.values()) {
-    geometry.computeBoundingBox();
-    const b = geometry.boundingBox;
-    const c = new THREE.Vector3(); b.getCenter(c);
-    centers.push({ c, index });
-  }
-  const gridCenter = new THREE.Vector3();
-  centers.forEach(e => gridCenter.add(e.c));
-  gridCenter.divideScalar(Math.max(1, centers.length));
-
-  let ci = 0;
-  const meshByKey = new Map();
-  for (const [key, { geometry }] of pieces) {
-    const mat = new THREE.MeshStandardMaterial({ color: colorCycle[ci++ % colorCycle.length], metalness: 0.1, roughness: 0.6 });
-    const mesh = new THREE.Mesh(geometry, mat);
-    displayGroup.add(mesh);
-    meshByKey.set(key, mesh);
-    overallBox.expandByObject(mesh);
-  }
-  frameCameraToBox(overallBox);
-
-  els.explodeRow.style.display = pieces.size > 1 ? 'flex' : 'none';
-  els.explodeChk.onchange = () => {
-    const factor = els.explodeChk.checked ? 1.6 : 0;
-    for (const [key, mesh] of meshByKey) {
-      const [i, j, k] = key.split(',').map(Number);
-      const c = centers.find(e => e.index[0] === i && e.index[1] === j && e.index[2] === k).c;
-      const dir = c.clone().sub(gridCenter);
-      mesh.position.copy(dir.multiplyScalar(factor));
-    }
-  };
-  els.explodeChk.checked = false;
-
-  renderPieceList();
-}
-
-function exportPieceSTL(geometry) {
-  const mesh = new THREE.Mesh(geometry);
-  const result = new STLExporter().parse(mesh, { binary: true });
-  return result.buffer;
-}
-
-function renderPieceList() {
-  els.piecesHeader.style.display = 'block';
-  els.zipBtn.style.display = pieces.size > 1 ? 'flex' : 'none';
-  els.pieceList.innerHTML = '';
-  for (const [key, { geometry, index }] of pieces) {
-    geometry.computeBoundingBox();
-    const s = geometry.boundingBox.getSize(new THREE.Vector3());
-    const row = document.createElement('div');
-    row.className = 'piece-row';
-    row.innerHTML = `<span>${key} &nbsp;(${s.x.toFixed(0)}x${s.y.toFixed(0)}x${s.z.toFixed(0)}mm)</span>`;
-    const btn = document.createElement('button');
-    btn.className = 'ghost'; btn.textContent = '다운로드';
-    btn.onclick = () => downloadArrayBuffer(exportPieceSTL(geometry), `${baseName}_${index.join('-')}.stl`);
-    row.appendChild(btn);
-    els.pieceList.appendChild(row);
-  }
-}
-
-function downloadArrayBuffer(buffer, name) {
-  const blob = new Blob([buffer], { type: 'application/octet-stream' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = name;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-els.zipBtn.addEventListener('click', async () => {
-  const zip = new JSZip();
-  for (const [, { geometry, index }] of pieces) {
-    zip.file(`${baseName}_${index.join('-')}.stl`, exportPieceSTL(geometry));
-  }
-  const blob = await zip.generateAsync({ type: 'blob' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = `${baseName}_parts.zip`;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
-</script>
+</main>
+<footer class="site-footer"><p>가입도, 업로드도, 추적도 없는 무료 도구입니다.</p></footer>
+<script>window.T={"lang":"ko","js_err_empty":"{name}: 파일이 비어 있습니다(0바이트).","js_err_wrong_type":"{name}: 지원하지 않는 형식입니다. 사용할 수 있는 형식: {types}","js_err_not_mesh":"{name}: 3D 모델 데이터를 찾지 못했습니다. STL, 3MF, OBJ 파일이 맞는지 확인해 주세요.","js_err_truncated":"{name}: 파일이 중간에 잘려 있습니다. 삼각형 {declared}개 중 {present}개만 들어 있습니다.","js_err_truncated_unknown":"{name}: 파일이 중간에 잘려 있습니다. 온전한 삼각형은 {present}개입니다.","js_load_partial":"온전한 부분만 불러오기","js_err_too_large":"{name}: 파일이 너무 커서 이 기기의 메모리로는 열 수 없습니다. 다른 탭을 닫거나 데스크톱 브라우저에서 다시 시도해 주세요.","js_err_no_triangles":"{name}: 삼각형이 하나도 없습니다.","js_err_unknown":"{name}: 파일을 처리하지 못했습니다. ({detail})","js_bad_triangles":"좌표가 숫자가 아닌(NaN·무한대) 삼각형 {n}개는 제외했습니다.","js_reading":"{name} 읽는 중… {percent}%","js_working":"처리하는 중…","js_num_required":"값을 입력해 주세요.","js_num_invalid":"숫자만 입력해 주세요.","js_num_min":"{min} 이상으로 입력해 주세요.","js_num_max":"{max} 이하로 입력해 주세요.","js_unit_h":"시간","js_unit_m":"분","js_unit_s":"초","js_viewer_fail":"3D 미리보기를 표시하지 못했습니다(인터넷 연결 또는 WebGL 문제). 자르기와 다운로드는 그대로 쓸 수 있습니다.","js_model_info":"{name}: {size} mm, 삼각형 {n}개","js_open_warn":"이 메시는 닫혀 있지 않습니다. 열려 있거나 셋 이상의 면이 만나는 모서리가 {n}개 있어서, 자른 조각이 비거나 면이 빠질 수 있습니다.","js_err_fields":"빨갛게 표시된 입력값을 확인해 주세요.","js_err_count_int":"조각 수는 정수로 입력해 주세요.","js_err_margin":"여백을 빼면 쓸 수 있는 크기가 남지 않습니다. 출력 크기를 키우거나 여백을 줄여 주세요.","js_err_no_fit":"이 출력 크기로는 이빨 깊이를 감안하면 맞는 조각을 만들 수 없습니다. 이빨 깊이를 줄이거나 평면 절단을 선택해 주세요.","js_err_too_long":"이 출력 크기로는 한 방향으로 50조각이 넘게 필요합니다. 모델의 단위(mm)와 출력 크기를 확인해 주세요.","js_err_too_many":"조각이 {n}개로 너무 많습니다(최대 {max}개). 출력 크기나 조각 수를 확인해 주세요.","js_err_tooth_small":"조립 여유에 비해 이빨 폭이 너무 좁습니다. 이빨 폭을 늘리거나 여유를 줄여 주세요.","js_err_tooth_deep":"조각 두께에 비해 이빨이 너무 깊습니다. 이빨 깊이를 줄이거나 조각 수를 줄여 주세요.","js_stage_lib":"절단 라이브러리 불러오는 중…","js_stage_prep":"모델 준비하는 중…","js_stage_cut":"자르는 중… {done}/{total}","js_err_lib":"절단에 필요한 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요. ({detail})","js_err_cut":"{name}: 자르는 중에 오류가 났습니다. 메시가 닫혀 있지 않거나 면이 서로 겹쳐 있을 수 있습니다. ({detail})","js_err_no_pieces":"자른 결과가 비어 있습니다. 메시가 닫혀 있는지 확인해 주세요.","js_sum_nocut":"자르지 않아도 출력 크기에 들어갑니다.","js_sum_grid":"조각 {total}개 (X {x} × Y {y} × Z {z}), {mode}.","js_mode_teeth":"핑거 조인트","js_mode_flat":"평면 절단","js_flat_zero":"이빨 폭이 0이라서 평면으로 잘랐습니다.","js_flat_short":"절단면이 이빨 두 개가 들어가기에는 좁아서 평면으로 잘랐습니다.","js_sum_rotated":"모델을 회전했습니다: 원래의 {x}축이 X, {y}축이 Y, {z}축이 Z 방향이 됩니다.","js_sum_usable":"여백을 뺀 사용 가능 크기: {size} mm.","js_fit_yes":"맞음","js_fit_no":"초과","js_warn_nofit":"조각 {n}개가 사용 가능 크기보다 큽니다. 조각 수를 늘리거나 '자동'을 선택해 주세요.","js_warn_volume":"조각 부피의 합이 원본과 {percent}% 다릅니다. 절단이 잘못됐을 수 있으니 슬라이서에서 조각을 확인해 주세요.","js_warn_open_result":"원본 메시가 닫혀 있지 않아서 조각이 올바르지 않을 수 있습니다. 슬라이서 미리보기로 확인해 주세요.","js_cancelled":"취소했습니다."}</script>
+<script type="module" src="../../assets/tools/stl-cutter/main.js"></script>
 </body>
 </html>

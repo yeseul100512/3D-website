@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G-code Analyzer – print time, filament use and per-feature breakdown | BENCH</title>
+<meta name="description" content="Open a .gcode or .gcode.3mf file to see the slicer&#x27;s print time, filament length and weight, layer count and how much filament goes into walls, infill and supports. Free, in your browser, nothing is uploaded.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/gcode-analyzer/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="G-code Analyzer – print time, filament use and per-feature breakdown | BENCH">
+<meta property="og:description" content="Open a .gcode or .gcode.3mf file to see the slicer&#x27;s print time, filament length and weight, layer count and how much filament goes into walls, infill and supports. Free, in your browser, nothing is uploaded.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"G-code Analyzer","url":"https://yeseul100512.github.io/3D-website/en/tools/gcode-analyzer/","description":"Open a .gcode or .gcode.3mf file to see the slicer's print time, filament length and weight, layer count and how much filament goes into walls, infill and supports. Free, in your browser, nothing is uploaded.","inLanguage":"en","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why does the real print take longer or shorter than the slicer said?","acceptedAnswer":{"@type":"Answer","text":"A slicer estimates travel time from an acceleration model that never matches the printer's firmware exactly. Heating, bed levelling, filament changes and purging also take a different amount of time on each machine. This tool does not claim to predict better than the slicer; it shows the slicer's own number."}},{"@type":"Question","name":"Why is “Summed from E moves” slightly different from the header?","acceptedAnswer":{"@type":"Answer","text":"The header is what the slicer calculated; the sum is what the extrusion commands in the file actually add up to. Purge lines in the start G-code and rounding usually cause a difference of under 1%. If the two differ by more than 5%, the file may have been edited or cut off, and a warning is shown."}},{"@type":"Question","name":"Can I get a total for several plates?","acceptedAnswer":{"@type":"Answer","text":"Yes. Select the G-code files of all plates together, or drop a .gcode.3mf that contains several plates. Each plate gets its own result, and the total time and filament appear at the bottom."}},{"@type":"Question","name":"Is my file uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The file is read and processed inside this browser only. When you continue to the cost calculator, just the weight and time are passed after the # in the address, which browsers do not send to a server."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="brand" href="../../../en/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="Language">
+<a href="../../../tools/gcode-analyzer/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/gcode-analyzer/" lang="en" hreflang="en" aria-current="page">English</a>
+<a href="../../../ja/tools/gcode-analyzer/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../../zh/tools/gcode-analyzer/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../en/"><span aria-hidden="true">←</span> All tools</a></p>
+<h1>G-code Analyzer</h1>
+<p class="lead">Drop a sliced file to read its print time and filament use. The tool also adds up every extrusion move to check the numbers in the header.</p>
+<noscript><p class="notice warn">This tool needs JavaScript. Please enable it in your browser.</p></noscript>
+<div class="tool">
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".gcode,.gco,.g,.bgcode,.3mf" multiple>
+<strong>Drop G-code files here, or click to choose</strong>
+<span>.gcode · .gco · .g · .gcode.3mf, several at once</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errors" style="white-space:pre-line" hidden></p>
+</div>
+<div id="out" style="display:grid;gap:16px;margin-top:16px"></div>
+<div class="panel" id="actions" style="margin-top:16px" hidden>
+<h2>Totals and export</h2>
+<div id="totals"></div>
+<p style="display:flex;flex-wrap:wrap;gap:8px">
+<a class="button" id="cost" href="../print-cost-calculator/">Calculate cost with these numbers</a>
+<button type="button" class="button secondary" id="copy">Copy results</button>
+<button type="button" class="button secondary" id="csv">Save CSV</button>
+<button type="button" class="button secondary" id="xlsx">Save xlsx</button>
+</p>
+<p class="notice" id="copied" hidden></p>
+</div>
+
+</div>
+<section class="doc">
+<h2>What this tool does</h2>
+<p>It opens G-code written by a slicer (.gcode, .gco, .g) or a .gcode.3mf from Bambu Studio or OrcaSlicer and lists what the slicer recorded in the file: estimated print time, filament length, volume and weight, layer count and height, nozzle and bed temperatures, and the number of filament changes.</p>
+<p>It does not rely on the header alone. Every extrusion (E) move is added up to recompute the filament length and to show where the filament goes: outer walls, inner walls, infill, supports and so on. You get a warning when the header disagrees with the moves or was never filled in.</p>
+<p>Add several files or plates at once to get a combined total. Results can be copied, saved as CSV or xlsx, or sent to the cost calculator.</p>
+</section>
+<section class="doc">
+<h2>How to use it</h2>
+<ol>
+<li>Export G-code or a .gcode.3mf from your slicer, then drop it on the area above or click the area to choose it. You can select several files at once.</li>
+<li>Each file gets a summary, a table per filament and a table per feature. Anything that needs your attention appears as a warning above the tables.</li>
+<li>Use the buttons below to copy the results or save them as CSV or xlsx. “Calculate cost with these numbers” opens the cost calculator with the weight and time filled in.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>Limits and caveats</h2>
+<ul>
+<li>Print time is the number the slicer wrote into the file; this tool does not make its own prediction. Real prints differ from it because of filament changes, the printer&#x27;s acceleration limits and what the firmware does before and during the print (heating, bed levelling, calibration).</li>
+<li>Weight is shown only when the file states a weight or a density. Files from slicers that record length only, such as Cura, give length and volume; if the filament diameter is missing, 1.75 mm is assumed.</li>
+<li>The per-feature table needs ;TYPE: or ; FEATURE: comments, which Bambu Studio, OrcaSlicer, PrusaSlicer and Cura write. The purge line in the start G-code is usually not counted in the slicer&#x27;s header, so the summed length can be slightly higher.</li>
+<li>PrusaSlicer&#x27;s binary G-code (.bgcode) cannot be read; export plain G-code instead. For files that use firmware retraction (G10/G11) or volumetric extrusion (M200), the summed length may be off.</li>
+<li>Plain G-code is read in pieces, so files of tens of megabytes do not freeze the page. A .gcode.3mf has to be unpacked in memory, so a very large one may not open on a phone.</li>
+</ul>
+</section>
+<section class="doc"><h2>Frequently asked questions</h2>
+<details><summary>Why does the real print take longer or shorter than the slicer said?</summary><p>A slicer estimates travel time from an acceleration model that never matches the printer&#x27;s firmware exactly. Heating, bed levelling, filament changes and purging also take a different amount of time on each machine. This tool does not claim to predict better than the slicer; it shows the slicer&#x27;s own number.</p></details>
+<details><summary>Why is “Summed from E moves” slightly different from the header?</summary><p>The header is what the slicer calculated; the sum is what the extrusion commands in the file actually add up to. Purge lines in the start G-code and rounding usually cause a difference of under 1%. If the two differ by more than 5%, the file may have been edited or cut off, and a warning is shown.</p></details>
+<details><summary>Can I get a total for several plates?</summary><p>Yes. Select the G-code files of all plates together, or drop a .gcode.3mf that contains several plates. Each plate gets its own result, and the total time and filament appear at the bottom.</p></details>
+<details><summary>Is my file uploaded anywhere?</summary><p>No. The file is read and processed inside this browser only. When you continue to the cost calculator, just the weight and time are passed after the # in the address, which browsers do not send to a server.</p></details>
+</section>
+<section>
+<h2>Other tools</h2>
+<ul class="cards">
+<li><a class="card" href="../../../en/tools/stl-inspector/"><h3>STL/3MF Check &amp; Repair</h3><p>Find holes, flipped faces and other mesh problems, see where they are, and fix only what you choose. Also checks size and bed fit and saves to another format or to Excel.</p><p class="formats">Input · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../en/tools/stl-cutter/"><h3>STL Splitter</h3><p>Split a model that is larger than your bed into printable pieces, with finger joints so the parts line up.</p><p class="formats">Input · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../en/tools/print-cost-calculator/"><h3>Print Weight &amp; Cost Calculator</h3><p>Get filament weight from sliced G-code or a 3D model, then work out material cost, electricity and a selling price.</p><p class="formats">Input · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../en/tools/infill-recommender/"><h3>Infill Recommender</h3><p>Answer a few questions and get a Bambu Studio infill pattern, density, wall loops and top/bottom layers for your part.</p><p class="formats">Input · No file needed</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Your files never leave your browser. Everything is calculated on this device.</p>
+
+</main>
+<footer class="site-footer"><p>Free to use. No sign-up, no uploads, no tracking.</p></footer>
+<script>window.T={"lang":"en","js_err_empty":"{name} is empty (0 bytes).","js_err_wrong_type":"{name} is not a supported file type. Supported: {types}","js_err_not_mesh":"{name} is damaged or cut off and cannot be opened.","js_err_truncated":"{name} is cut off: it holds only {present} of the {declared} triangles it declares.","js_err_truncated_unknown":"{name} is cut off: only {present} complete triangles were found.","js_load_partial":"Load the intact part","js_err_too_large":"{name} is too large for this device's memory. Close other tabs or try a desktop browser.","js_err_no_triangles":"{name} contains no triangles.","js_err_unknown":"Could not process {name}. ({detail})","js_bad_triangles":"{n} triangles with invalid coordinates (NaN or infinity) were left out.","js_reading":"Reading {name}… {percent}%","js_working":"Working…","js_num_required":"Enter a value.","js_num_invalid":"Enter a number.","js_num_min":"Enter {min} or more.","js_num_max":"Enter {max} or less.","js_unit_h":"h","js_unit_m":"m","js_unit_s":"s","js_status":"Analysing {name}… {percent}% ({i} of {n})","js_err_not_text":"{name} is not a G-code text file. Check that it was exported as G-code from a slicer.","js_err_bgcode":"{name} is binary G-code (.bgcode), which cannot be read. Export plain G-code (.gcode) from your slicer.","js_err_no_moves":"{name} contains no move commands (G0/G1). It does not look like G-code.","js_err_no_plate":"{name} is a 3MF without sliced G-code. Use the file your slicer saves with “Export plate sliced file” (.gcode.3mf).","js_plate":"plate {n}","js_summary":"Summary","js_unknown":"not in the file","js_slicer":"Slicer","js_printer":"Printer","js_time":"Print time (slicer's estimate)","js_time_model":"model only {t}","js_filament":"Filament used","js_esum":"Summed from E moves","js_esum_diff":"{diff}% vs header","js_layers":"Layers","js_layers_z":"counted from Z changes","js_layer_height":"Layer height","js_max_z":"Highest printed Z","js_nozzle":"Nozzle temperature","js_bed":"Bed temperature","js_changes":"Filament changes","js_slice_info":"slice_info.config in the 3MF","js_fil_caption":"By filament","js_slot":"Slot","js_type":"Type","js_colour":"Colour","js_length":"Length","js_volume":"Volume","js_weight":"Weight","js_feat_caption":"By feature (summed from E moves)","js_feature":"Feature","js_share":"Share","js_feat_outer_wall":"Outer wall","js_feat_inner_wall":"Inner wall","js_feat_overhang_wall":"Overhang wall","js_feat_sparse_infill":"Sparse infill","js_feat_solid_infill":"Internal solid infill","js_feat_top_surface":"Top surface","js_feat_bottom_surface":"Bottom surface","js_feat_skin":"Top/bottom skin","js_feat_bridge":"Bridge","js_feat_gap_infill":"Gap infill","js_feat_support":"Support","js_feat_support_interface":"Support interface","js_feat_skirt_brim":"Skirt/brim","js_feat_prime_tower":"Prime tower","js_feat_ironing":"Ironing","js_feat_custom":"Start/end G-code","js_feat_unlabelled":"Unlabelled","js_warn_time_placeholder":"The print time in the header (;TIME:{value}) looks like a placeholder the slicer never filled in, so it was ignored. If the file has ;TIME_ELAPSED lines, the last one is shown instead.","js_warn_filament_placeholder":"The header says 0 filament used. The figures shown were summed from the E moves instead.","js_warn_mismatch":"The filament length in the header ({header}) and the sum of the E moves ({measured}) differ by more than 5%. The file may have been edited or cut off.","js_warn_no_time":"This file has no print time estimate from a slicer.","js_warn_no_density":"The file gives no filament density, so no weight was calculated. Continue to the cost calculator and pick a material to get the weight.","js_warn_no_features":"There are no feature comments (;TYPE: or ; FEATURE:), so no per-feature breakdown is possible.","js_total_caption":"Total of {n} results","js_total_partial":"not added up: some files have no time","js_file":"File","js_copied":"Results copied to the clipboard. You can paste them straight into a spreadsheet.","js_copy_failed":"The browser blocked clipboard access, so nothing was copied. Use Save CSV instead."}</script>
+<script type="module" src="../../../assets/tools/gcode-analyzer/main.js"></script>
+</body>
+</html>

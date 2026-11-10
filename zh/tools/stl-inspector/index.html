@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STL / 3MF 检查与修复 – 网格错误、尺寸与打印范围 | BENCH</title>
+<meta name="description" content="找出 STL、3MF、OBJ 文件中的孔洞、非流形边和翻转面，在 3D 视图中显示位置，只修复您选中的部分。还可检查尺寸与打印范围、转换格式、导出 Excel。免费、无需注册，在浏览器中运行，文件不会上传。">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/zh/tools/stl-inspector/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/stl-inspector/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-inspector/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/stl-inspector/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="STL / 3MF 检查与修复 – 网格错误、尺寸与打印范围 | BENCH">
+<meta property="og:description" content="找出 STL、3MF、OBJ 文件中的孔洞、非流形边和翻转面，在 3D 视图中显示位置，只修复您选中的部分。还可检查尺寸与打印范围、转换格式、导出 Excel。免费、无需注册，在浏览器中运行，文件不会上传。">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/zh/tools/stl-inspector/">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"STL/3MF 检查与修复","url":"https://yeseul100512.github.io/3D-website/zh/tools/stl-inspector/","description":"找出 STL、3MF、OBJ 文件中的孔洞、非流形边和翻转面，在 3D 视图中显示位置，只修复您选中的部分。还可检查尺寸与打印范围、转换格式、导出 Excel。免费、无需注册，在浏览器中运行，文件不会上传。","inLanguage":"zh-Hans","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"文件会上传到服务器吗？","acceptedAnswer":{"@type":"Answer","text":"不会。文件只在您的浏览器中读取和处理，不会发送到任何地方，也没有排队和时间限制。"}},{"@type":"Question","name":"和切片软件的自动修复有什么不同？","acceptedAnswer":{"@type":"Answer","text":"自动修复会一次性修掉所有问题，却不告诉您改了什么，有意留出的开口可能被填上，形状也可能在不知不觉中改变。本工具先让您看到每个问题的位置，再由您自己选择要修复的项目，修复后给出前后数量和包围盒的对比。"}},{"@type":"Question","name":"“非流形（non-manifold）”是什么意思？","acceptedAnswer":{"@type":"Answer","text":"指一条边被三个或更多的面共用，例如边上多出一片薄片，或两个实体只沿一条边相连。真实的实体每条边恰好连接两个面，所以切片软件在这种位置无法分辨内外。"}},{"@type":"Question","name":"显示有开放边，但打印一直正常，这算问题吗？","acceptedAnswer":{"@type":"Answer","text":"通常不算。切片软件会自行封闭小缝隙，所以轻微问题的判定是“切片软件很可能会自动修复”。大孔洞和非流形边才容易造成缺层或开口被填，请在切片预览中检查这些位置。"}},{"@type":"Question","name":"能把 STL 转成 3MF 或 OBJ 吗？","acceptedAnswer":{"@type":"Answer","text":"可以。加载文件后，在“保存网格”中点击想要的格式即可，不必应用任何修复，单位为毫米。"}},{"@type":"Question","name":"尺寸小了 25.4 倍（或 1000 倍），为什么？","acceptedAnswer":{"@type":"Answer","text":"STL 文件不带单位信息。按英寸或米导出的文件也会被当作毫米读取，所以显得很小。请在“更改单位”中乘以 25.4 或 1000，然后重新保存。"}},{"@type":"Question","name":"最大能打开多大的文件？","acceptedAnswer":{"@type":"Answer","text":"150 MB 的二进制 STL（300 万个三角形）在普通笔记本上几秒钟就能检查完，并显示 3D 视图。500 MB（1000 万个三角形）的文件在内存充足的台式机上也能检查，但只显示数值，不显示 3D 视图。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-header">
+<a class="brand" href="../../../zh/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="语言">
+<a href="../../../tools/stl-inspector/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/stl-inspector/" lang="en" hreflang="en">English</a>
+<a href="../../../ja/tools/stl-inspector/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../../zh/tools/stl-inspector/" lang="zh-Hans" hreflang="zh-Hans" aria-current="page">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../zh/"><span aria-hidden="true">←</span> 全部工具</a></p>
+<h1>STL/3MF 检查与修复</h1>
+<p class="lead">放入 STL、3MF 或 OBJ 文件，先看清网格哪里有什么问题（孔洞、非流形边、翻转面），再只修复您选中的项目，并确认尺寸没有改变。</p>
+<noscript><p class="notice warn">使用此工具需要在浏览器中启用 JavaScript。</p></noscript>
+<div class="tool">
+<style>
+#viewer canvas { touch-action: none; cursor: grab; }
+#view-reset { position: absolute; right: 8px; bottom: 8px; background: var(--surface); }
+#viewer-msg { margin: 0; padding: 16px; }
+@media (min-width: 900px) { #viewer { position: sticky; top: 8px; } }
+#msg, #errs { white-space: pre-line; }
+#p-files { margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.row .field { flex: 1 1 120px; }
+.hint { color: var(--muted); font-size: .92rem; }
+.notice.good { color: var(--ok); border-color: var(--ok); }
+.probs, #hole-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.probs li { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.prob-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 44px; }
+.prob-head span { font-weight: 600; }
+.prob-head strong { margin-right: auto; color: var(--warn); font-variant-numeric: tabular-nums; }
+.probs li.none strong { color: var(--ok); font-weight: 500; }
+.probs li.none p, .probs li.none button { display: none; }
+.probs p { margin: 0 0 8px; color: var(--muted); font-size: .92rem; }
+[aria-pressed="true"].button { color: var(--bg); background: var(--warn); border-color: var(--warn); }
+#p-summary details summary, #p-repair summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--link); }
+#p-summary details > * + * { margin-top: 8px; }
+fieldset { margin: 0; padding: 12px; min-width: 0; border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 10px; }
+fieldset > * { margin: 0; min-width: 0; }
+legend { padding: 0 6px; font-weight: 600; }
+#hole-list { max-height: 320px; overflow-y: auto; }
+#hole-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#files button.name { min-height: 44px; padding: 0; font: inherit; color: var(--link); background: none; border: 0; cursor: pointer; text-align: left; text-decoration: underline; }
+#files tr[aria-current="true"] button.name { color: var(--text); font-weight: 600; text-decoration: none; }
+#files td.err { color: var(--danger); }
+</style>
+<div class="tool-grid">
+<div class="viewer" id="viewer">
+<canvas id="canvas" tabindex="0" role="application" aria-label="模型 3D 视图。拖动旋转，按住 Shift 拖动平移，滚轮缩放；方向键旋转，加号和减号键缩放，0 键重置视角。" hidden></canvas>
+<p id="viewer-msg">加载文件后，模型会显示在这里。</p>
+<button class="button secondary" id="view-reset" type="button" hidden>重置视角</button>
+</div>
+<div class="controls">
+
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.obj,.3mf" multiple>
+<strong>将 STL、3MF 或 OBJ 文件拖到此处，或点击选择</strong>
+<span>可以一次放入多个文件，文件只在浏览器中处理。</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errs" hidden></p>
+</div>
+
+<div class="panel" id="p-summary" hidden>
+<h2 id="s-name"></h2>
+<p class="notice" id="s-verdict"></p>
+<table class="result">
+<tbody>
+<tr><th scope="row">尺寸 (X × Y × Z)</th><td id="s-size"></td></tr>
+<tr><th scope="row">三角形数量</th><td id="s-tris"></td></tr>
+<tr><th scope="row">体积</th><td id="s-volume"></td></tr>
+<tr><th scope="row">表面积</th><td id="s-area"></td></tr>
+<tr><th scope="row">独立壳体数</th><td id="s-shells"></td></tr>
+<tr><th scope="row">格式</th><td id="s-format"></td></tr>
+</tbody>
+</table>
+<p class="notice warn" id="s-unit" hidden></p>
+<details id="s-scale">
+<summary>更改单位（重新缩放）</summary>
+<p class="hint">STL 文件不带单位信息。如果尺寸差了固定倍数，可以把所有坐标乘以相应的系数：</p>
+<div class="row">
+<button class="button secondary act" type="button" data-scale="25.4">× 25.4 (英寸 → mm)</button>
+<button class="button secondary act" type="button" data-scale="1000">× 1000 (米 → mm)</button>
+<button class="button secondary act" type="button" data-scale="0.001">× 0.001</button>
+</div>
+<p class="hint" id="s-scaled" hidden></p>
+</details>
+</div>
+
+<div class="panel" id="p-bed" hidden>
+<h2>打印机放得下吗？</h2>
+<div class="field">
+<label for="bed">打印机成型范围 (X × Y × Z mm)</label>
+<select id="bed">
+<option value="180,180,180">180 × 180 × 180 – Bambu Lab A1 mini, Prusa MINI+</option>
+<option value="220,220,250">220 × 220 × 250 – Creality Ender-3, K1, Anycubic Kobra 2</option>
+<option value="225,225,265">225 × 225 × 265 – Elegoo Neptune 4</option>
+<option value="250,210,220">250 × 210 × 220 – Prusa MK4S, MK3S+</option>
+<option value="250,220,270">250 × 220 × 270 – Prusa CORE One</option>
+<option value="256,256,256" selected>256 × 256 × 256 – Bambu Lab A1, P1, X1</option>
+<option value="300,300,300">300 × 300 × 300 – Creality K1 Max, Voron 2.4 (300)</option>
+<option value="350,320,325">350 × 320 × 325 – Bambu Lab H2D</option>
+<option value="350,350,350">350 × 350 × 350 – Creality K2 Plus, Voron 2.4 (350)</option>
+<option value="360,360,360">360 × 360 × 360 – Prusa XL</option>
+<option value="420,420,480">420 × 420 × 480 – Elegoo Neptune 4 Max</option>
+<option value="custom">自定义尺寸…</option>
+</select>
+</div>
+<div class="fields" id="bed-custom" hidden>
+<div class="field"><label for="bed-x">X (mm)</label><input type="number" id="bed-x" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-y">Y (mm)</label><input type="number" id="bed-y" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-z">Z (mm)</label><input type="number" id="bed-z" value="250" min="1" max="5000" step="any" required inputmode="decimal"></div>
+</div>
+<p class="notice" id="bed-result" hidden></p>
+<p id="bed-cut" hidden><a class="button secondary" href="../stl-cutter/">用 STL 切割工具把它分成放得下的几块</a></p>
+</div>
+
+<div class="panel" id="p-problems" hidden>
+<h2>发现的问题</h2>
+<p class="notice warn" id="view-note" hidden></p>
+<ul class="probs">
+<li id="pr-open"><div class="prob-head"><span>开放边（孔洞）</span><strong></strong><button class="button secondary" type="button" data-hl="open" aria-pressed="false">显示</button></div><p>这里的表面没有封闭，切片软件只能猜测实体的边界。小缝隙通常会被自动封闭；大孔洞可能造成缺层，或者把本该留空的地方填上。</p></li>
+<li id="pr-nonManifold"><div class="prob-head"><span>非流形边</span><strong></strong><button class="button secondary" type="button" data-hl="nonManifold" aria-pressed="false">显示</button></div><p>一条边上连接了三个或更多的面。这里无法分辨内外，切片软件可能少打或多打材料。</p></li>
+<li id="pr-flipped"><div class="prob-head"><span>翻转面</span><strong></strong><button class="button secondary" type="button" data-hl="flipped" aria-pressed="false">显示</button></div><p>周围的面朝外，而这些面朝内。切片软件可能把这一块当成孔洞，或者把内外弄反。</p></li>
+<li id="pr-degenerate"><div class="prob-head"><span>零面积三角形</span><strong></strong><button class="button secondary" type="button" data-hl="degenerate" aria-pressed="false">显示</button></div><p>没有面积的三角形（退化成线或点）。它们对形状没有贡献，但可能干扰修复算法。</p></li>
+<li id="pr-duplicate"><div class="prob-head"><span>重复面</span><strong></strong><button class="button secondary" type="button" data-hl="duplicate" aria-pressed="false">显示</button></div><p>同一个三角形被保存了不止一次，该处表面出现了双层。</p></li>
+<li id="pr-bad"><div class="prob-head"><span>无法读取的三角形（NaN / Inf）</span><strong></strong></div><p>这些三角形的坐标不是有效数字，加载时已被排除，原位置可能留下孔洞。</p></li>
+<li id="pr-truncated"><div class="prob-head"><span>文件被截断</span><strong></strong></div><p>文件在声明的三角形全部写完之前就结束了，很可能是下载或导出中断所致，这里只显示完整的部分。如果可以，请重新获取文件。</p></li>
+</ul>
+</div>
+
+<div class="panel" id="p-thin" hidden>
+<h2>薄壁（估算）</h2>
+<p class="hint">从表面上均匀分布的 2 万个点向零件内部投射光线，测量到对面壁的距离。比两倍喷嘴直径还薄的壁往往打印得很脆弱，甚至打不出来。这是估算，不是精确测量。</p>
+<div class="row">
+<div class="field"><label for="nozzle">喷嘴直径 (mm)</label><input type="number" id="nozzle" value="0.4" min="0.1" max="2" step="0.05" required inputmode="decimal"></div>
+<button class="button secondary act" type="button" id="thin-run">检查薄壁</button>
+</div>
+<p class="notice" id="thin-result" hidden></p>
+<button class="button secondary" type="button" id="thin-show" data-hl="thin" aria-pressed="false" hidden>显示</button>
+</div>
+
+<div class="panel" id="p-repair" hidden>
+<h2>修复（可选）</h2>
+<p class="hint">不勾选就不会做任何改动。每项修复单独应用，并且可以撤销。</p>
+<label class="check"><input type="checkbox" id="rep-weld"> 合并距离小于容差的顶点</label>
+<div class="field"><label for="rep-tol">容差 (mm)</label><input type="number" id="rep-tol" value="0.001" min="0.0001" max="0.1" step="any" required inputmode="decimal"><small>封闭三角形之间的细微缝隙。顶点的移动距离不会超过该值。</small></div>
+<label class="check"><input type="checkbox" id="rep-clean"> 删除塌陷的三角形（两个顶点重合）和重复三角形</label>
+<label class="check"><input type="checkbox" id="rep-normals"> 逐个壳体把面的朝向统一为向外</label>
+<fieldset>
+<legend>封闭孔洞</legend>
+<p class="hint" id="holes-info"></p>
+<div id="holes-tools" hidden>
+<div class="row">
+<div class="field"><label for="hole-max">小于此尺寸 (mm)</label><input type="number" id="hole-max" value="5" min="0" max="100000" step="any" required inputmode="decimal"></div>
+<button class="button secondary" type="button" id="hole-pick">选择小于该尺寸的孔洞</button>
+<button class="button secondary" type="button" id="hole-clear">清除选择</button>
+</div>
+</div>
+<ul id="hole-list"></ul>
+</fieldset>
+<div class="row">
+<button class="button act" type="button" id="rep-apply">应用所选修复</button>
+<button class="button secondary act" type="button" id="rep-undo" hidden>撤销全部修复</button>
+</div>
+<p class="notice" id="rep-msg" hidden></p>
+<p class="notice" id="rep-proof" hidden></p>
+<div class="table-scroll">
+<table class="result" id="rep-table" hidden>
+<caption>修复前后对比</caption>
+<thead><tr><th scope="col">项目</th><th scope="col" class="num">修复前</th><th scope="col" class="num">修复后</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+<div class="panel" id="p-export" hidden>
+<h2>保存网格</h2>
+<p class="hint" id="exp-what"></p>
+<div class="row">
+<button class="button act" type="button" data-export="stl">STL</button>
+<button class="button secondary act" type="button" data-export="3mf">3MF</button>
+<button class="button secondary act" type="button" data-export="obj">OBJ</button>
+</div>
+<p class="notice" id="exp-msg" hidden></p>
+</div>
+
+</div>
+</div>
+
+<div class="panel" id="p-files" hidden>
+<h2>全部已加载的文件</h2>
+<p class="hint">点击文件名即可查看该文件的详细信息。切换到其他文件后，缩放和修复结果不会保留，请先导出。</p>
+<div class="table-scroll">
+<table class="result" id="files">
+<thead><tr><th scope="col">文件</th><th scope="col" class="num">X (mm)</th><th scope="col" class="num">Y (mm)</th><th scope="col" class="num">Z (mm)</th><th scope="col" class="num">体积 (cm³)</th><th scope="col" class="num">三角形数量</th><th scope="col">问题</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="row">
+<button class="button secondary" type="button" id="dl-xlsx">将表格保存为 Excel (.xlsx)</button>
+<button class="button secondary" type="button" id="dl-csv">将表格保存为 CSV</button>
+</div>
+</div>
+
+</div>
+<section class="doc">
+<h2>这个工具能做什么</h2>
+<p>本工具读取 STL、3MF 和 OBJ 文件，给出尺寸（毫米）、三角形数量、表面积、体积和独立壳体数量。它会检查零件能否直接放进所选打印机的成型范围、是否需要换个方向摆放，或者超出多少；如果尺寸看起来像是按英寸或米保存的，也会提醒您。</p>
+<p>接着查找会让切片软件出错或自行猜测的问题：按孔洞归组的开放边、被三个以上面共用的边、朝向翻转的面、面积为零的三角形和重复面、无法读取的坐标，以及被截断的文件。每种问题都给出数量和它对打印的影响说明，点一下按钮即可在 3D 视图中高亮并放大到对应位置。</p>
+<p>所有修复都是可选的，并且逐项单独应用：合并几乎重合的顶点、删除损坏的三角形、把面的朝向统一为向外，以及逐个选择要封闭的孔洞，这样有意留出的开口可以保持不变。修复后会重新检查并对比前后数量，同时显示包围盒在 0.001 mm 精度内是否保持不变。结果可保存为 STL、3MF 或 OBJ，因此也可以当作格式转换器使用；所有已加载文件的表格可以保存为 Excel 或 CSV。</p>
+</section>
+<section class="doc">
+<h2>使用方法</h2>
+<ol>
+<li>把一个或多个 STL、3MF、OBJ 文件拖到方框里，或点击方框选择文件。</li>
+<li>查看判定结果和尺寸。如果尺寸看起来差了 25.4 倍或 1000 倍，展开“更改单位”，一键重新缩放。</li>
+<li>选择打印机或手动输入成型范围，查看零件能否放下。</li>
+<li>在“发现的问题”中点击某项旁边的“显示”，3D 视图会高亮并放大到该位置。</li>
+<li>需要修复时，只勾选想要的修复项和要封闭的孔洞，然后点击“应用所选修复”。对照前后对比表，不满意可以用“撤销全部修复”恢复到加载时的状态。</li>
+<li>把网格保存为 STL、3MF 或 OBJ，或把全部文件的表格保存为 Excel 或 CSV。</li>
+</ol>
+</section>
+<section class="doc">
+<h2>限制与注意事项</h2>
+<ul>
+<li>无法修复自相交（表面互相穿过）、没有厚度的壁，以及本身设计有误的模型。这些问题需要回到 CAD 或建模软件中解决。</li>
+<li>孔洞只用其边缘上的点生成平面补片来封闭。这适合小缝隙和平面开口；曲面上的孔会被平盖封住，而不是还原原来的曲面。超过 2,000 条边的孔洞和不成闭合环的边界只会报告，不会封闭。</li>
+<li>合并顶点时，顶点最多可能移动一个容差的距离，比容差更小的三角形会被压扁消失，因此请保持较小的容差（默认 0.001 mm）。</li>
+<li>薄壁数值是根据表面上均匀分布的 2 万个采样点估算的，并非对每一处壁厚的测量。采样点之间的薄处可能被漏掉，而楔形尖锐边缘的尖端总会被判为过薄。</li>
+<li>只有网格完全封闭时体积才可靠，否则会标注为不可靠。</li>
+<li>打印范围判断只比较包围盒沿坐标轴摆放的各个方向，不考虑斜放，也不考虑裙边、Brim 和擦料区域。</li>
+<li>三角形超过约 500 万个时会关闭 3D 视图，只显示数值；超过约 400 万个时跳过薄壁检查。能打开多大的文件取决于设备内存。</li>
+<li>3MF 只读取几何形状。保存时不会保留颜色、材料、打印设置和盘面布局，文件中的多个对象会合并成一个网格一起检查。</li>
+</ul>
+</section>
+<section class="doc"><h2>常见问题</h2>
+<details><summary>文件会上传到服务器吗？</summary><p>不会。文件只在您的浏览器中读取和处理，不会发送到任何地方，也没有排队和时间限制。</p></details>
+<details><summary>和切片软件的自动修复有什么不同？</summary><p>自动修复会一次性修掉所有问题，却不告诉您改了什么，有意留出的开口可能被填上，形状也可能在不知不觉中改变。本工具先让您看到每个问题的位置，再由您自己选择要修复的项目，修复后给出前后数量和包围盒的对比。</p></details>
+<details><summary>“非流形（non-manifold）”是什么意思？</summary><p>指一条边被三个或更多的面共用，例如边上多出一片薄片，或两个实体只沿一条边相连。真实的实体每条边恰好连接两个面，所以切片软件在这种位置无法分辨内外。</p></details>
+<details><summary>显示有开放边，但打印一直正常，这算问题吗？</summary><p>通常不算。切片软件会自行封闭小缝隙，所以轻微问题的判定是“切片软件很可能会自动修复”。大孔洞和非流形边才容易造成缺层或开口被填，请在切片预览中检查这些位置。</p></details>
+<details><summary>能把 STL 转成 3MF 或 OBJ 吗？</summary><p>可以。加载文件后，在“保存网格”中点击想要的格式即可，不必应用任何修复，单位为毫米。</p></details>
+<details><summary>尺寸小了 25.4 倍（或 1000 倍），为什么？</summary><p>STL 文件不带单位信息。按英寸或米导出的文件也会被当作毫米读取，所以显得很小。请在“更改单位”中乘以 25.4 或 1000，然后重新保存。</p></details>
+<details><summary>最大能打开多大的文件？</summary><p>150 MB 的二进制 STL（300 万个三角形）在普通笔记本上几秒钟就能检查完，并显示 3D 视图。500 MB（1000 万个三角形）的文件在内存充足的台式机上也能检查，但只显示数值，不显示 3D 视图。</p></details>
+</section>
+<section>
+<h2>其他工具</h2>
+<ul class="cards">
+<li><a class="card" href="../../../zh/tools/stl-cutter/"><h3>STL 模型分割</h3><p>把比热床大的模型切成能打印的小块，并加上指接榫，方便拼装对位。</p><p class="formats">输入 · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../zh/tools/print-cost-calculator/"><h3>打印重量与成本计算器</h3><p>根据切片后的 G-code 或 3D 模型得出耗材重量，再算出材料费、电费和售价。</p><p class="formats">输入 · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../zh/tools/gcode-analyzer/"><h3>G-code 分析器</h3><p>从 G-code 中读取打印时间和耗材用量，并按特征类型和耗材分别统计。</p><p class="formats">输入 · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../../zh/tools/infill-recommender/"><h3>填充设置推荐</h3><p>根据打印件的用途和受力情况，推荐 Bambu Studio 的填充图案、填充密度、墙层数和顶部/底部层数。</p><p class="formats">输入 · 无需文件</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>文件不会上传到服务器，所有计算都在您的浏览器中完成。</p>
+
+</main>
+<footer class="site-footer"><p>免费使用，无需注册，不上传文件，不做追踪。</p></footer>
+<script>window.T={"lang":"zh-Hans","js_err_empty":"{name} 是空文件（0 字节）。","js_err_wrong_type":"不支持 {name} 的文件格式。支持的格式：{types}","js_err_not_mesh":"无法从 {name} 中读取 3D 模型。请确认它是 STL、3MF 或 OBJ 文件。","js_err_truncated":"{name} 文件不完整：声明了 {declared} 个三角形，实际只有 {present} 个。","js_err_truncated_unknown":"{name} 文件不完整：只找到 {present} 个完整的三角形。","js_load_partial":"仅加载完整的部分","js_err_too_large":"{name} 太大，此设备内存不足，无法打开。请关闭其他标签页，或改用电脑浏览器重试。","js_err_no_triangles":"{name} 中没有任何三角形。","js_err_unknown":"无法处理 {name}。（{detail}）","js_bad_triangles":"已排除 {n} 个坐标无效（NaN 或无穷大）的三角形。","js_reading":"正在读取 {name}… {percent}%","js_working":"正在处理…","js_num_required":"请输入数值。","js_num_invalid":"请输入数字。","js_num_min":"请输入不小于 {min} 的数值。","js_num_max":"请输入不大于 {max} 的数值。","js_unit_h":"小时","js_unit_m":"分钟","js_unit_s":"秒","js_viewer_empty":"加载文件后，模型会显示在这里。","js_row_triangles":"三角形数量","js_row_volume":"体积","js_row_shells":"独立壳体数","js_row_holes":"孔洞数","js_volume_unreliable":"网格未封闭，数值不可靠","js_fmt_stl_binary":"STL（二进制）","js_fmt_stl_ascii":"STL（ASCII）","js_fmt_obj":"OBJ","js_fmt_3mf":"3MF","js_analyzing":"正在检查 {name}…","js_verdict_ok":"可以直接打印：表面封闭，未发现问题。","js_verdict_auto":"有轻微问题：切片软件很可能会自动修复，但请检查切片预览。","js_verdict_attention":"需要注意：打印前请先查看下面的问题。","js_scaled":"已在加载文件的基础上缩放 × {factor} 倍。","js_hint_m":"最长边只有 {size}。文件可能是按米保存的：请试试 × 1000（如果是英寸则 × 25.4）。","js_hint_inch":"最长边只有 {size}。如果零件本应更大，文件可能是按英寸保存的：请试试 × 25.4。","js_hint_big":"最长边为 {size}。如果太大，文件可能是按微米保存的：请试试 × 0.001。","js_bed_fits":"可以直接放下。","js_bed_rotated":"按当前方向放不下，但换一个面朝下摆放就能放下。","js_bed_too_big":"任何方向都放不下。按当前方向超出：{over}","js_prob_open":"开放边（孔洞）","js_n_open":"{edges} 条边，{holes} 个孔洞","js_prob_nonmanifold":"非流形边","js_prob_flipped":"翻转面","js_prob_degenerate":"零面积三角形","js_prob_duplicate":"重复面","js_prob_bad":"无法读取的三角形（NaN / Inf）","js_prob_truncated":"文件被截断","js_n_truncated":"{declared} 个三角形中只有 {present} 个","js_n_truncated_unknown":"{present} 个完整的三角形","js_none":"无","js_show":"显示","js_view_skipped":"三角形超过 {n} 个，已关闭 3D 视图。数值查看和修复功能仍可正常使用。","js_view_failed":"无法启动 3D 视图（WebGL 不可用，或 3D 库加载失败）。数值查看和修复功能仍可正常使用。","js_thin_result":"约 {percent}% 的表面背后的材料厚度不足 {limit} mm（根据 {samples} 个采样点估算）。","js_thin_skipped":"三角形超过 {n} 个，已跳过薄壁检查，因为耗时和内存占用都太大。","js_holes_none":"没有发现孔洞。","js_holes_pick":"尚未选择任何孔洞。只勾选需要封闭的孔洞，有意留出的开口请保持不选。","js_holes_more":"共 {total} 个孔洞，仅显示其中最大和最小的 {shown} 个。","js_hole":"孔洞 {i}：{edges} 条边，跨度约 {size}","js_hole_uncappable":"无法自动封闭","js_rep_nothing":"尚未选择任何项目。请至少勾选一项修复或一个孔洞。","js_rep_done":"完成：封闭 {capped} 个孔洞，合并 {merged} 个顶点，删除 {removed} 个三角形，翻转 {flipped} 个面。","js_err_rep_empty":"应用这些修复后将不剩任何三角形，因此未作更改。","js_bbox_same":"包围盒未改变：仍为 {size}（最大差值 {delta} mm，阈值 0.001 mm）。","js_bbox_changed":"包围盒变化了 {delta} mm，现在是 {size}。如果这不是您想要的结果，请撤销修复。","js_exp_original":"按加载时的原样保存网格（未应用修复），单位为毫米。","js_exp_repaired":"保存修复后的网格，单位为毫米。","js_exp_done":"已保存 {name}。","js_col_name":"文件","js_col_volume":"体积 (cm³)","js_col_triangles":"三角形数量","js_col_issues":"问题"}</script>
+<script type="module" src="../../../assets/tools/stl-inspector/main.js"></script>
+</body>
+</html>

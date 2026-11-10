@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STL &amp; 3MF Checker and Repair – mesh errors, size and bed fit | BENCH</title>
+<meta name="description" content="Find holes, non-manifold edges and flipped faces in STL, 3MF and OBJ files, see them in 3D and repair only what you choose. Checks size and bed fit, converts formats and exports to Excel. Free, in your browser, no upload.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/stl-inspector/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/stl-inspector/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/stl-inspector/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="STL &amp; 3MF Checker and Repair – mesh errors, size and bed fit | BENCH">
+<meta property="og:description" content="Find holes, non-manifold edges and flipped faces in STL, 3MF and OBJ files, see them in 3D and repair only what you choose. Checks size and bed fit, converts formats and exports to Excel. Free, in your browser, no upload.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"STL/3MF Check & Repair","url":"https://yeseul100512.github.io/3D-website/en/tools/stl-inspector/","description":"Find holes, non-manifold edges and flipped faces in STL, 3MF and OBJ files, see them in 3D and repair only what you choose. Checks size and bed fit, converts formats and exports to Excel. Free, in your browser, no upload.","inLanguage":"en","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is my file uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The file is read and processed only inside your browser and is not sent anywhere. There is no queue and no time limit."}},{"@type":"Question","name":"Why not just use the slicer's automatic repair?","acceptedAnswer":{"@type":"Answer","text":"Automatic repair fixes everything at once and does not say what it changed, so intended openings can get filled and shapes can change without notice. Here you first see where each problem is, then choose the fixes yourself, and afterwards get the before and after counts and a bounding-box comparison."}},{"@type":"Question","name":"What does “non-manifold” mean?","acceptedAnswer":{"@type":"Answer","text":"An edge shared by three or more faces, such as a fin attached to an edge or two bodies joined along a single edge. A real solid has exactly two faces on every edge, so the slicer cannot tell inside from outside at that spot."}},{"@type":"Question","name":"My model shows open edges but prints fine. Is that a problem?","acceptedAnswer":{"@type":"Answer","text":"Often not. Slicers close small gaps on their own, which is why minor issues get the verdict “a slicer will probably fix these”. Large holes and non-manifold edges are what cause missing layers or filled openings, so check the sliced preview at those spots."}},{"@type":"Question","name":"Can it convert STL to 3MF or OBJ?","acceptedAnswer":{"@type":"Answer","text":"Yes. Load the file and pick the other format under “Save mesh”. No repair has to be applied. Units are millimetres."}},{"@type":"Question","name":"The size is 25.4 times (or 1,000 times) too small. Why?","acceptedAnswer":{"@type":"Answer","text":"STL files carry no unit. A file exported in inches or metres is read as millimetres and comes out too small. Use “Change units” to multiply by 25.4 or 1,000, then save it again."}},{"@type":"Question","name":"How big a file can it open?","acceptedAnswer":{"@type":"Answer","text":"A 150 MB binary STL (3 million triangles) is checked in a few seconds on an ordinary laptop, with the 3D view. A 500 MB file (10 million triangles) can be checked on a desktop with enough memory, but only with numbers, without the 3D view."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="brand" href="../../../en/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="Language">
+<a href="../../../tools/stl-inspector/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/stl-inspector/" lang="en" hreflang="en" aria-current="page">English</a>
+<a href="../../../ja/tools/stl-inspector/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../../zh/tools/stl-inspector/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../en/"><span aria-hidden="true">←</span> All tools</a></p>
+<h1>STL/3MF Check &amp; Repair</h1>
+<p class="lead">Drop STL, 3MF or OBJ files to see exactly what is wrong with a mesh and where: holes, non-manifold edges, flipped faces. Then fix only what you choose, with proof that the size did not change.</p>
+<noscript><p class="notice warn">This tool needs JavaScript. Please enable it in your browser.</p></noscript>
+<div class="tool">
+<style>
+#viewer canvas { touch-action: none; cursor: grab; }
+#view-reset { position: absolute; right: 8px; bottom: 8px; background: var(--surface); }
+#viewer-msg { margin: 0; padding: 16px; }
+@media (min-width: 900px) { #viewer { position: sticky; top: 8px; } }
+#msg, #errs { white-space: pre-line; }
+#p-files { margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.row .field { flex: 1 1 120px; }
+.hint { color: var(--muted); font-size: .92rem; }
+.notice.good { color: var(--ok); border-color: var(--ok); }
+.probs, #hole-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.probs li { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.prob-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 44px; }
+.prob-head span { font-weight: 600; }
+.prob-head strong { margin-right: auto; color: var(--warn); font-variant-numeric: tabular-nums; }
+.probs li.none strong { color: var(--ok); font-weight: 500; }
+.probs li.none p, .probs li.none button { display: none; }
+.probs p { margin: 0 0 8px; color: var(--muted); font-size: .92rem; }
+[aria-pressed="true"].button { color: var(--bg); background: var(--warn); border-color: var(--warn); }
+#p-summary details summary, #p-repair summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--link); }
+#p-summary details > * + * { margin-top: 8px; }
+fieldset { margin: 0; padding: 12px; min-width: 0; border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 10px; }
+fieldset > * { margin: 0; min-width: 0; }
+legend { padding: 0 6px; font-weight: 600; }
+#hole-list { max-height: 320px; overflow-y: auto; }
+#hole-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#files button.name { min-height: 44px; padding: 0; font: inherit; color: var(--link); background: none; border: 0; cursor: pointer; text-align: left; text-decoration: underline; }
+#files tr[aria-current="true"] button.name { color: var(--text); font-weight: 600; text-decoration: none; }
+#files td.err { color: var(--danger); }
+</style>
+<div class="tool-grid">
+<div class="viewer" id="viewer">
+<canvas id="canvas" tabindex="0" role="application" aria-label="3D view of the model. Drag to rotate, Shift-drag to pan, scroll to zoom. Arrow keys rotate, plus and minus zoom, 0 resets the view." hidden></canvas>
+<p id="viewer-msg">The model appears here once a file is loaded.</p>
+<button class="button secondary" id="view-reset" type="button" hidden>Reset view</button>
+</div>
+<div class="controls">
+
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.obj,.3mf" multiple>
+<strong>Drop STL, 3MF or OBJ files here, or click to choose</strong>
+<span>Several files at once are fine. They stay in your browser.</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errs" hidden></p>
+</div>
+
+<div class="panel" id="p-summary" hidden>
+<h2 id="s-name"></h2>
+<p class="notice" id="s-verdict"></p>
+<table class="result">
+<tbody>
+<tr><th scope="row">Size (X × Y × Z)</th><td id="s-size"></td></tr>
+<tr><th scope="row">Triangles</th><td id="s-tris"></td></tr>
+<tr><th scope="row">Volume</th><td id="s-volume"></td></tr>
+<tr><th scope="row">Surface area</th><td id="s-area"></td></tr>
+<tr><th scope="row">Separate shells</th><td id="s-shells"></td></tr>
+<tr><th scope="row">Format</th><td id="s-format"></td></tr>
+</tbody>
+</table>
+<p class="notice warn" id="s-unit" hidden></p>
+<details id="s-scale">
+<summary>Change units (rescale)</summary>
+<p class="hint">STL files carry no unit. If the size is off by a fixed factor, multiply every coordinate:</p>
+<div class="row">
+<button class="button secondary act" type="button" data-scale="25.4">× 25.4 (inch → mm)</button>
+<button class="button secondary act" type="button" data-scale="1000">× 1000 (m → mm)</button>
+<button class="button secondary act" type="button" data-scale="0.001">× 0.001</button>
+</div>
+<p class="hint" id="s-scaled" hidden></p>
+</details>
+</div>
+
+<div class="panel" id="p-bed" hidden>
+<h2>Does it fit the printer?</h2>
+<div class="field">
+<label for="bed">Printer build volume (X × Y × Z mm)</label>
+<select id="bed">
+<option value="180,180,180">180 × 180 × 180 – Bambu Lab A1 mini, Prusa MINI+</option>
+<option value="220,220,250">220 × 220 × 250 – Creality Ender-3, K1, Anycubic Kobra 2</option>
+<option value="225,225,265">225 × 225 × 265 – Elegoo Neptune 4</option>
+<option value="250,210,220">250 × 210 × 220 – Prusa MK4S, MK3S+</option>
+<option value="250,220,270">250 × 220 × 270 – Prusa CORE One</option>
+<option value="256,256,256" selected>256 × 256 × 256 – Bambu Lab A1, P1, X1</option>
+<option value="300,300,300">300 × 300 × 300 – Creality K1 Max, Voron 2.4 (300)</option>
+<option value="350,320,325">350 × 320 × 325 – Bambu Lab H2D</option>
+<option value="350,350,350">350 × 350 × 350 – Creality K2 Plus, Voron 2.4 (350)</option>
+<option value="360,360,360">360 × 360 × 360 – Prusa XL</option>
+<option value="420,420,480">420 × 420 × 480 – Elegoo Neptune 4 Max</option>
+<option value="custom">Custom size…</option>
+</select>
+</div>
+<div class="fields" id="bed-custom" hidden>
+<div class="field"><label for="bed-x">X (mm)</label><input type="number" id="bed-x" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-y">Y (mm)</label><input type="number" id="bed-y" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-z">Z (mm)</label><input type="number" id="bed-z" value="250" min="1" max="5000" step="any" required inputmode="decimal"></div>
+</div>
+<p class="notice" id="bed-result" hidden></p>
+<p id="bed-cut" hidden><a class="button secondary" href="../stl-cutter/">Cut it into pieces that fit with the STL cutter</a></p>
+</div>
+
+<div class="panel" id="p-problems" hidden>
+<h2>Problems found</h2>
+<p class="notice warn" id="view-note" hidden></p>
+<ul class="probs">
+<li id="pr-open"><div class="prob-head"><span>Open edges (holes)</span><strong></strong><button class="button secondary" type="button" data-hl="open" aria-pressed="false">Show</button></div><p>The surface is not closed here, so the slicer has to guess where the solid ends. Small gaps are usually closed automatically; large holes can cause missing layers, or get filled where you wanted an opening.</p></li>
+<li id="pr-nonManifold"><div class="prob-head"><span>Non-manifold edges</span><strong></strong><button class="button secondary" type="button" data-hl="nonManifold" aria-pressed="false">Show</button></div><p>Three or more faces meet at one edge. Inside and outside are ambiguous there, and slicers may drop or add material.</p></li>
+<li id="pr-flipped"><div class="prob-head"><span>Flipped faces</span><strong></strong><button class="button secondary" type="button" data-hl="flipped" aria-pressed="false">Show</button></div><p>These faces point inward while their neighbours point outward. Slicers can treat the area as a hole or as inside-out material.</p></li>
+<li id="pr-degenerate"><div class="prob-head"><span>Zero-area triangles</span><strong></strong><button class="button secondary" type="button" data-hl="degenerate" aria-pressed="false">Show</button></div><p>Triangles with no area (a line or a point). They add nothing to the shape and can confuse repair algorithms.</p></li>
+<li id="pr-duplicate"><div class="prob-head"><span>Duplicate faces</span><strong></strong><button class="button secondary" type="button" data-hl="duplicate" aria-pressed="false">Show</button></div><p>The same triangle is stored more than once. The surface has a double skin at that spot.</p></li>
+<li id="pr-bad"><div class="prob-head"><span>Unreadable triangles (NaN / Inf)</span><strong></strong></div><p>These triangles had coordinates that are not numbers and were left out when loading, so there may be holes where they were.</p></li>
+<li id="pr-truncated"><div class="prob-head"><span>File cut off</span><strong></strong></div><p>The file ends before all the triangles it announces. The download or export was probably interrupted; only the intact part is shown. Get the file again if you can.</p></li>
+</ul>
+</div>
+
+<div class="panel" id="p-thin" hidden>
+<h2>Thin walls (estimate)</h2>
+<p class="hint">Casts a ray into the part from 20,000 points spread over the surface and measures the distance to the opposite wall. Walls thinner than two nozzle widths often print weak or not at all. This is an estimate, not an exact measurement.</p>
+<div class="row">
+<div class="field"><label for="nozzle">Nozzle diameter (mm)</label><input type="number" id="nozzle" value="0.4" min="0.1" max="2" step="0.05" required inputmode="decimal"></div>
+<button class="button secondary act" type="button" id="thin-run">Check thin walls</button>
+</div>
+<p class="notice" id="thin-result" hidden></p>
+<button class="button secondary" type="button" id="thin-show" data-hl="thin" aria-pressed="false" hidden>Show</button>
+</div>
+
+<div class="panel" id="p-repair" hidden>
+<h2>Repair (optional)</h2>
+<p class="hint">Nothing is changed unless you tick it. Each fix is separate, and you can undo.</p>
+<label class="check"><input type="checkbox" id="rep-weld"> Merge vertices that are closer than the tolerance</label>
+<div class="field"><label for="rep-tol">Tolerance (mm)</label><input type="number" id="rep-tol" value="0.001" min="0.0001" max="0.1" step="any" required inputmode="decimal"><small>Closes hairline gaps between triangles. No vertex moves further than this value.</small></div>
+<label class="check"><input type="checkbox" id="rep-clean"> Remove collapsed triangles (two corners in the same place) and duplicates</label>
+<label class="check"><input type="checkbox" id="rep-normals"> Make faces consistent and outward-facing, shell by shell</label>
+<fieldset>
+<legend>Close holes</legend>
+<p class="hint" id="holes-info"></p>
+<div id="holes-tools" hidden>
+<div class="row">
+<div class="field"><label for="hole-max">Smaller than (mm)</label><input type="number" id="hole-max" value="5" min="0" max="100000" step="any" required inputmode="decimal"></div>
+<button class="button secondary" type="button" id="hole-pick">Select holes below this size</button>
+<button class="button secondary" type="button" id="hole-clear">Clear selection</button>
+</div>
+</div>
+<ul id="hole-list"></ul>
+</fieldset>
+<div class="row">
+<button class="button act" type="button" id="rep-apply">Apply selected repairs</button>
+<button class="button secondary act" type="button" id="rep-undo" hidden>Undo all repairs</button>
+</div>
+<p class="notice" id="rep-msg" hidden></p>
+<p class="notice" id="rep-proof" hidden></p>
+<div class="table-scroll">
+<table class="result" id="rep-table" hidden>
+<caption>Before and after</caption>
+<thead><tr><th scope="col">Item</th><th scope="col" class="num">Before</th><th scope="col" class="num">After</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+<div class="panel" id="p-export" hidden>
+<h2>Save mesh</h2>
+<p class="hint" id="exp-what"></p>
+<div class="row">
+<button class="button act" type="button" data-export="stl">STL</button>
+<button class="button secondary act" type="button" data-export="3mf">3MF</button>
+<button class="button secondary act" type="button" data-export="obj">OBJ</button>
+</div>
+<p class="notice" id="exp-msg" hidden></p>
+</div>
+
+</div>
+</div>
+
+<div class="panel" id="p-files" hidden>
+<h2>All loaded files</h2>
+<p class="hint">Click a file name to inspect that file. Scaling and repairs are lost when you switch to another file, so export first.</p>
+<div class="table-scroll">
+<table class="result" id="files">
+<thead><tr><th scope="col">File</th><th scope="col" class="num">X (mm)</th><th scope="col" class="num">Y (mm)</th><th scope="col" class="num">Z (mm)</th><th scope="col" class="num">Volume (cm³)</th><th scope="col" class="num">Triangles</th><th scope="col">Problems</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="row">
+<button class="button secondary" type="button" id="dl-xlsx">Save table as Excel (.xlsx)</button>
+<button class="button secondary" type="button" id="dl-csv">Save table as CSV</button>
+</div>
+</div>
+
+</div>
+<section class="doc">
+<h2>What this tool does</h2>
+<p>This tool reads STL, 3MF and OBJ files and reports their size in millimetres, triangle count, surface area, volume and number of separate shells. It checks whether the part fits your printer&#x27;s build volume as it is, only when laid on another side, or by how much it is too big, and warns when the size looks like it was saved in inches or metres.</p>
+<p>It then looks for the problems that make slicers fail or guess: open edges grouped into holes, edges shared by more than two faces, faces pointing the wrong way, zero-area and duplicate triangles, unreadable coordinates and files that were cut off. Each one comes with a count, a short explanation of what it means for printing, and a button that highlights exactly those places in the 3D view and zooms to them.</p>
+<p>Repairs are optional and separate: merge near-identical vertices, remove broken triangles, make faces point outward, and close holes one by one so that intended openings stay open. After a repair the check runs again and shows before and after counts, plus the bounding box compared to 0.001 mm. The result can be saved as STL, 3MF or OBJ, which also makes this a format converter, and the table of all loaded files can be saved as Excel or CSV.</p>
+</section>
+<section class="doc">
+<h2>How to use it</h2>
+<ol>
+<li>Drop one or more STL, 3MF or OBJ files on the box, or click it to choose them.</li>
+<li>Read the verdict and the size. If the size looks wrong by a factor of 25.4 or 1000, open “Change units” and rescale with one click.</li>
+<li>Choose your printer, or enter a custom build volume, to see whether the part fits.</li>
+<li>In “Problems found”, press Show next to a problem to highlight it and zoom to it in the 3D view.</li>
+<li>To repair, tick only the fixes you want and the holes that should be closed, then press Apply. Compare the before and after table; Undo brings back the file as loaded.</li>
+<li>Save the mesh as STL, 3MF or OBJ, or save the table of all files as Excel or CSV.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>Limits and caveats</h2>
+<ul>
+<li>It cannot fix self-intersections (parts of the surface passing through each other), walls with no thickness, or a model that was designed wrong. Those have to be fixed in the CAD or sculpting program.</li>
+<li>Holes are closed with a flat patch made only from the hole&#x27;s own edge points. That works for small gaps and flat openings; a hole in a curved surface gets a flat lid, not the missing curve. Holes with more than 2,000 edges and outlines that do not form a closed loop are reported but not closed.</li>
+<li>Merging vertices can move a vertex by up to the tolerance, and triangles smaller than the tolerance collapse, so keep the tolerance small (default 0.001 mm).</li>
+<li>The thin-wall figure is an estimate from 20,000 sample points, not a measurement of every wall. Thin spots between sample points can be missed, and the tips of sharp, wedge-shaped edges always count as thin.</li>
+<li>Volume is only reliable when the mesh is watertight; otherwise it is marked as not reliable.</li>
+<li>Bed fit compares the bounding box in axis-aligned orientations only. It does not try diagonal placement and ignores brims, skirts and purge areas.</li>
+<li>Above about 5 million triangles the 3D view is switched off and only the numbers are shown; the thin-wall check is skipped above about 4 million triangles. How large a file opens at all depends on your device&#x27;s memory.</li>
+<li>3MF: only the geometry is read. Colours, materials, print settings and plate layout are not kept when you save, and all objects in the file are checked together as one mesh.</li>
+</ul>
+</section>
+<section class="doc"><h2>Frequently asked questions</h2>
+<details><summary>Is my file uploaded to a server?</summary><p>No. The file is read and processed only inside your browser and is not sent anywhere. There is no queue and no time limit.</p></details>
+<details><summary>Why not just use the slicer&#x27;s automatic repair?</summary><p>Automatic repair fixes everything at once and does not say what it changed, so intended openings can get filled and shapes can change without notice. Here you first see where each problem is, then choose the fixes yourself, and afterwards get the before and after counts and a bounding-box comparison.</p></details>
+<details><summary>What does “non-manifold” mean?</summary><p>An edge shared by three or more faces, such as a fin attached to an edge or two bodies joined along a single edge. A real solid has exactly two faces on every edge, so the slicer cannot tell inside from outside at that spot.</p></details>
+<details><summary>My model shows open edges but prints fine. Is that a problem?</summary><p>Often not. Slicers close small gaps on their own, which is why minor issues get the verdict “a slicer will probably fix these”. Large holes and non-manifold edges are what cause missing layers or filled openings, so check the sliced preview at those spots.</p></details>
+<details><summary>Can it convert STL to 3MF or OBJ?</summary><p>Yes. Load the file and pick the other format under “Save mesh”. No repair has to be applied. Units are millimetres.</p></details>
+<details><summary>The size is 25.4 times (or 1,000 times) too small. Why?</summary><p>STL files carry no unit. A file exported in inches or metres is read as millimetres and comes out too small. Use “Change units” to multiply by 25.4 or 1,000, then save it again.</p></details>
+<details><summary>How big a file can it open?</summary><p>A 150 MB binary STL (3 million triangles) is checked in a few seconds on an ordinary laptop, with the 3D view. A 500 MB file (10 million triangles) can be checked on a desktop with enough memory, but only with numbers, without the 3D view.</p></details>
+</section>
+<section>
+<h2>Other tools</h2>
+<ul class="cards">
+<li><a class="card" href="../../../en/tools/stl-cutter/"><h3>STL Splitter</h3><p>Split a model that is larger than your bed into printable pieces, with finger joints so the parts line up.</p><p class="formats">Input · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../en/tools/print-cost-calculator/"><h3>Print Weight &amp; Cost Calculator</h3><p>Get filament weight from sliced G-code or a 3D model, then work out material cost, electricity and a selling price.</p><p class="formats">Input · G-code · .gcode.3mf · STL · OBJ · 3MF</p></a></li>
+<li><a class="card" href="../../../en/tools/gcode-analyzer/"><h3>G-code Analyzer</h3><p>Read print time and filament use from G-code, broken down by feature and by filament.</p><p class="formats">Input · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../../en/tools/infill-recommender/"><h3>Infill Recommender</h3><p>Answer a few questions and get a Bambu Studio infill pattern, density, wall loops and top/bottom layers for your part.</p><p class="formats">Input · No file needed</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Your files never leave your browser. Everything is calculated on this device.</p>
+
+</main>
+<footer class="site-footer"><p>Free to use. No sign-up, no uploads, no tracking.</p></footer>
+<script>window.T={"lang":"en","js_err_empty":"{name} is empty (0 bytes).","js_err_wrong_type":"{name} is not a supported file type. Supported: {types}","js_err_not_mesh":"{name} does not contain a 3D model we can read. Check that it is an STL, 3MF or OBJ file.","js_err_truncated":"{name} is cut off: it holds only {present} of the {declared} triangles it declares.","js_err_truncated_unknown":"{name} is cut off: only {present} complete triangles were found.","js_load_partial":"Load the intact part","js_err_too_large":"{name} is too large for this device's memory. Close other tabs or try a desktop browser.","js_err_no_triangles":"{name} contains no triangles.","js_err_unknown":"Could not process {name}. ({detail})","js_bad_triangles":"{n} triangles with invalid coordinates (NaN or infinity) were left out.","js_reading":"Reading {name}… {percent}%","js_working":"Working…","js_num_required":"Enter a value.","js_num_invalid":"Enter a number.","js_num_min":"Enter {min} or more.","js_num_max":"Enter {max} or less.","js_unit_h":"h","js_unit_m":"m","js_unit_s":"s","js_viewer_empty":"The model appears here once a file is loaded.","js_row_triangles":"Triangles","js_row_volume":"Volume","js_row_shells":"Separate shells","js_row_holes":"Holes","js_volume_unreliable":"not reliable: the mesh is not closed","js_fmt_stl_binary":"STL (binary)","js_fmt_stl_ascii":"STL (ASCII)","js_fmt_obj":"OBJ","js_fmt_3mf":"3MF","js_analyzing":"Checking {name}…","js_verdict_ok":"Printable as it is: the surface is closed and no problems were found.","js_verdict_auto":"Minor problems: a slicer will probably fix these automatically. Check the sliced preview.","js_verdict_attention":"Needs attention: look at the problems below before printing.","js_scaled":"Scaled by × {factor} from the file as loaded.","js_hint_m":"The longest side is only {size}. The file may have been saved in metres: try × 1000 (or × 25.4 for inches).","js_hint_inch":"The longest side is only {size}. If the part should be bigger, the file may have been saved in inches: try × 25.4.","js_hint_big":"The longest side is {size}. If that is too big, the file may have been saved in micrometres: try × 0.001.","js_bed_fits":"Fits as it is.","js_bed_rotated":"Does not fit as it is, but fits when laid on another side.","js_bed_too_big":"Too big in every orientation. As loaded it is over by: {over}","js_prob_open":"Open edges (holes)","js_n_open":"{edges} (holes: {holes})","js_prob_nonmanifold":"Non-manifold edges","js_prob_flipped":"Flipped faces","js_prob_degenerate":"Zero-area triangles","js_prob_duplicate":"Duplicate faces","js_prob_bad":"Unreadable triangles (NaN / Inf)","js_prob_truncated":"File cut off","js_n_truncated":"{present} of {declared} triangles present","js_n_truncated_unknown":"{present} complete triangles","js_none":"None","js_show":"Show","js_view_skipped":"The 3D view is switched off above {n} triangles to keep the page responsive. All numbers and repairs still work.","js_view_failed":"The 3D view could not be started (WebGL is unavailable or the 3D library could not be loaded). All numbers and repairs still work.","js_thin_result":"About {percent}% of the surface has less than {limit} mm of material behind it (estimate from {samples} sample points).","js_thin_skipped":"The thin-wall check is skipped above {n} triangles because it would take too long and too much memory.","js_holes_none":"No holes found.","js_holes_pick":"Nothing is selected. Tick only the holes that should be closed; leave intended openings alone.","js_holes_more":"Showing {shown} of {total} holes: the largest and the smallest.","js_hole":"Hole {i}: {edges} edges, about {size} across","js_hole_uncappable":"cannot be closed automatically","js_rep_nothing":"Nothing is selected. Tick at least one repair or one hole.","js_rep_done":"Done. Holes closed: {capped} · vertices merged: {merged} · triangles removed: {removed} · faces turned: {flipped}.","js_err_rep_empty":"These repairs would leave no triangles at all, so nothing was changed.","js_bbox_same":"Bounding box unchanged: still {size} (largest difference {delta} mm, limit 0.001 mm).","js_bbox_changed":"The bounding box moved by {delta} mm and is now {size}. Undo if that is not what you want.","js_exp_original":"Saves the mesh as loaded (no repairs applied), in millimetres.","js_exp_repaired":"Saves the repaired mesh, in millimetres.","js_exp_done":"Saved {name}.","js_col_name":"File","js_col_volume":"Volume (cm³)","js_col_triangles":"Triangles","js_col_issues":"Problems"}</script>
+<script type="module" src="../../../assets/tools/stl-inspector/main.js"></script>
+</body>
+</html>

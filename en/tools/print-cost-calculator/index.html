@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D Print Weight &amp; Cost Calculator – from G-code or STL, by material | BENCH</title>
+<meta name="description" content="Turn the filament weight and print time from your G-code into material cost, electricity, machine wear, failure allowance, labour and a selling price. Can also estimate weight from an STL. Free, no sign-up, nothing is uploaded.">
+<link rel="canonical" href="https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="ko" href="https://yeseul100512.github.io/3D-website/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="en" href="https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="ja" href="https://yeseul100512.github.io/3D-website/ja/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="zh-Hans" href="https://yeseul100512.github.io/3D-website/zh/tools/print-cost-calculator/">
+<link rel="alternate" hreflang="x-default" href="https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="BENCH">
+<meta property="og:title" content="3D Print Weight &amp; Cost Calculator – from G-code or STL, by material | BENCH">
+<meta property="og:description" content="Turn the filament weight and print time from your G-code into material cost, electricity, machine wear, failure allowance, labour and a selling price. Can also estimate weight from an STL. Free, no sign-up, nothing is uploaded.">
+<meta property="og:url" content="https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#161826">
+<link rel="icon" href="../../../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../../assets/site.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Print Weight & Cost Calculator","url":"https://yeseul100512.github.io/3D-website/en/tools/print-cost-calculator/","description":"Turn the filament weight and print time from your G-code into material cost, electricity, machine wear, failure allowance, labour and a selling price. Can also estimate weight from an STL. Free, no sign-up, nothing is uploaded.","inLanguage":"en","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why does the STL estimate differ from my slicer's weight?","acceptedAnswer":{"@type":"Answer","text":"The STL estimate only looks at the model's volume and surface area. A real print depends on wall count, top and bottom layers, infill pattern, supports and brim, which are only known after slicing. For an accurate figure, drop the sliced G-code."}},{"@type":"Question","name":"How is the selling price calculated?","acceptedAnswer":{"@type":"Answer","text":"The markup (%) is added to the total cost, and the result is divided so that this amount is still left after the marketplace takes its share of the selling price: price = total cost × (1 + markup) ÷ (1 − fee)."}},{"@type":"Question","name":"What does the failure allowance apply to?","acceptedAnswer":{"@type":"Answer","text":"It is a percentage of filament, electricity and machine wear together. If roughly one print in ten fails, enter 10%. Labour is not included in it."}},{"@type":"Question","name":"Where are my settings stored?","acceptedAnswer":{"@type":"Answer","text":"Only in this browser's local storage; nothing is sent to a server. “Reset settings” clears them."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+<a class="brand" href="../../../en/"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>BENCH</a>
+<nav class="langs" aria-label="Language">
+<a href="../../../tools/print-cost-calculator/" lang="ko" hreflang="ko">한국어</a>
+<a href="../../../en/tools/print-cost-calculator/" lang="en" hreflang="en" aria-current="page">English</a>
+<a href="../../../ja/tools/print-cost-calculator/" lang="ja" hreflang="ja">日本語</a>
+<a href="../../../zh/tools/print-cost-calculator/" lang="zh-Hans" hreflang="zh-Hans">简体中文</a>
+</nav>
+</header>
+<main id="main">
+<p class="crumb"><a href="../../../en/"><span aria-hidden="true">←</span> All tools</a></p>
+<h1>Print Weight &amp; Cost Calculator</h1>
+<p class="lead">Drop a sliced file to price a print from the weight and time your slicer calculated. Not sliced yet? A 3D model gives a rough weight estimate.</p>
+<noscript><p class="notice warn">This tool needs JavaScript. Please enable it in your browser.</p></noscript>
+<div class="tool">
+<div class="panel">
+<h2>Weight and time</h2>
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".gcode,.gco,.g,.bgcode,.3mf,.stl,.obj">
+<strong>Drop a sliced G-code file here, or click to choose</strong>
+<span>.gcode · .gcode.3mf: accurate (recommended). STL · OBJ · 3MF model: rough estimate</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice warn" id="open-mesh" role="alert" hidden>This model has holes or inconsistent face directions, so its volume cannot be trusted and no weight was estimated. Check it in the <a href="../stl-inspector/">model inspector</a>, or drop the sliced G-code instead.</p>
+<div id="estimate" hidden>
+<p class="notice warn">Rough pre-slice estimate. Supports, brim and purge are not included, and the slicer&#x27;s result will differ.</p>
+<div class="fields" style="margin-top:12px">
+<div class="field"><label for="wall">Shell thickness (mm)</label><input type="number" id="wall" value="1.2" min="0" max="20" step="0.1" required inputmode="decimal"></div>
+<div class="field"><label for="infill">Infill (%)</label><input type="number" id="infill" value="15" min="0" max="100" step="1" required inputmode="decimal"></div>
+</div>
+</div>
+<div class="fields">
+<div class="field"><label for="weight">Filament weight (g)</label><input type="number" id="weight" min="0" max="1000000" step="any" inputmode="decimal"></div>
+<div class="field"><label for="hours">Print time (hours)</label><input type="number" id="hours" min="0" max="100000" step="any" inputmode="decimal"><small>Used for electricity and machine wear. Enter 1 h 30 min as 1.5.</small></div>
+</div>
+</div>
+<div class="panel">
+<h2>Material</h2>
+<div class="fields">
+<div class="field"><label for="material">Material</label><select id="material"></select></div>
+<div class="field"><label for="density">Density (g/cm³)</label><input type="number" id="density" min="0.1" max="25" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="price">Price per kg</label><input type="number" id="price" min="0" max="100000000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="currency">Currency</label><select id="currency"><option>KRW</option><option>USD</option><option>EUR</option><option>JPY</option><option>CNY</option><option>GBP</option></select></div>
+</div>
+<p><small style="color:var(--muted)">Density and price are typical defaults. Your edits are remembered per material. The currency changes the symbol only; nothing is converted.</small></p>
+</div>
+<div class="panel">
+<h2>Extra costs (optional)</h2>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">Electricity</summary>
+<div class="fields">
+<div class="field"><label for="watts">Average printer power (W)</label><input type="number" id="watts" min="0" max="100000" step="any" inputmode="decimal"><small>Average while printing. Desktop printers typically draw 80–200 W.</small></div>
+<div class="field"><label for="kwh">Price per kWh</label><input type="number" id="kwh" min="0" max="1000000" step="any" inputmode="decimal"><small>The unit rate on your electricity bill, e.g. 0.17</small></div>
+</div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">Machine wear</summary>
+<div class="field"><label for="wear">Machine cost per hour</label><input type="number" id="wear" min="0" max="100000000" step="any" inputmode="decimal"><small>Printer price plus consumables, divided by the hours you expect it to run.</small></div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">Failure allowance</summary>
+<div class="field"><label for="fail">Failure allowance (%)</label><input type="number" id="fail" min="0" max="1000" step="any" inputmode="decimal"><small>Added on top of filament, electricity and machine wear. Enter 10 if about one print in ten fails.</small></div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">Labour</summary>
+<div class="fields">
+<div class="field"><label for="labour-rate">Hourly rate</label><input type="number" id="labour-rate" min="0" max="100000000" step="any" inputmode="decimal"></div>
+<div class="field"><label for="labour-min">Hands-on time (minutes)</label><input type="number" id="labour-min" min="0" max="100000" step="any" inputmode="decimal"><small>Time you actually spend: slicing, setup, support removal, packing.</small></div>
+</div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">Selling price</summary>
+<div class="fields">
+<div class="field"><label for="margin">Markup (%)</label><input type="number" id="margin" min="0" max="100000" step="any" inputmode="decimal"><small>Added on top of the total cost.</small></div>
+<div class="field"><label for="fee">Marketplace fee (%)</label><input type="number" id="fee" min="0" max="99" step="any" inputmode="decimal"><small>The share of the selling price taken by the marketplace or payment provider.</small></div>
+</div>
+</details>
+</div>
+<div class="panel">
+<h2>Result</h2>
+<p id="empty" style="color:var(--muted)">Drop a file or enter the filament weight to see the result here. If a field is marked in red, correct it first.</p>
+<div class="table-scroll" id="result" aria-live="polite" hidden></div>
+<p class="notice warn" id="need-hours" hidden>Print time is empty, so electricity and machine wear are counted as 0. Enter the print time above.</p>
+<p style="display:flex;flex-wrap:wrap;gap:8px">
+<button type="button" class="button secondary" id="csv" disabled>Save CSV</button>
+<button type="button" class="button secondary" id="xlsx" disabled>Save xlsx</button>
+<button type="button" class="button secondary" id="reset">Reset settings</button>
+</p>
+</div>
+
+</div>
+<section class="doc">
+<h2>What this tool does</h2>
+<p>It calculates material cost from the filament weight and the price per kilogram. The most accurate weight comes from sliced G-code or a .gcode.3mf; you can also bring it over from the G-code analyzer or type it in.</p>
+<p>For an STL, OBJ or 3MF model that is not sliced yet, it makes a rough estimate from volume and surface area. The formula assumes a wall of uniform thickness over the whole surface and the rest filled at the infill percentage, so it will not match the slicer.</p>
+<p>Optionally add electricity, machine wear per hour, a failure allowance and labour, then a markup and a marketplace fee to get a selling price. Your settings are remembered in this browser, and the breakdown can be exported as CSV or xlsx.</p>
+</section>
+<section class="doc">
+<h2>How to use it</h2>
+<ol>
+<li>Drop the G-code or .gcode.3mf exported from your slicer. Weight and print time are filled in for you. Without a file, just type the weight.</li>
+<li>Pick the material, then adjust density and price per kilogram to match your spool.</li>
+<li>Open any of the optional sections (electricity, machine wear, failure allowance, labour, selling price) and enter values. Empty fields are left out of the calculation.</li>
+<li>Read the breakdown and total in the table below, and save it as CSV or xlsx if you need it.</li>
+</ol>
+</section>
+<section class="doc">
+<h2>Limits and caveats</h2>
+<ul>
+<li>Weight from a 3D model is a rough pre-slice estimate. It ignores supports, brim, purge and top/bottom layers, so use sliced G-code for a real quote.</li>
+<li>A model with holes or inconsistent face directions has no reliable volume, so no weight is estimated for it. Check it in the <a href="../stl-inspector/">model inspector</a>.</li>
+<li>Densities and prices are typical values provided as defaults. They vary by brand and colour, so correct them from your filament&#x27;s data sheet.</li>
+<li>The currency only changes the symbol and the number of decimals. Amounts are not converted at an exchange rate.</li>
+<li>Electricity is simply average power × print time. Print time is the slicer&#x27;s estimate and real prints differ. Taxes and shipping are not included.</li>
+</ul>
+</section>
+<section class="doc"><h2>Frequently asked questions</h2>
+<details><summary>Why does the STL estimate differ from my slicer&#x27;s weight?</summary><p>The STL estimate only looks at the model&#x27;s volume and surface area. A real print depends on wall count, top and bottom layers, infill pattern, supports and brim, which are only known after slicing. For an accurate figure, drop the sliced G-code.</p></details>
+<details><summary>How is the selling price calculated?</summary><p>The markup (%) is added to the total cost, and the result is divided so that this amount is still left after the marketplace takes its share of the selling price: price = total cost × (1 + markup) ÷ (1 − fee).</p></details>
+<details><summary>What does the failure allowance apply to?</summary><p>It is a percentage of filament, electricity and machine wear together. If roughly one print in ten fails, enter 10%. Labour is not included in it.</p></details>
+<details><summary>Where are my settings stored?</summary><p>Only in this browser&#x27;s local storage; nothing is sent to a server. “Reset settings” clears them.</p></details>
+</section>
+<section>
+<h2>Other tools</h2>
+<ul class="cards">
+<li><a class="card" href="../../../en/tools/stl-inspector/"><h3>STL/3MF Check &amp; Repair</h3><p>Find holes, flipped faces and other mesh problems, see where they are, and fix only what you choose. Also checks size and bed fit and saves to another format or to Excel.</p><p class="formats">Input · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../en/tools/stl-cutter/"><h3>STL Splitter</h3><p>Split a model that is larger than your bed into printable pieces, with finger joints so the parts line up.</p><p class="formats">Input · STL · 3MF · OBJ</p></a></li>
+<li><a class="card" href="../../../en/tools/gcode-analyzer/"><h3>G-code Analyzer</h3><p>Read print time and filament use from G-code, broken down by feature and by filament.</p><p class="formats">Input · .gcode · .gcode.3mf</p></a></li>
+<li><a class="card" href="../../../en/tools/infill-recommender/"><h3>Infill Recommender</h3><p>Answer a few questions and get a Bambu Studio infill pattern, density, wall loops and top/bottom layers for your part.</p><p class="formats">Input · No file needed</p></a></li>
+</ul>
+</section>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Your files never leave your browser. Everything is calculated on this device.</p>
+
+</main>
+<footer class="site-footer"><p>Free to use. No sign-up, no uploads, no tracking.</p></footer>
+<script>window.T={"lang":"en","js_err_empty":"{name} is empty (0 bytes).","js_err_wrong_type":"{name} is not a supported file type. Supported: {types}","js_err_not_mesh":"{name} contains no G-code or 3D model we can read. The file is damaged or not a supported format.","js_err_truncated":"{name} is cut off: it holds only {present} of the {declared} triangles it declares.","js_err_truncated_unknown":"{name} is cut off: only {present} complete triangles were found.","js_load_partial":"Load the intact part","js_err_too_large":"{name} is too large for this device's memory. Close other tabs or try a desktop browser.","js_err_no_triangles":"{name} contains no triangles.","js_err_unknown":"Could not process {name}. ({detail})","js_bad_triangles":"{n} triangles with invalid coordinates (NaN or infinity) were left out.","js_reading":"Reading {name}… {percent}%","js_working":"Working…","js_num_required":"Enter a value.","js_num_invalid":"Enter a number.","js_num_min":"Enter {min} or more.","js_num_max":"Enter {max} or less.","js_unit_h":"h","js_unit_m":"m","js_unit_s":"s","js_col_item":"Item","js_col_basis":"Basis","js_col_amount":"Amount","js_row_filament":"Filament","js_row_electricity":"Electricity","js_row_wear":"Machine wear","js_row_failure":"Failure allowance","js_row_labour":"Labour","js_row_total":"Total cost","js_row_margin":"Markup","js_row_fee":"Marketplace fee","js_row_price":"Selling price","js_from_gcode":"{name}: using the filament weight from this file. Print time: {time}.","js_from_gcode_volume":"{name}: the file states no weight, so it is calculated as {volume} cm³ of filament × the density of the selected material. Print time: {time}.","js_no_time":"not in the file","js_from_mesh":"{name}: rough estimate from a model with a volume of {volume} cm³ and a surface area of {area} cm².","js_from_analyzer":"Filled in with the numbers from the G-code analyzer.","js_err_not_text":"{name} is not a G-code text file. Check that it was exported as G-code from a slicer.","js_err_bgcode":"{name} is binary G-code (.bgcode), which cannot be read. Export plain G-code (.gcode) from your slicer.","js_err_no_moves":"{name} contains no move commands (G0/G1). It does not look like G-code.","js_err_no_plate":"{name} does not contain sliced G-code."}</script>
+<script type="module" src="../../../assets/tools/print-cost-calculator/main.js"></script>
+</body>
+</html>
