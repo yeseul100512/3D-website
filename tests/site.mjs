@@ -168,7 +168,7 @@ test('nothing forbidden is referenced; CDN imports are pinned jsDelivr URLs', ()
     assert.ok(!/claude|anthropic/i.test(s), `${f}: forbidden name`);
     for (const [url] of s.matchAll(/https?:\/\/[^\s'"`)<]+/g)) {
       if (!/\.(js|css)$/.test(f) || /^https?:\/\/(www\.w3\.org|schemas\.|yeseul100512\.github\.io)/.test(url)) continue;
-      assert.match(url, /^https:\/\/cdn\.jsdelivr\.net\/npm\/[a-z-]+@\d+\.\d+\.\d+\//, `${f}: ${url}`);
+      assert.match(url, /^https:\/\/cdn\.jsdelivr\.net\/npm\/[a-z0-9-]+@\d+\.\d+\.\d+\//, `${f}: ${url}`);
     }
   }
 });

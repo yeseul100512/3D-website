@@ -5,9 +5,10 @@ export const MAX_PIECES = 200;
 export const COLORS = ['#9184d9', '#ff8a3a', '#4ade80', '#f472b6', '#facc15', '#38bdf8', '#d2cefd', '#fb7185'];
 const PAD = 1; // mm the cutters reach beyond the model on every outer side
 const MAX_N = 50;
-// CAD models have many vertices on round coordinates, and so would evenly spaced cut planes. A vertex lying
-// exactly on a cutter face makes the CSG library leave triangles uncut, so every cutter face is moved a few
-// microns off the round value (far below print resolution, and inside the 0.01 mm fit tolerance).
+// CAD models have many vertices on round coordinates, and so would evenly spaced cut planes. Every cutter face
+// is moved a few microns off the round value (far below print resolution, and inside the 0.01 mm fit
+// tolerance) so that model faces rarely lie exactly in a cutter face. The former CSG library needed this;
+// manifold-3d copes with coincident faces, and the offset is kept because the tested geometry is built on it.
 const NUDGE_PLANE = 0.0043;
 const NUDGE_COMB = 0.0037;
 

@@ -1,14 +1,13 @@
 // One job per worker: 'load' parses a file, 'cut' splits a triangle soup, 'zip' packs the pieces.
 // The page cancels by terminate().
-import { parseMesh, bounds, writeSTL } from '../../lib/mesh-io.js';
+import { parseMesh, bounds, weld, writeSTL } from '../../lib/mesh-io.js';
 import { zipStore } from '../../lib/zip.js';
 import { analyze } from '../../lib/mesh-analyze.js';
 import { volume, orient, slab } from './cut-plan.js';
 
-// The jsDelivr bundle of three-bvh-csg 0.0.18 imports exactly these two builds; using the same three URL
-// here keeps a single copy of three.js in the worker.
-const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.182.0/+esm';
-const CSG_URL = 'https://cdn.jsdelivr.net/npm/three-bvh-csg@0.0.18/+esm';
+// manifold-3d (WASM): Booleans whose result is guaranteed to be a closed mesh. The plain file (not jsDelivr's
+// +esm bundle) is imported so that the wasm next to it is found; locateFile says so explicitly.
+const MANIFOLD_URL = 'https://cdn.jsdelivr.net/npm/manifold-3d@3.5.4/';
 
 onmessage = async ({ data }) => {
   try {
@@ -41,78 +40,78 @@ async function zip({ files }) {
 }
 
 async function cut({ triangles, perm, n, joints }) {
-  let THREE, CSG;
-  if (n.some((v) => v > 1)) { // nothing to cut: no need for the library (or a connection)
-    postMessage({ stage: 'lib' });
-    try {
-      [THREE, CSG] = await Promise.all([import(THREE_URL), import(CSG_URL)]);
-    } catch (e) {
-      throw Object.assign(new Error(e.message), { code: 'lib' });
-    }
+  postMessage({ stage: 'lib' });
+  let M;
+  try {
+    M = await (await import(`${MANIFOLD_URL}manifold.js`)).default({ locateFile: (file) => MANIFOLD_URL + file });
+    M.setup();
+  } catch (e) {
+    throw Object.assign(new Error(e?.message || String(e)), { code: 'lib' });
   }
   postMessage({ stage: 'prep' });
   const dims = orient(triangles, perm);
-  const evaluator = CSG && new CSG.Evaluator();
-  if (CSG) {
-    evaluator.attributes = ['position'];
-    evaluator.useGroups = false;
-  }
-  const brush = (tri) => {
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.BufferAttribute(tri, 3));
-    const b = new CSG.Brush(g);
-    b.updateMatrixWorld();
-    return b;
+  // Soup -> solid. Vertices are merged only when their coordinates are identical: nothing is repaired.
+  const solid = (tri) => {
+    const { vertices, indices } = weld(tri);
+    return new M.Manifold(new M.Mesh({ numProp: 3, vertProperties: vertices, triVerts: indices }));
   };
-  // Result geometry -> plain soup (handles an index and a draw range, whichever the library produced).
-  const soup = (g) => {
-    const pos = g.attributes.position;
-    if (!pos) return new Float32Array(0);
-    if (!g.index) return pos.array.slice(0, Math.min(pos.count, g.drawRange.count) * 3);
-    const idx = g.index.array;
-    const count = Math.min(g.index.count, g.drawRange.count);
-    const out = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) out.set(pos.array.subarray(idx[i] * 3, idx[i] * 3 + 3), i * 3);
+  const soup = (s) => {
+    const { vertProperties: v, triVerts: t, numProp: k } = s.getMesh();
+    const out = new Float32Array(t.length * 3);
+    for (let i = 0; i < t.length; i++) out.set(v.subarray(t[i] * k, t[i] * k + 3), i * 3);
     return out;
   };
 
-  // Cut axis by axis: X slabs first, then each slab along Y, then along Z. Later cuts work on smaller meshes.
-  let total = 0;
-  for (let a = 0, cells = 1; a < 3; a++) if (n[a] > 1) total += (cells *= n[a]);
-  let done = 0;
-  let parts = [{ index: [], tri: triangles }];
+  let pieces;
   try {
+    let model;
+    try {
+      model = solid(triangles);
+    } catch (e) {
+      if (e?.code === 'NotManifold') throw Object.assign(new Error(e.message), { code: 'open' });
+      throw e;
+    }
+    // Closed but inside out: the library would cut the space around the model instead of the model.
+    if (!(model.volume() > 0)) throw Object.assign(new Error('volume is not positive'), { code: 'open' });
+
+    // Cut axis by axis: X slabs first, then each slab along Y, then along Z. Later cuts work on smaller meshes.
+    let total = 0;
+    for (let a = 0, cells = 1; a < 3; a++) if (n[a] > 1) total += (cells *= n[a]);
+    let done = 0;
+    let parts = [{ index: [], solid: model }];
     for (let axis = 0; axis < 3; axis++) {
       if (n[axis] === 1) {
         for (const p of parts) p.index.push(0);
         continue;
       }
-      const cutters = Array.from({ length: n[axis] }, (_, m) => brush(slab(dims, axis, m, n[axis], joints[axis])));
+      const cutters = Array.from({ length: n[axis] }, (_, m) => solid(slab(dims, axis, m, n[axis], joints[axis])));
       const next = [];
       for (const part of parts) {
-        const b = brush(part.tri);
         for (let m = 0; m < n[axis]; m++) {
           postMessage({ stage: 'cut', done, total });
-          const tri = soup(evaluator.evaluate(b, cutters[m], CSG.INTERSECTION).geometry);
+          const piece = part.solid.intersect(cutters[m]);
+          const status = piece.status(); // Booleans are lazy: this is where the work (and any failure) happens
+          if (status !== 'NoError') throw new Error(status);
           done++;
-          if (tri.length >= 36) next.push({ index: [...part.index, m], tri }); // fewer than 4 triangles: empty cell
+          if (piece.isEmpty()) piece.delete(); // empty cell
+          else next.push({ index: [...part.index, m], solid: piece });
         }
+        part.solid.delete(); // WASM objects are not garbage collected
       }
+      for (const c of cutters) c.delete();
       parts = next;
     }
+    pieces = parts.map(({ index, solid: s }) => {
+      const tri = soup(s);
+      s.delete();
+      return { index, triangles: tri, ...bounds(tri), volume: volume(tri) };
+    });
   } catch (e) {
-    throw Object.assign(new Error(e.message), { code: e instanceof RangeError ? 'too_large' : 'cut' });
+    if (e?.code === 'open') throw e;
+    // Out of memory arrives as a RangeError, an aborted WASM runtime or a bare C++ exception, depending on where.
+    const message = e?.message || String(e);
+    const memory = e instanceof RangeError || !(e instanceof Error) || /memory|alloc|abort|ResultTooLarge/i.test(message);
+    throw Object.assign(new Error(message), { code: memory ? 'too_large' : 'cut' });
   }
-  // The CSG library sometimes leaves a sliver of a cutter face, which lies outside the model: drop those.
-  const tidy = (tri) => {
-    let w = 0;
-    for (let i = 0; i < tri.length; i += 9) {
-      let inside = true;
-      for (let k = 0; k < 9; k++) if (tri[i + k] < -0.01 || tri[i + k] > dims[k % 3] + 0.01) inside = false;
-      if (inside) tri.copyWithin(w, i, i + 9), (w += 9);
-    }
-    return tri.slice(0, w);
-  };
-  const pieces = parts.map(({ index, tri }) => ({ index, triangles: (tri = tidy(tri)), ...bounds(tri), volume: volume(tri) }));
   postMessage({ pieces, dims }, pieces.map((p) => p.triangles.buffer));
 }

@@ -174,7 +174,7 @@ function load(file, allowTruncated = false) {
     notice($('msg'), 'warn', notes.join(' '));
     $('info').textContent = fmt(T.js_model_info, { name: file.name, size: dimsText(m.size), n: num(m.count, 0) });
     $('info').hidden = false;
-    $('open-text').textContent = fmt(T.js_open_warn, { n: num(m.open, 0) });
+    $('open-text').textContent = m.open ? fmt(T.js_open_warn, { n: num(m.open, 0) }) : '';
     $('open').hidden = !m.open;
     show([{ triangles: m.triangles, color: COLORS[0] }]);
   });
@@ -219,7 +219,10 @@ function run() {
   start($('status'), { cmd: 'cut', triangles: model.triangles, perm: s.perm, n: s.n, joints: s.joints }, [],
     (d) => (d.stage === 'cut' ? fmt(T.js_stage_cut, { done: d.done + 1, total: d.total }) : stages[d.stage]),
     (data, err) => {
-      if (err) return notice($('status'), 'error', errorText(err, model.name));
+      if (err) {
+        if (err.code === 'open') $('open').hidden = false; // refused: the link to the repair tool goes with the message
+        return notice($('status'), 'error', errorText(err, model.name));
+      }
       if (!data.pieces.length) return notice($('status'), 'error', T.js_err_no_pieces);
       notice($('status'), 'info', '');
       result = { pieces: data.pieces, n: s.n, dims: data.dims, base };
@@ -269,7 +272,6 @@ function render(s) {
   const whole = Math.abs(model.volume);
   const lost = whole - pieces.reduce((a, p) => a + p.volume, 0);
   if (model.open === 0 && (lost > 0.01 * whole + cleared || lost < -0.01 * whole)) warns.push(fmt(T.js_warn_volume, { percent: num((Math.abs(lost) / whole) * 100, 1) }));
-  if (model.open) warns.push(T.js_warn_open_result);
   notice($('warn'), 'warn', warns.join(' '));
 
   $('map').innerHTML = mapSVG(dims, n, pieces); // built from numbers only
