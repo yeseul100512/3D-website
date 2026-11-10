@@ -1,0 +1,338 @@
+{
+  "name": { "ko": "출력 무게·비용 계산기", "en": "Print Weight & Cost Calculator", "ja": "造形重量・コスト計算", "zh": "打印重量与成本计算器" },
+  "card": {
+    "ko": "슬라이스한 G-code나 3D 모델에서 필라멘트 무게를 구해 재료비, 전기요금, 판매가까지 계산합니다.",
+    "en": "Get filament weight from sliced G-code or a 3D model, then work out material cost, electricity and a selling price.",
+    "ja": "スライス済みの G-code や 3D モデルからフィラメント重量を求め、材料費・電気代・販売価格まで計算します。",
+    "zh": "根据切片后的 G-code 或 3D 模型得出耗材重量，再算出材料费、电费和售价。"
+  },
+  "formats": "G-code · .gcode.3mf · STL · OBJ · 3MF",
+  "title": {
+    "ko": "3D 프린팅 무게·비용 계산기 – G-code 또는 STL로 재료별 계산",
+    "en": "3D Print Weight & Cost Calculator – from G-code or STL, by material",
+    "ja": "3D プリント重量・コスト計算 – G-code や STL から材料別に算出",
+    "zh": "3D 打印重量与成本计算器 – 支持 G-code 和 STL，按材料计算"
+  },
+  "description": {
+    "ko": "G-code에서 읽은 필라멘트 무게와 출력 시간으로 재료비, 전기요금, 장비 비용, 실패 여유분, 인건비, 판매가를 계산합니다. STL로 대략적인 무게도 추정합니다. 가입 없이 무료이며 파일은 서버로 전송되지 않습니다.",
+    "en": "Turn the filament weight and print time from your G-code into material cost, electricity, machine wear, failure allowance, labour and a selling price. Can also estimate weight from an STL. Free, no sign-up, nothing is uploaded.",
+    "ja": "G-code から読み取ったフィラメント重量と造形時間をもとに、材料費、電気代、機器の損耗、失敗分の上乗せ、作業費、販売価格を計算します。STL からのおおよその重量見積もりにも対応。登録不要・無料で、ファイルはサーバーに送信されません。",
+    "zh": "根据 G-code 中的耗材重量和打印时间，计算材料费、电费、设备损耗、失败余量、人工和售价；也可以用 STL 粗略估算重量。免费、无需注册，文件不会上传。"
+  },
+  "h1": { "ko": "출력 무게·비용 계산기", "en": "Print Weight & Cost Calculator", "ja": "造形重量・コスト計算", "zh": "打印重量与成本计算器" },
+  "intro": {
+    "ko": "슬라이스한 파일을 넣으면 슬라이서가 계산한 무게와 시간으로 출력 비용을 계산합니다. 아직 슬라이스하지 않았다면 3D 모델로 대략적인 무게를 추정할 수 있습니다.",
+    "en": "Drop a sliced file to price a print from the weight and time your slicer calculated. Not sliced yet? A 3D model gives a rough weight estimate.",
+    "ja": "スライス済みのファイルを読み込むと、スライサーが計算した重量と時間から造形コストを計算します。まだスライスしていない場合は、3D モデルからおおよその重量を見積もれます。",
+    "zh": "放入切片后的文件，即可按切片软件算出的重量和时间计算打印成本。还没切片？也可以用 3D 模型粗略估算重量。"
+  },
+  "what_1": {
+    "ko": "필라멘트 무게와 kg당 가격으로 재료비를 계산합니다. 무게는 슬라이스한 G-code나 .gcode.3mf에서 읽는 방법이 가장 정확하며, G-code 분석기에서 넘겨받거나 직접 입력할 수도 있습니다.",
+    "en": "It calculates material cost from the filament weight and the price per kilogram. The most accurate weight comes from sliced G-code or a .gcode.3mf; you can also bring it over from the G-code analyzer or type it in.",
+    "ja": "フィラメントの重量と 1 kg あたりの価格から材料費を計算します。重量は、スライス済みの G-code や .gcode.3mf から読み取るのが最も正確です。G-code 解析ツールから引き継ぐことも、直接入力することもできます。",
+    "zh": "根据耗材重量和每公斤价格计算材料费。最准确的重量来自切片后的 G-code 或 .gcode.3mf；也可以从 G-code 分析器带过来，或直接手动输入。"
+  },
+  "what_2": {
+    "ko": "아직 슬라이스하지 않은 STL·OBJ·3MF 모델은 부피와 표면적으로 무게를 대략 추정합니다. 표면 전체에 일정한 두께의 벽이 있고 나머지는 채움 비율만큼 찬다고 가정하는 단순한 계산이라, 슬라이서 결과와는 차이가 납니다.",
+    "en": "For an STL, OBJ or 3MF model that is not sliced yet, it makes a rough estimate from volume and surface area. The formula assumes a wall of uniform thickness over the whole surface and the rest filled at the infill percentage, so it will not match the slicer.",
+    "ja": "まだスライスしていない STL・OBJ・3MF モデルは、体積と表面積からおおよその重量を見積もります。表面全体に一定の厚みの壁があり、残りがインフィル率の分だけ埋まると仮定した単純な計算なので、スライサーの結果とは差が出ます。",
+    "zh": "对于尚未切片的 STL、OBJ、3MF 模型，会根据体积和表面积粗略估算重量。算法假设整个表面有一层厚度均匀的外壳，其余部分按填充率填充，因此结果与切片软件会有出入。"
+  },
+  "what_3": {
+    "ko": "필요하면 전기요금, 시간당 장비 비용, 실패 여유분, 인건비를 더하고, 마진과 판매 수수료를 넣어 판매가를 구합니다. 설정은 이 브라우저에 저장되며 결과는 CSV·xlsx로 내보낼 수 있습니다.",
+    "en": "Optionally add electricity, machine wear per hour, a failure allowance and labour, then a markup and a marketplace fee to get a selling price. Your settings are remembered in this browser, and the breakdown can be exported as CSV or xlsx.",
+    "ja": "必要に応じて電気代、1 時間あたりの機器費用、失敗分の上乗せ、作業費を加え、上乗せ率と販売手数料を入れて販売価格を求められます。設定はこのブラウザーに保存され、内訳は CSV・xlsx で書き出せます。",
+    "zh": "还可以按需加入电费、每小时设备损耗、失败余量和人工，再填入加价率和平台手续费得出售价。设置会保存在当前浏览器中，明细可导出为 CSV 或 xlsx。"
+  },
+  "how_1": {
+    "ko": "슬라이서에서 내보낸 G-code 또는 .gcode.3mf 파일을 넣습니다. 무게와 출력 시간이 자동으로 채워집니다. 파일이 없으면 무게를 직접 입력해도 됩니다.",
+    "en": "Drop the G-code or .gcode.3mf exported from your slicer. Weight and print time are filled in for you. Without a file, just type the weight.",
+    "ja": "スライサーから書き出した G-code または .gcode.3mf を読み込みます。重量と造形時間が自動で入力されます。ファイルがない場合は、重量を直接入力してもかまいません。",
+    "zh": "放入切片软件导出的 G-code 或 .gcode.3mf，重量和打印时间会自动填好。没有文件时，直接输入重量即可。"
+  },
+  "how_2": {
+    "ko": "재료를 고르고, 가지고 있는 필라멘트에 맞게 밀도와 kg당 가격을 고칩니다.",
+    "en": "Pick the material, then adjust density and price per kilogram to match your spool.",
+    "ja": "材料を選び、お使いのフィラメントに合わせて密度と 1 kg あたりの価格を修正します。",
+    "zh": "选择材料，并按手头的耗材修改密度和每公斤价格。"
+  },
+  "how_3": {
+    "ko": "전기요금, 장비 비용, 실패 여유분, 인건비, 판매가가 필요하면 해당 항목을 펼쳐 값을 입력합니다. 비워 둔 항목은 계산에 넣지 않습니다.",
+    "en": "Open any of the optional sections (electricity, machine wear, failure allowance, labour, selling price) and enter values. Empty fields are left out of the calculation.",
+    "ja": "電気代、機器費用、失敗分の上乗せ、作業費、販売価格が必要な場合は、該当する項目を開いて値を入力します。空欄の項目は計算に含めません。",
+    "zh": "需要计算电费、设备损耗、失败余量、人工或售价时，展开对应的选项并填写数值。留空的项目不计入。"
+  },
+  "how_4": {
+    "ko": "아래 표에서 항목별 금액과 합계를 확인하고, 필요하면 CSV나 xlsx로 저장합니다.",
+    "en": "Read the breakdown and total in the table below, and save it as CSV or xlsx if you need it.",
+    "ja": "下の表で項目ごとの金額と合計を確認し、必要に応じて CSV や xlsx で保存します。",
+    "zh": "在下方表格中查看各项金额与合计，需要时保存为 CSV 或 xlsx。"
+  },
+  "limit_1": {
+    "ko": "3D 모델로 구한 무게는 슬라이스 전의 대략적인 추정입니다. 서포트, 브림, 퍼지, 윗면·바닥면 층수 등은 반영하지 않으므로 견적에는 슬라이스한 G-code를 사용해 주세요.",
+    "en": "Weight from a 3D model is a rough pre-slice estimate. It ignores supports, brim, purge and top/bottom layers, so use sliced G-code for a real quote.",
+    "ja": "3D モデルから求めた重量は、スライス前のおおよその見積もりです。サポート、ブリム、パージ、上面・底面の層数などは反映されないため、見積もりにはスライス済みの G-code をお使いください。",
+    "zh": "由 3D 模型得出的重量只是切片前的粗略估算，不包含支撑、帽檐、冲刷和顶底层数等因素。正式报价请使用切片后的 G-code。"
+  },
+  "limit_2": {
+    "ko": "구멍이 있거나 면 방향이 뒤섞인 모델은 부피를 믿을 수 없어 무게를 추정하지 않습니다. <a href=\"../stl-inspector/\">모델 검사 도구</a>에서 상태를 확인해 주세요.",
+    "en": "A model with holes or inconsistent face directions has no reliable volume, so no weight is estimated for it. Check it in the <a href=\"../stl-inspector/\">model inspector</a>.",
+    "ja": "穴があるモデルや面の向きが揃っていないモデルは体積が信頼できないため、重量を見積もりません。<a href=\"../stl-inspector/\">モデル検査ツール</a>で状態をご確認ください。",
+    "zh": "有孔洞或面朝向不一致的模型，其体积并不可靠，因此不会估算重量。请在<a href=\"../stl-inspector/\">模型检查工具</a>中查看问题。",
+    "html": true
+  },
+  "limit_3": {
+    "ko": "재료의 밀도와 가격은 흔히 쓰이는 값을 넣어 둔 기본값입니다. 같은 재료라도 제조사와 색에 따라 달라지므로 필라멘트 사양서에 맞게 고쳐 주세요.",
+    "en": "Densities and prices are typical values provided as defaults. They vary by brand and colour, so correct them from your filament's data sheet.",
+    "ja": "材料の密度と価格は、一般的な値を入れた初期値です。同じ材料でもメーカーや色によって異なるため、フィラメントの仕様に合わせて修正してください。",
+    "zh": "材料的密度和价格只是常见数值的默认值。同一种材料也会因品牌和颜色而不同，请按耗材规格书修改。"
+  },
+  "limit_4": {
+    "ko": "통화는 기호와 소수 자릿수만 바꿉니다. 환율로 금액을 환산하지 않습니다.",
+    "en": "The currency only changes the symbol and the number of decimals. Amounts are not converted at an exchange rate.",
+    "ja": "通貨は記号と小数点以下の桁数を切り替えるだけです。為替レートによる換算は行いません。",
+    "zh": "货币选项只改变符号和小数位数，不会按汇率换算金额。"
+  },
+  "limit_5": {
+    "ko": "전기요금은 평균 소비전력 × 출력 시간으로 계산한 단순한 값입니다. 출력 시간은 슬라이서의 예상값이라 실제와 다를 수 있습니다. 세금과 배송비는 포함하지 않습니다.",
+    "en": "Electricity is simply average power × print time. Print time is the slicer's estimate and real prints differ. Taxes and shipping are not included.",
+    "ja": "電気代は「平均消費電力 × 造形時間」という単純な計算です。造形時間はスライサーの予想値のため、実際とは異なる場合があります。税金と送料は含みません。",
+    "zh": "电费只是“平均功率 × 打印时间”的简单计算。打印时间是切片软件的估计值，可能与实际不同。不含税费和运费。"
+  },
+  "faq_1_q": {
+    "ko": "STL로 추정한 무게와 슬라이서가 알려 준 무게가 왜 다른가요?",
+    "en": "Why does the STL estimate differ from my slicer's weight?",
+    "ja": "STL からの見積もりとスライサーの重量が違うのはなぜですか？",
+    "zh": "为什么用 STL 估算的重量和切片软件给出的不一样？"
+  },
+  "faq_1_a": {
+    "ko": "STL 추정은 모델의 부피와 표면적만 봅니다. 실제 출력물은 벽 수, 윗면·바닥면 층수, 채움 패턴, 서포트, 브림에 따라 필라멘트 양이 달라지고, 이 값은 슬라이스를 해야 알 수 있습니다. 정확한 값이 필요하면 슬라이스한 G-code를 넣어 주세요.",
+    "en": "The STL estimate only looks at the model's volume and surface area. A real print depends on wall count, top and bottom layers, infill pattern, supports and brim, which are only known after slicing. For an accurate figure, drop the sliced G-code.",
+    "ja": "STL からの見積もりは、モデルの体積と表面積しか見ていません。実際の造形物は、壁の数、上面・底面の層数、インフィルパターン、サポート、ブリムによってフィラメント量が変わり、これはスライスして初めて分かります。正確な値が必要な場合は、スライス済みの G-code を読み込んでください。",
+    "zh": "STL 估算只考虑模型的体积和表面积。实际打印的耗材量还取决于墙层数、顶底层数、填充图案、支撑和帽檐，这些只有切片后才能确定。需要准确数值时，请放入切片后的 G-code。"
+  },
+  "faq_2_q": {
+    "ko": "판매가는 어떻게 계산하나요?",
+    "en": "How is the selling price calculated?",
+    "ja": "販売価格はどのように計算されますか？",
+    "zh": "售价是怎么算出来的？"
+  },
+  "faq_2_a": {
+    "ko": "총 원가에 마진(%)을 더한 뒤, 판매 수수료가 판매가의 일정 비율로 빠져나가도 그 금액이 남도록 나눕니다. 판매가 = 총 원가 × (1 + 마진) ÷ (1 − 수수료)입니다.",
+    "en": "The markup (%) is added to the total cost, and the result is divided so that this amount is still left after the marketplace takes its share of the selling price: price = total cost × (1 + markup) ÷ (1 − fee).",
+    "ja": "総原価に上乗せ率（%）を上乗せし、販売手数料が販売価格の一定割合として引かれても、その金額が手元に残るように割り戻します。販売価格 = 総原価 ×（1 + 上乗せ率）÷（1 − 手数料率）です。",
+    "zh": "先在总成本上加上加价率（%），再倒推出一个价格，使平台按售价比例扣除手续费后仍能拿到这笔金额：售价 = 总成本 ×（1 + 加价率）÷（1 − 手续费率）。"
+  },
+  "faq_3_q": {
+    "ko": "실패 여유분은 어디에 적용되나요?",
+    "en": "What does the failure allowance apply to?",
+    "ja": "失敗分の上乗せは、どの費用にかかりますか？",
+    "zh": "失败余量是按哪些费用计算的？"
+  },
+  "faq_3_a": {
+    "ko": "재료비, 전기요금, 장비 비용의 합에 입력한 비율을 곱합니다. 예를 들어 열 번에 한 번 실패한다면 10%를 넣습니다. 인건비에는 적용하지 않습니다.",
+    "en": "It is a percentage of filament, electricity and machine wear together. If roughly one print in ten fails, enter 10%. Labour is not included in it.",
+    "ja": "材料費・電気代・機器費用の合計に、入力した割合を掛けます。たとえば 10 回に 1 回失敗するなら 10% と入力します。作業費にはかかりません。",
+    "zh": "按材料费、电费和设备损耗之和乘以填写的百分比。例如大约每十次失败一次，就填 10%。人工不计入其中。"
+  },
+  "faq_4_q": {
+    "ko": "입력한 설정은 어디에 저장되나요?",
+    "en": "Where are my settings stored?",
+    "ja": "入力した設定はどこに保存されますか？",
+    "zh": "我填写的设置保存在哪里？"
+  },
+  "faq_4_a": {
+    "ko": "이 브라우저의 로컬 저장소에만 저장되며 서버로 보내지 않습니다. ‘설정 초기화’를 누르면 지워집니다.",
+    "en": "Only in this browser's local storage; nothing is sent to a server. “Reset settings” clears them.",
+    "ja": "このブラウザーのローカルストレージにのみ保存され、サーバーには送信されません。「設定をリセット」を押すと消去されます。",
+    "zh": "只保存在当前浏览器的本地存储中，不会发送到服务器。点击“重置设置”即可清除。"
+  },
+
+  "sec_weight": { "ko": "무게와 시간", "en": "Weight and time", "ja": "重量と時間", "zh": "重量与时间" },
+  "drop_title": {
+    "ko": "슬라이스한 G-code 파일을 끌어다 놓거나 눌러서 선택해 주세요",
+    "en": "Drop a sliced G-code file here, or click to choose",
+    "ja": "スライス済みの G-code ファイルをここにドロップ、またはクリックして選択",
+    "zh": "将切片后的 G-code 文件拖到此处，或点击选择"
+  },
+  "drop_hint": {
+    "ko": ".gcode · .gcode.3mf는 정확한 값(권장), STL · OBJ · 3MF 모델은 대략적인 추정",
+    "en": ".gcode · .gcode.3mf: accurate (recommended). STL · OBJ · 3MF model: rough estimate",
+    "ja": ".gcode · .gcode.3mf は正確な値（推奨）、STL · OBJ · 3MF モデルはおおよその見積もり",
+    "zh": ".gcode · .gcode.3mf：准确（推荐）；STL · OBJ · 3MF 模型：粗略估算"
+  },
+  "mesh_open": {
+    "ko": "이 모델은 구멍이 있거나 면 방향이 뒤섞여 있어 부피를 믿을 수 없습니다. 그래서 무게를 추정하지 않았습니다. <a href=\"../stl-inspector/\">모델 검사 도구</a>에서 문제를 확인하거나, 슬라이스한 G-code를 넣어 주세요.",
+    "en": "This model has holes or inconsistent face directions, so its volume cannot be trusted and no weight was estimated. Check it in the <a href=\"../stl-inspector/\">model inspector</a>, or drop the sliced G-code instead.",
+    "ja": "このモデルには穴があるか、面の向きが揃っていないため、体積が信頼できません。そのため重量は見積もっていません。<a href=\"../stl-inspector/\">モデル検査ツール</a>で問題を確認するか、スライス済みの G-code を読み込んでください。",
+    "zh": "此模型有孔洞或面朝向不一致，体积并不可靠，因此没有估算重量。请在<a href=\"../stl-inspector/\">模型检查工具</a>中查看问题，或改用切片后的 G-code。",
+    "html": true
+  },
+  "estimate_note": {
+    "ko": "슬라이스 전의 대략적인 추정입니다. 서포트, 브림, 퍼지는 포함하지 않으며 슬라이서 결과와 다를 수 있습니다.",
+    "en": "Rough pre-slice estimate. Supports, brim and purge are not included, and the slicer's result will differ.",
+    "ja": "スライス前のおおよその見積もりです。サポート、ブリム、パージは含まず、スライサーの結果とは異なる場合があります。",
+    "zh": "这是切片前的粗略估算，不含支撑、帽檐和冲刷，与切片软件的结果可能不同。"
+  },
+  "wall_label": { "ko": "벽(쉘) 두께 (mm)", "en": "Shell thickness (mm)", "ja": "壁（シェル）の厚さ (mm)", "zh": "外壳厚度 (mm)" },
+  "infill_label": { "ko": "내부 채움 (%)", "en": "Infill (%)", "ja": "インフィル率 (%)", "zh": "填充率 (%)" },
+  "weight_label": { "ko": "필라멘트 무게 (g)", "en": "Filament weight (g)", "ja": "フィラメント重量 (g)", "zh": "耗材重量 (g)" },
+  "hours_label": { "ko": "출력 시간 (시간)", "en": "Print time (hours)", "ja": "造形時間 (時間)", "zh": "打印时间 (小时)" },
+  "hours_hint": {
+    "ko": "전기요금과 장비 비용 계산에 씁니다. 1시간 30분은 1.5로 입력합니다.",
+    "en": "Used for electricity and machine wear. Enter 1 h 30 min as 1.5.",
+    "ja": "電気代と機器費用の計算に使います。1 時間 30 分は 1.5 と入力します。",
+    "zh": "用于计算电费和设备损耗。1 小时 30 分钟请填 1.5。"
+  },
+  "sec_material": { "ko": "재료", "en": "Material", "ja": "材料", "zh": "材料" },
+  "material_label": { "ko": "재료", "en": "Material", "ja": "材料", "zh": "材料" },
+  "density_label": { "ko": "밀도 (g/cm³)", "en": "Density (g/cm³)", "ja": "密度 (g/cm³)", "zh": "密度 (g/cm³)" },
+  "price_label": { "ko": "kg당 가격", "en": "Price per kg", "ja": "1 kg あたりの価格", "zh": "每公斤价格" },
+  "currency_label": { "ko": "통화", "en": "Currency", "ja": "通貨", "zh": "货币" },
+  "material_note": {
+    "ko": "밀도와 가격은 흔히 쓰이는 값을 넣어 둔 기본값입니다. 고친 값은 재료별로 기억합니다. 통화는 기호만 바꾸며 환산하지 않습니다.",
+    "en": "Density and price are typical defaults. Your edits are remembered per material. The currency changes the symbol only; nothing is converted.",
+    "ja": "密度と価格は一般的な値の初期値です。修正した値は材料ごとに記憶されます。通貨は記号を切り替えるだけで、換算は行いません。",
+    "zh": "密度和价格为常见数值的默认值，修改后会按材料分别记住。货币只改变符号，不做换算。"
+  },
+  "sec_extra": { "ko": "추가 비용(선택)", "en": "Extra costs (optional)", "ja": "追加費用（任意）", "zh": "其他费用（可选）" },
+  "elec_title": { "ko": "전기요금", "en": "Electricity", "ja": "電気代", "zh": "电费" },
+  "watts_label": { "ko": "프린터 평균 소비전력 (W)", "en": "Average printer power (W)", "ja": "プリンターの平均消費電力 (W)", "zh": "打印机平均功率 (W)" },
+  "watts_hint": {
+    "ko": "출력 중 평균값입니다. 가정용 프린터는 보통 80~200 W입니다.",
+    "en": "Average while printing. Desktop printers typically draw 80–200 W.",
+    "ja": "造形中の平均値です。家庭用プリンターは一般に 80〜200 W 程度です。",
+    "zh": "打印过程中的平均值。桌面级打印机通常为 80–200 W。"
+  },
+  "kwh_label": { "ko": "1 kWh당 요금", "en": "Price per kWh", "ja": "1 kWh あたりの料金", "zh": "每度电价格 (kWh)" },
+  "kwh_hint": {
+    "ko": "전기요금 고지서의 단가를 넣습니다. 예: 150",
+    "en": "The unit rate on your electricity bill, e.g. 0.17",
+    "ja": "電気料金の明細にある単価を入力します。例: 31",
+    "zh": "填写电费单上的单价，例如 0.6"
+  },
+  "wear_title": { "ko": "장비 비용(감가·소모품)", "en": "Machine wear", "ja": "機器費用（減価償却・消耗品）", "zh": "设备损耗（折旧与易损件）" },
+  "wear_label": { "ko": "시간당 장비 비용", "en": "Machine cost per hour", "ja": "1 時間あたりの機器費用", "zh": "每小时设备费用" },
+  "wear_hint": {
+    "ko": "프린터 가격과 소모품 비용을 예상 사용 시간으로 나눈 값입니다.",
+    "en": "Printer price plus consumables, divided by the hours you expect it to run.",
+    "ja": "プリンター本体と消耗品の費用を、見込まれる稼働時間で割った値です。",
+    "zh": "打印机价格加易损件费用，除以预计的使用小时数。"
+  },
+  "fail_title": { "ko": "실패 여유분", "en": "Failure allowance", "ja": "失敗分の上乗せ", "zh": "失败余量" },
+  "fail_label": { "ko": "실패 여유분 (%)", "en": "Failure allowance (%)", "ja": "失敗分の上乗せ (%)", "zh": "失败余量 (%)" },
+  "fail_hint": {
+    "ko": "재료비·전기요금·장비 비용의 합에 더합니다. 열 번에 한 번 실패한다면 10을 넣습니다.",
+    "en": "Added on top of filament, electricity and machine wear. Enter 10 if about one print in ten fails.",
+    "ja": "材料費・電気代・機器費用の合計に上乗せします。10 回に 1 回失敗するなら 10 と入力します。",
+    "zh": "加在材料费、电费和设备损耗之和上。大约每十次失败一次就填 10。"
+  },
+  "labour_title": { "ko": "인건비", "en": "Labour", "ja": "作業費", "zh": "人工" },
+  "labour_rate_label": { "ko": "시간당 인건비", "en": "Hourly rate", "ja": "時給", "zh": "每小时人工费" },
+  "labour_min_label": { "ko": "작업 시간 (분)", "en": "Hands-on time (minutes)", "ja": "作業時間 (分)", "zh": "操作时间 (分钟)" },
+  "labour_hint": {
+    "ko": "슬라이스, 출력 준비, 서포트 제거, 포장처럼 직접 손이 가는 시간입니다.",
+    "en": "Time you actually spend: slicing, setup, support removal, packing.",
+    "ja": "スライス、造形の準備、サポート除去、梱包など、実際に手を動かす時間です。",
+    "zh": "实际动手的时间：切片、准备、去支撑、包装等。"
+  },
+  "sell_title": { "ko": "판매가", "en": "Selling price", "ja": "販売価格", "zh": "售价" },
+  "margin_label": { "ko": "마진 (%)", "en": "Markup (%)", "ja": "上乗せ率 (%)", "zh": "加价率 (%)" },
+  "margin_hint": {
+    "ko": "총 원가에 더하는 비율입니다.",
+    "en": "Added on top of the total cost.",
+    "ja": "総原価に上乗せする割合です。",
+    "zh": "在总成本上加价的比例。"
+  },
+  "fee_label": { "ko": "판매 수수료 (%)", "en": "Marketplace fee (%)", "ja": "販売手数料 (%)", "zh": "平台手续费 (%)" },
+  "fee_hint": {
+    "ko": "판매가에서 빠져나가는 오픈마켓·결제 수수료입니다.",
+    "en": "The share of the selling price taken by the marketplace or payment provider.",
+    "ja": "販売価格から差し引かれる、販売サイトや決済の手数料です。",
+    "zh": "电商平台或支付渠道从售价中扣除的比例。"
+  },
+  "sec_result": { "ko": "계산 결과", "en": "Result", "ja": "計算結果", "zh": "计算结果" },
+  "result_empty": {
+    "ko": "파일을 넣거나 필라멘트 무게를 입력하면 여기에 결과가 표시됩니다. 빨간색으로 표시된 입력값이 있으면 먼저 고쳐 주세요.",
+    "en": "Drop a file or enter the filament weight to see the result here. If a field is marked in red, correct it first.",
+    "ja": "ファイルを読み込むか、フィラメント重量を入力すると、ここに結果が表示されます。赤く表示された入力欄がある場合は、先に修正してください。",
+    "zh": "放入文件或输入耗材重量后，结果会显示在这里。如果有标红的输入项，请先修改。"
+  },
+  "need_hours": {
+    "ko": "출력 시간이 비어 있어 전기요금과 장비 비용은 0으로 계산했습니다. 위에서 출력 시간을 입력해 주세요.",
+    "en": "Print time is empty, so electricity and machine wear are counted as 0. Enter the print time above.",
+    "ja": "造形時間が未入力のため、電気代と機器費用は 0 として計算しています。上の欄に造形時間を入力してください。",
+    "zh": "未填写打印时间，电费和设备损耗按 0 计算。请在上方填写打印时间。"
+  },
+  "btn_csv": { "ko": "CSV 저장", "en": "Save CSV", "ja": "CSV で保存", "zh": "保存为 CSV" },
+  "btn_xlsx": { "ko": "xlsx 저장", "en": "Save xlsx", "ja": "xlsx で保存", "zh": "保存为 xlsx" },
+  "btn_reset": { "ko": "설정 초기화", "en": "Reset settings", "ja": "設定をリセット", "zh": "重置设置" },
+
+  "js_col_item": { "ko": "항목", "en": "Item", "ja": "項目", "zh": "项目" },
+  "js_col_basis": { "ko": "계산 근거", "en": "Basis", "ja": "計算の根拠", "zh": "计算依据" },
+  "js_col_amount": { "ko": "금액", "en": "Amount", "ja": "金額", "zh": "金额" },
+  "js_row_filament": { "ko": "재료비", "en": "Filament", "ja": "材料費", "zh": "材料费" },
+  "js_row_electricity": { "ko": "전기요금", "en": "Electricity", "ja": "電気代", "zh": "电费" },
+  "js_row_wear": { "ko": "장비 비용", "en": "Machine wear", "ja": "機器費用", "zh": "设备损耗" },
+  "js_row_failure": { "ko": "실패 여유분", "en": "Failure allowance", "ja": "失敗分の上乗せ", "zh": "失败余量" },
+  "js_row_labour": { "ko": "인건비", "en": "Labour", "ja": "作業費", "zh": "人工" },
+  "js_row_total": { "ko": "총 원가", "en": "Total cost", "ja": "総原価", "zh": "总成本" },
+  "js_row_margin": { "ko": "마진", "en": "Markup", "ja": "上乗せ分", "zh": "加价" },
+  "js_row_fee": { "ko": "판매 수수료", "en": "Marketplace fee", "ja": "販売手数料", "zh": "平台手续费" },
+  "js_row_price": { "ko": "판매가", "en": "Selling price", "ja": "販売価格", "zh": "售价" },
+  "js_from_gcode": {
+    "ko": "{name}: 이 파일의 필라멘트 무게를 가져왔습니다. 출력 시간: {time}.",
+    "en": "{name}: using the filament weight from this file. Print time: {time}.",
+    "ja": "{name}: このファイルのフィラメント重量を読み込みました。造形時間: {time}。",
+    "zh": "{name}：已采用此文件中的耗材重量。打印时间：{time}。"
+  },
+  "js_from_gcode_volume": {
+    "ko": "{name}: 파일에 무게가 없어 필라멘트 부피 {volume} cm³에 선택한 재료의 밀도를 곱해 계산했습니다. 출력 시간: {time}.",
+    "en": "{name}: the file states no weight, so it is calculated as {volume} cm³ of filament × the density of the selected material. Print time: {time}.",
+    "ja": "{name}: ファイルに重量の記録がないため、フィラメント体積 {volume} cm³ に、選択した材料の密度を掛けて計算しました。造形時間: {time}。",
+    "zh": "{name}：文件中没有重量，已按耗材体积 {volume} cm³ × 所选材料的密度计算。打印时间：{time}。"
+  },
+  "js_no_time": { "ko": "파일에 없음", "en": "not in the file", "ja": "ファイルに記録なし", "zh": "文件中未记录" },
+  "js_from_mesh": {
+    "ko": "{name}: 부피 {volume} cm³, 표면적 {area} cm²인 모델에서 대략 추정한 무게입니다.",
+    "en": "{name}: rough estimate from a model with a volume of {volume} cm³ and a surface area of {area} cm².",
+    "ja": "{name}: 体積 {volume} cm³、表面積 {area} cm² のモデルから見積もったおおよその重量です。",
+    "zh": "{name}：根据体积 {volume} cm³、表面积 {area} cm² 的模型粗略估算的重量。"
+  },
+  "js_from_analyzer": {
+    "ko": "G-code 분석기에서 넘겨받은 수치를 채웠습니다.",
+    "en": "Filled in with the numbers from the G-code analyzer.",
+    "ja": "G-code 解析ツールから引き継いだ数値を入力しました。",
+    "zh": "已填入从 G-code 分析器带来的数值。"
+  },
+  "js_err_not_text": {
+    "ko": "{name}: G-code 텍스트 파일이 아닙니다. 슬라이서에서 G-code로 내보낸 파일인지 확인해 주세요.",
+    "en": "{name} is not a G-code text file. Check that it was exported as G-code from a slicer.",
+    "ja": "{name} は G-code のテキストファイルではありません。スライサーから G-code として書き出したファイルかご確認ください。",
+    "zh": "{name} 不是 G-code 文本文件。请确认它是从切片软件导出的 G-code。"
+  },
+  "js_err_bgcode": {
+    "ko": "{name}: 바이너리 G-code(.bgcode)는 읽을 수 없습니다. 슬라이서에서 일반 G-code(.gcode)로 내보내 주세요.",
+    "en": "{name} is binary G-code (.bgcode), which cannot be read. Export plain G-code (.gcode) from your slicer.",
+    "ja": "{name} はバイナリ G-code（.bgcode）のため読み込めません。スライサーで通常の G-code（.gcode）として書き出してください。",
+    "zh": "{name} 是二进制 G-code（.bgcode），无法读取。请在切片软件中导出普通 G-code（.gcode）。"
+  },
+  "js_err_no_moves": {
+    "ko": "{name}: 이동 명령(G0/G1)이 하나도 없습니다. G-code 파일이 아닌 것 같습니다.",
+    "en": "{name} contains no move commands (G0/G1). It does not look like G-code.",
+    "ja": "{name} には移動命令（G0/G1）が 1 つもありません。G-code ファイルではないようです。",
+    "zh": "{name} 中没有任何移动指令（G0/G1），看起来不是 G-code 文件。"
+  },
+  "js_err_no_plate": {
+    "ko": "{name}: 슬라이스된 G-code가 들어 있지 않습니다.",
+    "en": "{name} does not contain sliced G-code.",
+    "ja": "{name} にはスライス済みの G-code が含まれていません。",
+    "zh": "{name} 中不包含切片后的 G-code。"
+  },
+  "js_err_not_mesh": {
+    "ko": "{name}: 읽을 수 있는 G-code나 3D 모델을 찾지 못했습니다. 파일이 손상되었거나 지원하지 않는 형식입니다.",
+    "en": "{name} contains no G-code or 3D model we can read. The file is damaged or not a supported format.",
+    "ja": "{name} から、読み取れる G-code や 3D モデルが見つかりませんでした。ファイルが破損しているか、対応していない形式です。",
+    "zh": "无法从 {name} 中读取 G-code 或 3D 模型。文件已损坏，或格式不受支持。"
+  }
+}

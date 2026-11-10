@@ -1,0 +1,29 @@
+{
+  "title": {
+    "ko": "3D 프린팅 도구 모음 – STL 검사·분할, 출력 비용 계산, G-code 분석",
+    "en": "Free 3D Printing Tools – STL check and split, print cost, G-code analysis",
+    "ja": "3D プリント用無料ツール集 – STL チェック・分割、コスト計算、G-code 解析",
+    "zh": "免费 3D 打印工具集 – STL 检查与分割、成本计算、G-code 分析"
+  },
+  "description": {
+    "ko": "STL·3MF 검사와 수리, 큰 모델 분할, 출력 무게·비용 계산, G-code 분석, 채움 설정 추천까지. 설치와 가입 없이 브라우저에서 바로 쓰는 무료 3D 프린팅 도구입니다. 파일은 서버로 전송되지 않습니다.",
+    "en": "Check and repair STL/3MF files, split models larger than your bed, estimate print weight and cost, analyze G-code and pick infill settings. Free tools that run in your browser: no install, no sign-up, no uploads.",
+    "ja": "STL・3MF のチェックと修復、大きなモデルの分割、造形重量とコストの計算、G-code 解析、インフィル設定の提案まで。インストールも登録も不要で、ブラウザーだけで使える無料の 3D プリント用ツールです。ファイルはサーバーに送信されません。",
+    "zh": "检查并修复 STL / 3MF 文件、分割超出热床的模型、计算打印重量与成本、分析 G-code、推荐填充设置。无需安装和注册，打开浏览器即可使用的免费 3D 打印工具，文件不会上传到服务器。"
+  },
+  "h1": {
+    "ko": "브라우저에서 바로 쓰는 3D 프린팅 도구",
+    "en": "3D printing tools that run in your browser",
+    "ja": "ブラウザーですぐ使える 3D プリント用ツール",
+    "zh": "打开浏览器就能用的 3D 打印工具"
+  },
+  "intro": {
+    "ko": "모델 파일을 검사하고, 베드보다 큰 모델을 나누고, 출력 무게와 비용을 계산하고, G-code를 분석합니다. 프로그램을 설치하거나 가입할 필요가 없습니다.",
+    "en": "Check model files, split models that are larger than your bed, estimate weight and cost, and analyze G-code. Nothing to install and no account needed.",
+    "ja": "モデルファイルのチェック、ベッドより大きいモデルの分割、重量とコストの計算、G-code の解析ができます。インストールもアカウント登録も不要です。",
+    "zh": "检查模型文件、分割比热床大的模型、计算重量与成本、分析 G-code。无需安装软件，也不用注册账号。"
+  },
+  "search_label": { "ko": "도구 검색", "en": "Search tools", "ja": "ツールを検索", "zh": "搜索工具" },
+  "search_placeholder": { "ko": "예: STL, 비용, G-code", "en": "e.g. STL, cost, G-code", "ja": "例: STL、コスト、G-code", "zh": "例如：STL、成本、G-code" },
+  "no_results": { "ko": "검색 결과가 없습니다.", "en": "No tools match your search.", "ja": "該当するツールがありません。", "zh": "没有找到匹配的工具。" }
+}

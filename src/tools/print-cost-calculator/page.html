@@ -1,0 +1,74 @@
+<div class="panel">
+<h2>{{sec_weight}}</h2>
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".gcode,.gco,.g,.bgcode,.3mf,.stl,.obj">
+<strong>{{drop_title}}</strong>
+<span>{{drop_hint}}</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice warn" id="open-mesh" role="alert" hidden>{{mesh_open}}</p>
+<div id="estimate" hidden>
+<p class="notice warn">{{estimate_note}}</p>
+<div class="fields" style="margin-top:12px">
+<div class="field"><label for="wall">{{wall_label}}</label><input type="number" id="wall" value="1.2" min="0" max="20" step="0.1" required inputmode="decimal"></div>
+<div class="field"><label for="infill">{{infill_label}}</label><input type="number" id="infill" value="15" min="0" max="100" step="1" required inputmode="decimal"></div>
+</div>
+</div>
+<div class="fields">
+<div class="field"><label for="weight">{{weight_label}}</label><input type="number" id="weight" min="0" max="1000000" step="any" inputmode="decimal"></div>
+<div class="field"><label for="hours">{{hours_label}}</label><input type="number" id="hours" min="0" max="100000" step="any" inputmode="decimal"><small>{{hours_hint}}</small></div>
+</div>
+</div>
+<div class="panel">
+<h2>{{sec_material}}</h2>
+<div class="fields">
+<div class="field"><label for="material">{{material_label}}</label><select id="material"></select></div>
+<div class="field"><label for="density">{{density_label}}</label><input type="number" id="density" min="0.1" max="25" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="price">{{price_label}}</label><input type="number" id="price" min="0" max="100000000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="currency">{{currency_label}}</label><select id="currency"><option>KRW</option><option>USD</option><option>EUR</option><option>JPY</option><option>CNY</option><option>GBP</option></select></div>
+</div>
+<p><small style="color:var(--muted)">{{material_note}}</small></p>
+</div>
+<div class="panel">
+<h2>{{sec_extra}}</h2>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">{{elec_title}}</summary>
+<div class="fields">
+<div class="field"><label for="watts">{{watts_label}}</label><input type="number" id="watts" min="0" max="100000" step="any" inputmode="decimal"><small>{{watts_hint}}</small></div>
+<div class="field"><label for="kwh">{{kwh_label}}</label><input type="number" id="kwh" min="0" max="1000000" step="any" inputmode="decimal"><small>{{kwh_hint}}</small></div>
+</div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">{{wear_title}}</summary>
+<div class="field"><label for="wear">{{wear_label}}</label><input type="number" id="wear" min="0" max="100000000" step="any" inputmode="decimal"><small>{{wear_hint}}</small></div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">{{fail_title}}</summary>
+<div class="field"><label for="fail">{{fail_label}}</label><input type="number" id="fail" min="0" max="1000" step="any" inputmode="decimal"><small>{{fail_hint}}</small></div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">{{labour_title}}</summary>
+<div class="fields">
+<div class="field"><label for="labour-rate">{{labour_rate_label}}</label><input type="number" id="labour-rate" min="0" max="100000000" step="any" inputmode="decimal"></div>
+<div class="field"><label for="labour-min">{{labour_min_label}}</label><input type="number" id="labour-min" min="0" max="100000" step="any" inputmode="decimal"><small>{{labour_hint}}</small></div>
+</div>
+</details>
+<details>
+<summary style="padding:10px 0;font-weight:600;cursor:pointer">{{sell_title}}</summary>
+<div class="fields">
+<div class="field"><label for="margin">{{margin_label}}</label><input type="number" id="margin" min="0" max="100000" step="any" inputmode="decimal"><small>{{margin_hint}}</small></div>
+<div class="field"><label for="fee">{{fee_label}}</label><input type="number" id="fee" min="0" max="99" step="any" inputmode="decimal"><small>{{fee_hint}}</small></div>
+</div>
+</details>
+</div>
+<div class="panel">
+<h2>{{sec_result}}</h2>
+<p id="empty" style="color:var(--muted)">{{result_empty}}</p>
+<div class="table-scroll" id="result" aria-live="polite" hidden></div>
+<p class="notice warn" id="need-hours" hidden>{{need_hours}}</p>
+<p style="display:flex;flex-wrap:wrap;gap:8px">
+<button type="button" class="button secondary" id="csv" disabled>{{btn_csv}}</button>
+<button type="button" class="button secondary" id="xlsx" disabled>{{btn_xlsx}}</button>
+<button type="button" class="button secondary" id="reset">{{btn_reset}}</button>
+</p>
+</div>

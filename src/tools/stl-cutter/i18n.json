@@ -1,0 +1,440 @@
+{
+  "name": { "ko": "STL 분할기", "en": "STL Splitter", "ja": "STL 分割ツール", "zh": "STL 模型分割" },
+  "card": {
+    "ko": "베드보다 큰 모델을 출력할 수 있는 크기로 나누고, 조립할 때 잘 맞도록 핑거 조인트를 넣어 줍니다.",
+    "en": "Split a model that is larger than your bed into printable pieces, with finger joints so the parts line up.",
+    "ja": "ベッドより大きいモデルを印刷できるサイズに分割し、組み立てやすいようにフィンガージョイントを付けます。",
+    "zh": "把比热床大的模型切成能打印的小块，并加上指接榫，方便拼装对位。"
+  },
+  "formats": "STL · 3MF · OBJ",
+  "title": {
+    "ko": "STL 분할기 – 베드보다 큰 모델을 핑거 조인트로 나누기",
+    "en": "STL Splitter – cut a model larger than your bed, with finger joints",
+    "ja": "STL 分割ツール – ベッドより大きいモデルをジョイント付きで分割",
+    "zh": "STL 模型分割 – 把超出热床的模型切块并加指接榫"
+  },
+  "description": {
+    "ko": "베드보다 큰 STL·3MF·OBJ 모델을 출력 가능한 크기의 조각으로 나누고 핑거 조인트를 넣어 줍니다. 조각마다 실제 크기와 베드 적합 여부를 보여 주고, 조립 지도와 함께 ZIP으로 받을 수 있습니다. 파일은 서버로 전송되지 않습니다.",
+    "en": "Split an STL, 3MF or OBJ model that is too big for your printer into pieces that fit, with finger joints. See the real size of every piece, whether it fits, and download everything as a ZIP with an assembly map. Files are never uploaded.",
+    "ja": "プリンターに入らない STL・3MF・OBJ モデルを、印刷できる大きさのパーツに分割してフィンガージョイントを付けます。各パーツの実寸とベッドに収まるかどうかを表示し、組み立て図と一緒に ZIP で保存できます。ファイルはサーバーに送信されません。",
+    "zh": "把打印机放不下的 STL、3MF、OBJ 模型切成放得下的小块，并加上指接榫。显示每一块的实际尺寸和是否放得下，可连同拼装图一起打包成 ZIP 下载。文件不会上传到服务器。"
+  },
+  "h1": { "ko": "STL 분할기", "en": "STL Splitter", "ja": "STL 分割ツール", "zh": "STL 模型分割" },
+  "intro": {
+    "ko": "프린터 출력 크기를 입력하면 모델을 그 안에 들어가는 조각으로 나눠 드립니다. 이빨이 튀어나온 만큼까지 계산해서 조각 크기를 정합니다.",
+    "en": "Enter your printer's build volume and the model is cut into pieces that fit inside it. The size of every piece is planned with the joint teeth included.",
+    "ja": "プリンターの造形サイズを入力すると、その中に収まるパーツにモデルを分割します。ジョイントの出っ張りも含めてパーツの大きさを決めます。",
+    "zh": "输入打印机的成型尺寸，模型就会被切成放得下的小块。计算每块大小时已把榫头伸出的部分算进去。"
+  },
+
+  "what_1": {
+    "ko": "모델을 X·Y·Z 방향의 격자로 똑같은 간격으로 자릅니다. 조각 수는 출력 크기에서 가장자리 여백과 이빨 깊이를 뺀 값을 기준으로 정하므로, 이빨까지 포함한 조각이 출력 크기를 넘지 않습니다. 자른 뒤에는 조각마다 실제 크기를 다시 재서 맞는지 아닌지를 표로 보여 줍니다.",
+    "en": "The model is cut into an evenly spaced grid along X, Y and Z. The number of pieces is worked out from the build volume minus the edge margin and the tooth depth, so a piece with its teeth never exceeds the build volume. After cutting, every piece is measured again and the table shows whether it really fits.",
+    "ja": "モデルを X・Y・Z 方向に等間隔の格子で切り分けます。パーツ数は、造形サイズから周囲の余白とジョイントの深さを引いた値をもとに決めるため、ジョイントを含めたパーツが造形サイズを超えることはありません。分割後は各パーツの実寸を測り直し、収まるかどうかを表に示します。",
+    "zh": "模型会沿 X、Y、Z 方向按等间距的网格切开。块数是用成型尺寸减去边缘余量和榫头深度后计算的，所以带榫头的每一块都不会超出成型尺寸。切完后会重新测量每一块的实际尺寸，并在表格中标出是否放得下。"
+  },
+  "what_2": {
+    "ko": "절단면은 서로 맞물리는 핑거 조인트(상자 이음)나 평면 중에서 고를 수 있습니다. 이빨 폭과 깊이, 조립 여유를 직접 정할 수 있고, 여러 방향으로 자를 때는 절단면이 만나는 곳 옆의 이빨을 빼서, 이빨끼리 겹치거나 떨어져 나오는 조각이 생기지 않습니다.",
+    "en": "Cut faces can be interlocking finger joints (box joints) or flat. You set the tooth width, depth and clearance, and where two cuts cross, the teeth next to the crossing are left out, so teeth neither collide nor break off as loose slivers.",
+    "ja": "切断面は、かみ合うフィンガージョイント（あられ組み）か平面から選べます。歯の幅・深さ・クリアランスを指定でき、複数の方向に分割する場合は、切断面が交わる部分の隣の歯を省くため、歯どうしが重なったり、細片が切り離されたりしません。",
+    "zh": "切面可以选择互相咬合的指接榫，也可以选择平面。榫头的宽度、深度和装配间隙都可以自己设定；沿多个方向切开时，会省去切面交汇处旁边的榫头，避免榫头互相重叠或出现脱落的细条。"
+  },
+  "what_3": {
+    "ko": "조각 파일 이름에는 X1-Y2처럼 격자 위치가 들어가고, 같은 이름이 적힌 조립 지도를 함께 드립니다. 조각은 하나씩 STL로 받거나 전체를 ZIP으로 받을 수 있습니다.",
+    "en": "Each piece file is named after its grid position, such as X1-Y2, and an assembly map with the same labels comes with it. Download pieces one by one as STL, or everything as a ZIP.",
+    "ja": "パーツのファイル名には X1-Y2 のように格子上の位置が入り、同じ名前を書いた組み立て図も付きます。パーツは 1 つずつ STL で、またはまとめて ZIP で保存できます。",
+    "zh": "每块的文件名都带有网格位置，例如 X1-Y2，并附带一张标注相同名称的拼装图。可以逐块下载 STL，也可以打包成 ZIP 一次下载。"
+  },
+
+  "how_1": {
+    "ko": "STL, 3MF, OBJ 파일을 끌어다 놓거나 눌러서 선택합니다. 크기와 삼각형 수가 표시되고, 메시에 구멍이 있으면 경고가 나옵니다.",
+    "en": "Drop an STL, 3MF or OBJ file, or click to choose one. Its size and triangle count appear, with a warning if the mesh has holes.",
+    "ja": "STL・3MF・OBJ ファイルをドラッグ＆ドロップするか、クリックして選びます。サイズと三角形の数が表示され、メッシュに穴があれば警告が出ます。",
+    "zh": "拖入 STL、3MF 或 OBJ 文件，或点击选择文件。页面会显示尺寸和三角形数量；如果网格有破洞，会给出警告。"
+  },
+  "how_2": {
+    "ko": "프린터 출력 크기(X·Y·Z)와 가장자리 여백을 입력합니다.",
+    "en": "Enter the printer's build volume (X, Y, Z) and the edge margin.",
+    "ja": "プリンターの造形サイズ（X・Y・Z）と周囲の余白を入力します。",
+    "zh": "输入打印机的成型尺寸（X、Y、Z）和边缘余量。"
+  },
+  "how_3": {
+    "ko": "모델 방향을 그대로 둘지, 조각 수가 줄도록 회전할지 고릅니다. 조각 수를 직접 정하고 싶으면 '직접 지정'을 선택합니다.",
+    "en": "Choose whether to keep the model's orientation or rotate it for fewer pieces. Pick \"Set manually\" if you want to decide the number of pieces yourself.",
+    "ja": "モデルの向きをそのままにするか、パーツ数が減るように回転するかを選びます。パーツ数を自分で決めたいときは「手動で指定」を選びます。",
+    "zh": "选择保持模型方向，还是旋转模型以减少块数。如果想自己决定块数，请选择“手动指定”。"
+  },
+  "how_4": {
+    "ko": "절단면 방식을 고르고 '자르기'를 누릅니다. 진행 상황이 표시되며 언제든 취소할 수 있습니다.",
+    "en": "Choose the cut face and press \"Split\". Progress is shown and you can cancel at any time.",
+    "ja": "切断面の種類を選んで「分割する」を押します。進み具合が表示され、いつでもキャンセルできます。",
+    "zh": "选择切面方式后点击“开始分割”。页面会显示进度，随时可以取消。"
+  },
+  "how_5": {
+    "ko": "표에서 조각별 실제 크기와 적합 여부를 확인한 뒤 STL이나 ZIP으로 받습니다. 조립할 때는 조립 지도의 이름 순서대로 맞추면 됩니다.",
+    "en": "Check the real size and fit of each piece in the table, then download the STL files or the ZIP. When assembling, follow the labels on the assembly map.",
+    "ja": "表で各パーツの実寸と適合を確認してから、STL または ZIP で保存します。組み立てるときは、組み立て図の名前どおりに並べてください。",
+    "zh": "在表格中确认每块的实际尺寸和是否放得下，然后下载 STL 或 ZIP。拼装时按拼装图上的名称对位即可。"
+  },
+
+  "limit_1": {
+    "ko": "자르는 위치는 고를 수 없습니다. 항상 축에 나란한 평면으로, 같은 간격으로 자릅니다. 중요한 디테일을 피해서 자르거나 비스듬히 자르려면 CAD나 슬라이서의 절단 기능을 써야 합니다.",
+    "en": "You cannot choose where the cuts go. They are always axis-aligned planes at equal spacing. To cut around a detail or at an angle, use the cut tool of a CAD program or slicer.",
+    "ja": "切る位置は選べません。常に軸に平行な平面で、等間隔に切ります。大事なディテールを避けたり斜めに切ったりしたい場合は、CAD やスライサーのカット機能をお使いください。",
+    "zh": "切割位置不能自选，始终是与坐标轴平行、间距相等的平面。如果需要避开细节或斜着切，请使用 CAD 软件或切片软件的切割功能。"
+  },
+  "limit_2": {
+    "ko": "모델은 구멍 없이 닫힌 메시여야 합니다. 열린 모서리가 있으면 경고를 띄우고 그래도 자르지만, 조각이 비거나 면이 빠질 수 있습니다. 잘린 조각에는 한쪽 면만 쪼개진 모서리(T자 이음)가 남는 경우가 많아, 이 사이트의 검사 도구를 포함한 메시 검사기는 열린 모서리가 있다고 표시합니다. 틈의 폭은 0이라 슬라이서가 대개 스스로 이어 붙이지만, 출력 전에 슬라이서 미리보기로 꼭 확인해 주세요.",
+    "en": "The model must be a closed mesh without holes. If it has open edges you get a warning and the cut still runs, but pieces can come out hollow or with missing faces. The pieces usually contain edges that were split on one side only (T-junctions), so a mesh checker, including the one on this site, reports open edges on them. These gaps have zero width and slicers normally stitch them on their own, but always check the slicer preview before printing.",
+    "ja": "モデルは穴のない閉じたメッシュである必要があります。開いたエッジがあると警告を出したうえで分割しますが、パーツが空洞になったり面が欠けたりすることがあります。分割後のパーツには片側だけが分割されたエッジ（T 字接合）が残ることが多く、このサイトの検査ツールを含むメッシュチェッカーでは開いたエッジとして表示されます。隙間の幅はゼロなのでスライサーが自動でつなぐのが普通ですが、印刷前に必ずスライサーのプレビューでご確認ください。",
+    "zh": "模型必须是没有破洞的封闭网格。如果存在开放边，工具会给出警告并继续切割，但切出的块可能是空心的或缺面。切出的块上常会留下只有一侧被分割的边（T 形接缝），因此网格检查工具（包括本站的检查工具）会把它们报告为开放边。这些缝隙宽度为零，切片软件通常会自动缝合，但打印前请务必在切片软件的预览中检查。"
+  },
+  "limit_3": {
+    "ko": "핑거 조인트는 조각이 절단면을 따라 한 방향으로 미끄러지는 것만 막아 줍니다. 잡아당기는 힘은 버티지 못하므로 접착제로 붙여야 합니다. 위아래(Z)로 자르면 위 조각의 이빨이 아래를 향해 서포트가 필요하니, 그럴 때는 평면 절단을 권합니다.",
+    "en": "Finger joints only stop the pieces sliding in one direction along the cut. They do not resist pulling apart, so glue the parts. When a model is cut across Z, the teeth of the upper piece point down and need supports; a flat cut is the better choice there.",
+    "ja": "フィンガージョイントが止めるのは、切断面に沿った一方向のずれだけです。引っ張る力には耐えないので、接着剤で固定してください。上下（Z）に分割すると上側パーツの歯が下向きになり、サポートが必要になります。その場合は平面カットをおすすめします。",
+    "zh": "指接榫只能防止两块沿切面的一个方向滑动，不能抵抗拉开的力，所以需要用胶水粘合。沿 Z 方向上下切开时，上面一块的榫头朝下，需要支撑，这种情况建议用平面切割。"
+  },
+  "limit_4": {
+    "ko": "조립 여유 0.3mm는 일반적인 FDM 프린터를 기준으로 한 시작값입니다. 프린터와 재료에 따라 빡빡하거나 헐거울 수 있으니 작은 조각으로 먼저 시험해 보세요. 이빨 폭은 변 길이에 딱 맞게 나뉘도록 조금 조정됩니다.",
+    "en": "The 0.3 mm clearance is a starting value for a typical FDM printer. Depending on printer and material the fit can be tight or loose, so test with a small piece first. The tooth width is adjusted slightly so that a whole number of teeth fits the side.",
+    "ja": "クリアランス 0.3 mm は一般的な FDM プリンター向けの目安です。プリンターや材料によってきつくなったり緩くなったりするので、まず小さなパーツで試してください。歯の幅は、辺の長さをちょうど割り切れるように少し調整されます。",
+    "zh": "0.3 mm 的装配间隙是针对普通 FDM 打印机的起始值。不同的打印机和材料可能偏紧或偏松，建议先用小块试打。榫头宽度会略作调整，使其正好整数等分边长。"
+  },
+  "limit_5": {
+    "ko": "조각은 조립된 위치 그대로 저장됩니다. 베드에 눕히거나 배치하는 일은 슬라이서에서 해야 합니다. 단위는 mm로 가정합니다.",
+    "en": "Pieces are saved in their assembled position. Laying them flat and arranging them on the bed is done in the slicer. Units are assumed to be millimetres.",
+    "ja": "パーツは組み立てた位置のまま保存されます。ベッドへの配置や向きの調整はスライサーで行ってください。単位は mm として扱います。",
+    "zh": "各块按拼装后的位置保存，摆平和排版需要在切片软件中完成。单位按毫米处理。"
+  },
+  "limit_6": {
+    "ko": "삼각형이 수백만 개인 파일은 자르는 데 수십 초에서 몇 분이 걸리고 메모리를 몇 GB 쓸 수 있습니다. 휴대폰에서는 큰 파일이 실패할 수 있습니다. 3D 미리보기와 절단 라이브러리는 처음 쓸 때 CDN에서 내려받으므로 인터넷 연결이 필요합니다(모델 파일은 전송되지 않습니다).",
+    "en": "A file with millions of triangles can take from tens of seconds to a few minutes to cut and use several GB of memory. Large files may fail on a phone. The 3D preview and the cutting library are downloaded from a CDN on first use, so you need an internet connection (your model is not sent anywhere).",
+    "ja": "三角形が数百万個あるファイルは、分割に数十秒から数分かかり、メモリを数 GB 使うことがあります。スマートフォンでは大きなファイルが失敗する場合があります。3D プレビューと分割用ライブラリは初回利用時に CDN から読み込むため、インターネット接続が必要です（モデルのファイルは送信されません）。",
+    "zh": "含有数百万个三角形的文件，切割可能需要几十秒到几分钟，并占用数 GB 内存。在手机上处理大文件可能失败。3D 预览和切割库在首次使用时从 CDN 下载，因此需要联网（模型文件不会被发送）。"
+  },
+
+  "faq_1_q": {
+    "ko": "조각이 정말 베드에 들어가나요?",
+    "en": "Will the pieces really fit my bed?",
+    "ja": "パーツは本当にベッドに収まりますか？",
+    "zh": "切出来的每一块真的放得下吗？"
+  },
+  "faq_1_a": {
+    "ko": "조각 수를 '자동'으로 두면 이빨이 튀어나온 길이까지 포함해서 격자를 정하고, 자른 뒤 조각의 실제 크기를 다시 재서 표에 '맞음' 또는 '초과'로 표시합니다. 조각 수를 직접 지정했다면 초과가 나올 수 있으니 표를 확인해 주세요.",
+    "en": "With the number of pieces on \"Automatic\", the grid is planned with the protruding teeth included, and after cutting each piece is measured again and marked \"Fits\" or \"Too big\" in the table. If you set the counts manually a piece can be too big, so check the table.",
+    "ja": "パーツ数を「自動」にしておくと、歯の出っ張りまで含めて格子を決め、分割後に各パーツの実寸を測り直して表に「収まる」または「超過」と表示します。パーツ数を手動で指定した場合は超過することがあるので、表をご確認ください。",
+    "zh": "块数选择“自动”时，网格会把榫头伸出的长度一并计算；切完后还会重新测量每一块，并在表格中标出“放得下”或“超出”。如果手动指定了块数，可能出现超出的情况，请查看表格。"
+  },
+  "faq_2_q": {
+    "ko": "얇은 판 모델이 세워져서 잘리지는 않나요?",
+    "en": "Will a thin plate be stood on its edge?",
+    "ja": "薄い板状のモデルが立てられてしまうことはありますか？",
+    "zh": "薄板模型会不会被竖起来切？"
+  },
+  "faq_2_a": {
+    "ko": "기본값은 '지금 방향 그대로'라서 모델을 돌리지 않습니다. '조각 수가 가장 적어지도록 회전'을 직접 켰을 때만 90° 단위로 돌리며, 돌렸다면 어느 축이 어디로 갔는지 결과에 적어 드립니다.",
+    "en": "No. The default is \"Keep my orientation\", which never rotates the model. Only when you choose \"Rotate for the fewest pieces\" is it turned in 90° steps, and the result then states which axis went where.",
+    "ja": "初期設定は「今の向きのまま」なので、モデルは回転しません。「パーツ数が最も少なくなるように回転」を選んだときだけ 90° 単位で回転し、その場合はどの軸がどこへ移ったかを結果に表示します。",
+    "zh": "默认是“保持当前方向”，不会旋转模型。只有选择“旋转以使块数最少”时才会按 90° 旋转，并在结果中说明各轴的对应关系。"
+  },
+  "faq_3_q": {
+    "ko": "3MF나 OBJ 파일도 자를 수 있나요?",
+    "en": "Can I split 3MF or OBJ files?",
+    "ja": "3MF や OBJ ファイルも分割できますか？",
+    "zh": "3MF 或 OBJ 文件也能切吗？"
+  },
+  "faq_3_a": {
+    "ko": "네. STL(바이너리·ASCII), 3MF, OBJ를 읽습니다. 파일에 물체가 여러 개 있으면 하나의 모델로 합쳐서 자르고, 결과는 STL로 저장합니다. 색상이나 슬라이서 설정은 유지되지 않습니다.",
+    "en": "Yes. STL (binary and ASCII), 3MF and OBJ are read. If a file holds several objects they are cut together as one model, and the result is saved as STL. Colours and slicer settings are not kept.",
+    "ja": "はい。STL（バイナリ・ASCII）、3MF、OBJ を読み込めます。ファイルに複数のオブジェクトがある場合は 1 つのモデルとしてまとめて分割し、結果は STL で保存します。色やスライサーの設定は引き継がれません。",
+    "zh": "可以。支持读取 STL（二进制和 ASCII）、3MF 和 OBJ。如果文件里有多个物体，会合并成一个模型一起切，结果保存为 STL。颜色和切片设置不会保留。"
+  },
+  "faq_4_q": {
+    "ko": "조립 여유는 어디에 적용되나요?",
+    "en": "Where is the clearance applied?",
+    "ja": "クリアランスはどこに適用されますか？",
+    "zh": "装配间隙加在哪里？"
+  },
+  "faq_4_a": {
+    "ko": "이빨의 양쪽 옆면에 각각 입력한 값만큼 틈을 둡니다. 이빨 끝과 홈 바닥은 틈 없이 맞닿으므로 조립했을 때 전체 길이는 원본과 같습니다.",
+    "en": "On both side faces of every tooth, each by the value you enter. Tooth tips and socket floors touch without a gap, so the assembled length equals the original.",
+    "ja": "歯の両側面に、それぞれ入力した値のすき間を設けます。歯の先端と溝の底はすき間なく接するので、組み立てたときの全長は元のモデルと同じです。",
+    "zh": "加在每个榫头的两个侧面，每侧各留出所输入的间隙。榫头顶端与榫槽底部紧贴，没有间隙，所以拼装后的总长度与原模型相同。"
+  },
+  "faq_5_q": {
+    "ko": "파일이 서버로 올라가나요?",
+    "en": "Is my file uploaded?",
+    "ja": "ファイルはアップロードされますか？",
+    "zh": "文件会被上传吗？"
+  },
+  "faq_5_a": {
+    "ko": "아니요. 읽기, 자르기, ZIP 만들기까지 모두 이 브라우저 안에서 처리합니다. 내려받는 것은 3D 표시와 절단에 쓰는 공개 라이브러리뿐입니다.",
+    "en": "No. Reading, cutting and building the ZIP all happen inside this browser. The only thing downloaded is the public library used for the 3D view and the cutting.",
+    "ja": "いいえ。読み込みから分割、ZIP の作成まで、すべてこのブラウザー内で処理します。ダウンロードされるのは、3D 表示と分割に使う公開ライブラリだけです。",
+    "zh": "不会。读取、切割和生成 ZIP 都在这个浏览器内完成。唯一需要下载的是用于 3D 显示和切割的公开库。"
+  },
+
+  "viewer_empty": {
+    "ko": "모델을 불러오면 여기에 3D 미리보기가 나타납니다.",
+    "en": "The 3D preview appears here once a model is loaded.",
+    "ja": "モデルを読み込むと、ここに 3D プレビューが表示されます。",
+    "zh": "加载模型后，这里会显示 3D 预览。"
+  },
+  "drop_title": {
+    "ko": "STL · 3MF · OBJ 파일을 끌어다 놓거나 눌러서 선택해 주세요",
+    "en": "Drop an STL, 3MF or OBJ file here, or click to choose",
+    "ja": "STL・3MF・OBJ ファイルをここにドロップ、またはクリックして選択",
+    "zh": "将 STL、3MF 或 OBJ 文件拖到这里，或点击选择"
+  },
+  "drop_hint": {
+    "ko": "파일은 이 기기 안에서만 처리됩니다.",
+    "en": "The file is processed on this device only.",
+    "ja": "ファイルはこの端末の中だけで処理されます。",
+    "zh": "文件只在本设备上处理。"
+  },
+  "inspector_link": {
+    "ko": "STL/3MF 검사·수리 도구에서 확인하기",
+    "en": "Check it in the STL/3MF Check & Repair tool",
+    "ja": "STL/3MF チェック・修復ツールで確認する",
+    "zh": "用 STL/3MF 检查与修复工具查看"
+  },
+  "bed_legend": { "ko": "프린터 출력 크기", "en": "Printer build volume", "ja": "プリンターの造形サイズ", "zh": "打印机成型尺寸" },
+  "bed_x": { "ko": "가로 X (mm)", "en": "Width X (mm)", "ja": "幅 X (mm)", "zh": "宽 X (mm)" },
+  "bed_y": { "ko": "세로 Y (mm)", "en": "Depth Y (mm)", "ja": "奥行き Y (mm)", "zh": "深 Y (mm)" },
+  "bed_z": { "ko": "높이 Z (mm)", "en": "Height Z (mm)", "ja": "高さ Z (mm)", "zh": "高 Z (mm)" },
+  "margin": { "ko": "가장자리 여백 (mm)", "en": "Edge margin (mm)", "ja": "周囲の余白 (mm)", "zh": "边缘余量 (mm)" },
+  "margin_hint": {
+    "ko": "각 방향에서 여백의 두 배를 뺀 크기 안에 조각이 들어가도록 자릅니다.",
+    "en": "Pieces are sized to fit the build volume minus twice this margin in every direction.",
+    "ja": "各方向で余白の 2 倍を引いた大きさに収まるように分割します。",
+    "zh": "每个方向都减去两倍余量，切出的块要放进这个范围内。"
+  },
+  "orient_legend": { "ko": "모델 방향", "en": "Orientation", "ja": "モデルの向き", "zh": "模型方向" },
+  "orient_keep": { "ko": "지금 방향 그대로", "en": "Keep my orientation", "ja": "今の向きのまま", "zh": "保持当前方向" },
+  "orient_auto": {
+    "ko": "조각 수가 가장 적어지도록 회전",
+    "en": "Rotate for the fewest pieces",
+    "ja": "パーツ数が最も少なくなるように回転",
+    "zh": "旋转以使块数最少"
+  },
+  "orient_hint": {
+    "ko": "회전을 켜면 90° 단위로 돌려 보므로 얇은 판이 세워질 수 있습니다.",
+    "en": "Rotation tries 90° turns, so a thin plate may end up standing on its edge.",
+    "ja": "回転を選ぶと 90° 単位で向きを試すため、薄い板が立った向きになることがあります。",
+    "zh": "选择旋转后会按 90° 尝试各个方向，薄板可能会被竖起来。"
+  },
+  "count_legend": { "ko": "조각 수", "en": "Number of pieces", "ja": "パーツ数", "zh": "块数" },
+  "count_auto": {
+    "ko": "자동 (출력 크기에 맞춤)",
+    "en": "Automatic (fit the build volume)",
+    "ja": "自動（造形サイズに合わせる）",
+    "zh": "自动（按成型尺寸计算）"
+  },
+  "count_manual": { "ko": "직접 지정", "en": "Set manually", "ja": "手動で指定", "zh": "手动指定" },
+  "n_x": { "ko": "X 방향 조각 수", "en": "Pieces along X", "ja": "X 方向のパーツ数", "zh": "X 方向块数" },
+  "n_y": { "ko": "Y 방향 조각 수", "en": "Pieces along Y", "ja": "Y 方向のパーツ数", "zh": "Y 方向块数" },
+  "n_z": { "ko": "Z 방향 조각 수", "en": "Pieces along Z", "ja": "Z 方向のパーツ数", "zh": "Z 方向块数" },
+  "joint_legend": { "ko": "절단면", "en": "Cut face", "ja": "切断面", "zh": "切面" },
+  "joint_teeth": {
+    "ko": "핑거 조인트 (서로 맞물림)",
+    "en": "Finger joints (interlocking)",
+    "ja": "フィンガージョイント（かみ合わせ）",
+    "zh": "指接榫（互相咬合）"
+  },
+  "joint_flat": {
+    "ko": "평면 (접착해서 조립)",
+    "en": "Flat (glue together)",
+    "ja": "平面（接着して組み立て）",
+    "zh": "平面（用胶水粘合）"
+  },
+  "tooth_w": { "ko": "이빨 폭 (mm)", "en": "Tooth width (mm)", "ja": "歯の幅 (mm)", "zh": "榫头宽度 (mm)" },
+  "tooth_d": { "ko": "이빨 깊이 (mm)", "en": "Tooth depth (mm)", "ja": "歯の深さ (mm)", "zh": "榫头深度 (mm)" },
+  "tooth_gap": { "ko": "조립 여유 (mm)", "en": "Clearance (mm)", "ja": "クリアランス (mm)", "zh": "装配间隙 (mm)" },
+  "tooth_hint": {
+    "ko": "조립 여유는 이빨 옆면 한쪽마다 두는 틈입니다. 이빨 폭을 0으로 하면 평면으로 자릅니다.",
+    "en": "The clearance is the gap on each side face of a tooth. A tooth width of 0 gives a flat cut.",
+    "ja": "クリアランスは歯の側面 1 つごとのすき間です。歯の幅を 0 にすると平面で切ります。",
+    "zh": "装配间隙是榫头每个侧面留出的缝隙。榫头宽度设为 0 时按平面切割。"
+  },
+  "run": { "ko": "자르기", "en": "Split", "ja": "分割する", "zh": "开始分割" },
+  "cancel": { "ko": "취소", "en": "Cancel", "ja": "キャンセル", "zh": "取消" },
+  "out_heading": { "ko": "결과", "en": "Result", "ja": "結果", "zh": "结果" },
+  "explode": {
+    "ko": "조각을 벌려서 보기 (파일에는 영향 없음)",
+    "en": "Spread the pieces apart in the preview (files are not affected)",
+    "ja": "パーツを離して表示（ファイルには影響しません）",
+    "zh": "在预览中把各块分开显示（不影响文件）"
+  },
+  "map_heading": { "ko": "조립 지도", "en": "Assembly map", "ja": "組み立て図", "zh": "拼装图" },
+  "map_hint": {
+    "ko": "위에서 내려다본 배치입니다. 칸에 적힌 이름이 파일 이름 끝에 그대로 들어갑니다.",
+    "en": "Seen from above. The label in each cell is the end of that piece's file name.",
+    "ja": "上から見た配置です。マスに書かれた名前が、そのままファイル名の末尾になります。",
+    "zh": "这是从上往下看的排布。格子里的名称就是对应文件名的结尾。"
+  },
+  "table_caption": { "ko": "조각 목록", "en": "Pieces", "ja": "パーツ一覧", "zh": "分块列表" },
+  "col_piece": { "ko": "조각", "en": "Piece", "ja": "パーツ", "zh": "块" },
+  "col_size": { "ko": "실제 크기 (mm)", "en": "Real size (mm)", "ja": "実寸 (mm)", "zh": "实际尺寸 (mm)" },
+  "col_fit": { "ko": "출력 크기 적합", "en": "Fits the printer", "ja": "造形サイズに収まるか", "zh": "是否放得下" },
+  "col_file": { "ko": "파일", "en": "File", "ja": "ファイル", "zh": "文件" },
+  "zip": { "ko": "전체 ZIP으로 받기", "en": "Download all as ZIP", "ja": "すべて ZIP で保存", "zh": "全部打包为 ZIP 下载" },
+  "map_save": { "ko": "조립 지도 저장 (SVG)", "en": "Save the assembly map (SVG)", "ja": "組み立て図を保存 (SVG)", "zh": "保存拼装图 (SVG)" },
+
+  "js_viewer_fail": {
+    "ko": "3D 미리보기를 표시하지 못했습니다(인터넷 연결 또는 WebGL 문제). 자르기와 다운로드는 그대로 쓸 수 있습니다.",
+    "en": "The 3D preview could not be shown (no connection, or WebGL is unavailable). Splitting and downloading still work.",
+    "ja": "3D プレビューを表示できませんでした（接続または WebGL の問題）。分割と保存はそのままお使いいただけます。",
+    "zh": "无法显示 3D 预览（网络连接或 WebGL 问题）。分割和下载仍可正常使用。"
+  },
+  "js_model_info": {
+    "ko": "{name}: {size} mm, 삼각형 {n}개",
+    "en": "{name}: {size} mm, {n} triangles",
+    "ja": "{name}: {size} mm、三角形 {n} 個",
+    "zh": "{name}：{size} mm，{n} 个三角形"
+  },
+  "js_open_warn": {
+    "ko": "이 메시는 닫혀 있지 않습니다. 열려 있거나 셋 이상의 면이 만나는 모서리가 {n}개 있어서, 자른 조각이 비거나 면이 빠질 수 있습니다.",
+    "en": "This mesh is not closed: {n} edges are open or shared by more than two faces, so pieces may come out hollow or with missing faces.",
+    "ja": "このメッシュは閉じていません。開いている、または 3 つ以上の面が接しているエッジが {n} 本あり、分割したパーツが空洞になったり面が欠けたりすることがあります。",
+    "zh": "这个网格不是封闭的：有 {n} 条边是开放的或被两个以上的面共用，切出的块可能是空心的或缺面。"
+  },
+  "js_err_fields": {
+    "ko": "빨갛게 표시된 입력값을 확인해 주세요.",
+    "en": "Check the fields marked in red.",
+    "ja": "赤く表示された入力欄をご確認ください。",
+    "zh": "请检查标红的输入项。"
+  },
+  "js_err_count_int": {
+    "ko": "조각 수는 정수로 입력해 주세요.",
+    "en": "Enter whole numbers for the piece counts.",
+    "ja": "パーツ数は整数で入力してください。",
+    "zh": "块数请输入整数。"
+  },
+  "js_err_margin": {
+    "ko": "여백을 빼면 쓸 수 있는 크기가 남지 않습니다. 출력 크기를 키우거나 여백을 줄여 주세요.",
+    "en": "Nothing is left of the build volume after the margin. Enter a larger build volume or a smaller margin.",
+    "ja": "余白を引くと使える大きさが残りません。造形サイズを大きくするか、余白を小さくしてください。",
+    "zh": "减去余量后没有可用空间。请增大成型尺寸或减小余量。"
+  },
+  "js_err_no_fit": {
+    "ko": "이 출력 크기로는 이빨 깊이를 감안하면 맞는 조각을 만들 수 없습니다. 이빨 깊이를 줄이거나 평면 절단을 선택해 주세요.",
+    "en": "With this build volume no piece can fit once the tooth depth is included. Reduce the tooth depth or choose a flat cut.",
+    "ja": "この造形サイズでは、歯の深さを含めると収まるパーツを作れません。歯の深さを小さくするか、平面カットを選んでください。",
+    "zh": "按这个成型尺寸，算上榫头深度后无法切出放得下的块。请减小榫头深度，或选择平面切割。"
+  },
+  "js_err_too_long": {
+    "ko": "이 출력 크기로는 한 방향으로 50조각이 넘게 필요합니다. 모델의 단위(mm)와 출력 크기를 확인해 주세요.",
+    "en": "With this build volume the model would need more than 50 pieces along one axis. Check the model's units (mm) and the build volume.",
+    "ja": "この造形サイズでは、1 方向に 50 個を超えるパーツが必要になります。モデルの単位（mm）と造形サイズをご確認ください。",
+    "zh": "按这个成型尺寸，单个方向需要切成 50 块以上。请检查模型单位（mm）和成型尺寸。"
+  },
+  "js_err_too_many": {
+    "ko": "조각이 {n}개로 너무 많습니다(최대 {max}개). 출력 크기나 조각 수를 확인해 주세요.",
+    "en": "That would make {n} pieces, which is too many (the limit is {max}). Check the build volume or the piece counts.",
+    "ja": "パーツが {n} 個になり、多すぎます（上限 {max} 個）。造形サイズまたはパーツ数をご確認ください。",
+    "zh": "这样会切成 {n} 块，数量太多（上限 {max} 块）。请检查成型尺寸或块数。"
+  },
+  "js_err_tooth_small": {
+    "ko": "조립 여유에 비해 이빨 폭이 너무 좁습니다. 이빨 폭을 늘리거나 여유를 줄여 주세요.",
+    "en": "The teeth are too narrow for this clearance. Increase the tooth width or reduce the clearance.",
+    "ja": "クリアランスに対して歯の幅が狭すぎます。歯の幅を広げるか、クリアランスを小さくしてください。",
+    "zh": "相对于装配间隙，榫头太窄。请增大榫头宽度或减小间隙。"
+  },
+  "js_err_tooth_deep": {
+    "ko": "조각 두께에 비해 이빨이 너무 깊습니다. 이빨 깊이를 줄이거나 조각 수를 줄여 주세요.",
+    "en": "The teeth are too deep for pieces this thin. Reduce the tooth depth or the number of pieces.",
+    "ja": "パーツの厚みに対して歯が深すぎます。歯の深さを小さくするか、パーツ数を減らしてください。",
+    "zh": "相对于每块的厚度，榫头太深。请减小榫头深度或减少块数。"
+  },
+  "js_stage_lib": {
+    "ko": "절단 라이브러리 불러오는 중…",
+    "en": "Loading the cutting library…",
+    "ja": "分割用ライブラリを読み込み中…",
+    "zh": "正在加载切割库…"
+  },
+  "js_stage_prep": { "ko": "모델 준비하는 중…", "en": "Preparing the model…", "ja": "モデルを準備中…", "zh": "正在准备模型…" },
+  "js_stage_cut": {
+    "ko": "자르는 중… {done}/{total}",
+    "en": "Cutting… {done} of {total}",
+    "ja": "分割中… {done}/{total}",
+    "zh": "正在切割… {done}/{total}"
+  },
+  "js_err_lib": {
+    "ko": "절단에 필요한 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 다시 시도해 주세요. ({detail})",
+    "en": "The library needed for cutting could not be loaded. Check your internet connection and try again. ({detail})",
+    "ja": "分割に必要なライブラリを読み込めませんでした。インターネット接続を確認して、もう一度お試しください。（{detail}）",
+    "zh": "无法加载切割所需的库。请检查网络连接后重试。（{detail}）"
+  },
+  "js_err_cut": {
+    "ko": "{name}: 자르는 중에 오류가 났습니다. 메시가 닫혀 있지 않거나 면이 서로 겹쳐 있을 수 있습니다. ({detail})",
+    "en": "Cutting {name} failed. The mesh may not be closed, or its faces may intersect each other. ({detail})",
+    "ja": "{name} の分割中にエラーが発生しました。メッシュが閉じていないか、面どうしが交差している可能性があります。（{detail}）",
+    "zh": "切割 {name} 时出错。网格可能没有封闭，或者面与面互相交叉。（{detail}）"
+  },
+  "js_err_no_pieces": {
+    "ko": "자른 결과가 비어 있습니다. 메시가 닫혀 있는지 확인해 주세요.",
+    "en": "The cut produced no pieces. Check that the mesh is closed.",
+    "ja": "分割結果が空でした。メッシュが閉じているかご確認ください。",
+    "zh": "切割结果为空。请确认网格是否封闭。"
+  },
+  "js_sum_nocut": {
+    "ko": "자르지 않아도 출력 크기에 들어갑니다.",
+    "en": "The model fits the build volume without cutting.",
+    "ja": "分割しなくても造形サイズに収まります。",
+    "zh": "不用切割就能放进成型尺寸。"
+  },
+  "js_sum_grid": {
+    "ko": "조각 {total}개 (X {x} × Y {y} × Z {z}), {mode}.",
+    "en": "Pieces: {total} (X {x} × Y {y} × Z {z}), {mode}.",
+    "ja": "パーツ {total} 個（X {x} × Y {y} × Z {z}）、{mode}。",
+    "zh": "共 {total} 块（X {x} × Y {y} × Z {z}），{mode}。"
+  },
+  "js_mode_teeth": { "ko": "핑거 조인트", "en": "finger joints", "ja": "フィンガージョイント", "zh": "指接榫" },
+  "js_mode_flat": { "ko": "평면 절단", "en": "flat cuts", "ja": "平面カット", "zh": "平面切割" },
+  "js_flat_zero": {
+    "ko": "이빨 폭이 0이라서 평면으로 잘랐습니다.",
+    "en": "The tooth width is 0, so the cuts are flat.",
+    "ja": "歯の幅が 0 のため、平面で切りました。",
+    "zh": "榫头宽度为 0，因此按平面切割。"
+  },
+  "js_flat_short": {
+    "ko": "절단면이 이빨 두 개가 들어가기에는 좁아서 평면으로 잘랐습니다.",
+    "en": "The cut faces are too narrow for two teeth, so the cuts are flat.",
+    "ja": "切断面が歯 2 つ分より狭いため、平面で切りました。",
+    "zh": "切面太窄，放不下两个榫头，因此按平面切割。"
+  },
+  "js_sum_rotated": {
+    "ko": "모델을 회전했습니다: 원래의 {x}축이 X, {y}축이 Y, {z}축이 Z 방향이 됩니다.",
+    "en": "The model was rotated: its original {x} axis now runs along X, {y} along Y and {z} along Z.",
+    "ja": "モデルを回転しました。元の {x} 軸が X、{y} 軸が Y、{z} 軸が Z 方向になっています。",
+    "zh": "模型已旋转：原来的 {x} 轴现在沿 X 方向，{y} 轴沿 Y 方向，{z} 轴沿 Z 方向。"
+  },
+  "js_sum_usable": {
+    "ko": "여백을 뺀 사용 가능 크기: {size} mm.",
+    "en": "Usable volume after the margin: {size} mm.",
+    "ja": "余白を除いた使用可能サイズ: {size} mm。",
+    "zh": "减去余量后的可用尺寸：{size} mm。"
+  },
+  "js_fit_yes": { "ko": "맞음", "en": "Fits", "ja": "収まる", "zh": "放得下" },
+  "js_fit_no": { "ko": "초과", "en": "Too big", "ja": "超過", "zh": "超出" },
+  "js_warn_nofit": {
+    "ko": "조각 {n}개가 사용 가능 크기보다 큽니다. 조각 수를 늘리거나 '자동'을 선택해 주세요.",
+    "en": "Pieces larger than the usable volume: {n}. Increase the piece counts or choose \"Automatic\".",
+    "ja": "{n} 個のパーツが使用可能サイズを超えています。パーツ数を増やすか、「自動」を選んでください。",
+    "zh": "有 {n} 块超出可用尺寸。请增加块数，或选择“自动”。"
+  },
+  "js_warn_volume": {
+    "ko": "조각 부피의 합이 원본과 {percent}% 다릅니다. 절단이 잘못됐을 수 있으니 슬라이서에서 조각을 확인해 주세요.",
+    "en": "The pieces' total volume differs from the original by {percent}%. The cut may be faulty, so check the pieces in your slicer.",
+    "ja": "パーツの体積の合計が元のモデルと {percent}% 異なります。分割に問題がある可能性があるため、スライサーでパーツをご確認ください。",
+    "zh": "各块体积之和与原模型相差 {percent}%。切割可能有问题，请在切片软件中检查各块。"
+  },
+  "js_warn_open_result": {
+    "ko": "원본 메시가 닫혀 있지 않아서 조각이 올바르지 않을 수 있습니다. 슬라이서 미리보기로 확인해 주세요.",
+    "en": "The source mesh is not closed, so the pieces may be wrong. Check them in the slicer preview.",
+    "ja": "元のメッシュが閉じていないため、パーツが正しくない可能性があります。スライサーのプレビューでご確認ください。",
+    "zh": "原始网格没有封闭，切出的块可能不正确。请在切片软件的预览中检查。"
+  },
+  "js_cancelled": { "ko": "취소했습니다.", "en": "Cancelled.", "ja": "キャンセルしました。", "zh": "已取消。" }
+}

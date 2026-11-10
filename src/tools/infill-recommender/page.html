@@ -1,0 +1,66 @@
+<form class="panel" id="q">
+<h2>{{q_heading}}</h2>
+<div style="display:grid;gap:12px;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))">
+<div class="field"><label for="use">{{q_use}}</label>
+<select id="use" name="use">
+<option value="display">{{use_display}}</option>
+<option value="visible">{{use_visible}}</option>
+<option value="household" selected>{{use_household}}</option>
+<option value="functional">{{use_functional}}</option>
+<option value="heavy">{{use_heavy}}</option>
+</select></div>
+<div class="field"><label for="load">{{q_load}}</label>
+<select id="load" name="load" aria-describedby="load-hint">
+<option value="none">{{load_none}}</option>
+<option value="all">{{load_all}}</option>
+<option value="side">{{load_side}}</option>
+<option value="top">{{load_top}}</option>
+<option value="impact">{{load_impact}}</option>
+<option value="z">{{load_z}}</option>
+</select><small id="load-hint">{{load_hint}}</small></div>
+<div class="field"><label for="material">{{q_material}}</label>
+<select id="material" name="material">
+<option value="pla">PLA</option>
+<option value="abs">ABS · ASA</option>
+<option value="cf">{{mat_cf}}</option>
+<option value="other">{{mat_other}}</option>
+</select></div>
+<div class="field"><label for="priority">{{q_priority}}</label>
+<select id="priority" name="priority">
+<option value="strength">{{pri_strength}}</option>
+<option value="speed">{{pri_speed}}</option>
+<option value="weight">{{pri_weight}}</option>
+<option value="surface">{{pri_surface}}</option>
+</select></div>
+<div class="field"><label for="size">{{q_size}}</label>
+<select id="size" name="size">
+<option value="normal">{{size_normal}}</option>
+<option value="large">{{size_large}}</option>
+<option value="flat">{{size_flat}}</option>
+</select></div>
+</div>
+<label class="check"><input type="checkbox" id="topq" name="topq"> {{q_top}}</label>
+</form>
+<div class="panel" id="out" hidden>
+<h2>{{r_heading}}</h2>
+<div class="table-scroll">
+<table class="result">
+<thead><tr><th scope="col">{{th_setting}}</th><th scope="col">{{th_value}}</th></tr></thead>
+<tbody id="rows">
+<tr><th scope="row">{{row_pattern}}</th><td></td></tr>
+<tr><th scope="row">{{row_density}}</th><td></td></tr>
+<tr><th scope="row">{{row_walls}}</th><td></td></tr>
+<tr><th scope="row">{{row_top}}</th><td></td></tr>
+<tr><th scope="row">{{row_bottom}}</th><td></td></tr>
+<tr><th scope="row">{{row_toppattern}}</th><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small id="path" style="color:var(--muted)">{{path_note}}</small></p>
+<p id="alt"></p>
+<div id="notes-box"><h3>{{notes_heading}}</h3><ul id="notes" style="margin:0;padding-left:1.4em"></ul></div>
+<div><h3>{{fixes_heading}}</h3><ul id="fixes" style="margin:0;padding-left:1.4em"></ul></div>
+<p class="notice">{{basis_note}}</p>
+<div><button class="button secondary" type="button" id="copy">{{copy_btn}}</button></div>
+<p class="notice" id="msg" role="status" hidden></p>
+</div>

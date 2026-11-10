@@ -1,0 +1,102 @@
+{
+  "site_name": "BENCH",
+  "skip": { "ko": "본문으로 건너뛰기", "en": "Skip to content", "ja": "本文へスキップ", "zh": "跳到正文" },
+  "lang_nav": { "ko": "언어", "en": "Language", "ja": "言語", "zh": "语言" },
+  "all_tools": { "ko": "모든 도구", "en": "All tools", "ja": "すべてのツール", "zh": "全部工具" },
+  "what_heading": { "ko": "이 도구가 하는 일", "en": "What this tool does", "ja": "このツールでできること", "zh": "这个工具能做什么" },
+  "how_heading": { "ko": "사용 방법", "en": "How to use it", "ja": "使い方", "zh": "使用方法" },
+  "limits_heading": { "ko": "한계와 주의할 점", "en": "Limits and caveats", "ja": "制限と注意点", "zh": "限制与注意事项" },
+  "faq_heading": { "ko": "자주 묻는 질문", "en": "Frequently asked questions", "ja": "よくある質問", "zh": "常见问题" },
+  "other_heading": { "ko": "다른 도구", "en": "Other tools", "ja": "ほかのツール", "zh": "其他工具" },
+  "formats_label": { "ko": "입력", "en": "Input", "ja": "入力", "zh": "输入" },
+  "privacy_note": {
+    "ko": "파일은 서버로 전송되지 않습니다. 모든 계산은 이 브라우저 안에서만 이루어집니다.",
+    "en": "Your files never leave your browser. Everything is calculated on this device.",
+    "ja": "ファイルはサーバーに送信されません。すべての処理はこのブラウザー内で行われます。",
+    "zh": "文件不会上传到服务器，所有计算都在您的浏览器中完成。"
+  },
+  "noscript": {
+    "ko": "이 도구를 사용하려면 브라우저에서 자바스크립트를 켜야 합니다.",
+    "en": "This tool needs JavaScript. Please enable it in your browser.",
+    "ja": "このツールを使うには、ブラウザーの JavaScript を有効にしてください。",
+    "zh": "使用此工具需要在浏览器中启用 JavaScript。"
+  },
+  "footer_note": {
+    "ko": "가입도, 업로드도, 추적도 없는 무료 도구입니다.",
+    "en": "Free to use. No sign-up, no uploads, no tracking.",
+    "ja": "登録不要・アップロードなし・トラッキングなしの無料ツールです。",
+    "zh": "免费使用，无需注册，不上传文件，不做追踪。"
+  },
+  "nf_title": { "ko": "페이지를 찾을 수 없습니다", "en": "Page not found", "ja": "ページが見つかりません", "zh": "找不到页面" },
+  "nf_link": { "ko": "도구 목록으로 가기", "en": "Go to the tool list", "ja": "ツール一覧へ", "zh": "前往工具列表" },
+
+  "js_err_empty": {
+    "ko": "{name}: 파일이 비어 있습니다(0바이트).",
+    "en": "{name} is empty (0 bytes).",
+    "ja": "{name} は空のファイルです（0 バイト）。",
+    "zh": "{name} 是空文件（0 字节）。"
+  },
+  "js_err_wrong_type": {
+    "ko": "{name}: 지원하지 않는 형식입니다. 사용할 수 있는 형식: {types}",
+    "en": "{name} is not a supported file type. Supported: {types}",
+    "ja": "{name} は対応していない形式です。対応形式: {types}",
+    "zh": "不支持 {name} 的文件格式。支持的格式：{types}"
+  },
+  "js_err_not_mesh": {
+    "ko": "{name}: 3D 모델 데이터를 찾지 못했습니다. STL, 3MF, OBJ 파일이 맞는지 확인해 주세요.",
+    "en": "{name} does not contain a 3D model we can read. Check that it is an STL, 3MF or OBJ file.",
+    "ja": "{name} から 3D モデルを読み取れませんでした。STL・3MF・OBJ ファイルかどうかご確認ください。",
+    "zh": "无法从 {name} 中读取 3D 模型。请确认它是 STL、3MF 或 OBJ 文件。"
+  },
+  "js_err_truncated": {
+    "ko": "{name}: 파일이 중간에 잘려 있습니다. 삼각형 {declared}개 중 {present}개만 들어 있습니다.",
+    "en": "{name} is cut off: it holds only {present} of the {declared} triangles it declares.",
+    "ja": "{name} は途中で切れています。{declared} 個の三角形のうち {present} 個しか含まれていません。",
+    "zh": "{name} 文件不完整：声明了 {declared} 个三角形，实际只有 {present} 个。"
+  },
+  "js_err_truncated_unknown": {
+    "ko": "{name}: 파일이 중간에 잘려 있습니다. 온전한 삼각형은 {present}개입니다.",
+    "en": "{name} is cut off: only {present} complete triangles were found.",
+    "ja": "{name} は途中で切れています。完全な三角形は {present} 個です。",
+    "zh": "{name} 文件不完整：只找到 {present} 个完整的三角形。"
+  },
+  "js_load_partial": { "ko": "온전한 부분만 불러오기", "en": "Load the intact part", "ja": "読み込める部分だけ開く", "zh": "仅加载完整的部分" },
+  "js_err_too_large": {
+    "ko": "{name}: 파일이 너무 커서 이 기기의 메모리로는 열 수 없습니다. 다른 탭을 닫거나 데스크톱 브라우저에서 다시 시도해 주세요.",
+    "en": "{name} is too large for this device's memory. Close other tabs or try a desktop browser.",
+    "ja": "{name} は大きすぎて、この端末のメモリでは開けません。ほかのタブを閉じるか、パソコンのブラウザーでお試しください。",
+    "zh": "{name} 太大，此设备内存不足，无法打开。请关闭其他标签页，或改用电脑浏览器重试。"
+  },
+  "js_err_no_triangles": {
+    "ko": "{name}: 삼각형이 하나도 없습니다.",
+    "en": "{name} contains no triangles.",
+    "ja": "{name} には三角形が 1 つもありません。",
+    "zh": "{name} 中没有任何三角形。"
+  },
+  "js_err_unknown": {
+    "ko": "{name}: 파일을 처리하지 못했습니다. ({detail})",
+    "en": "Could not process {name}. ({detail})",
+    "ja": "{name} を処理できませんでした。（{detail}）",
+    "zh": "无法处理 {name}。（{detail}）"
+  },
+  "js_bad_triangles": {
+    "ko": "좌표가 숫자가 아닌(NaN·무한대) 삼각형 {n}개는 제외했습니다.",
+    "en": "{n} triangles with invalid coordinates (NaN or infinity) were left out.",
+    "ja": "座標が不正（NaN・無限大）な三角形 {n} 個を除外しました。",
+    "zh": "已排除 {n} 个坐标无效（NaN 或无穷大）的三角形。"
+  },
+  "js_reading": {
+    "ko": "{name} 읽는 중… {percent}%",
+    "en": "Reading {name}… {percent}%",
+    "ja": "{name} を読み込み中… {percent}%",
+    "zh": "正在读取 {name}… {percent}%"
+  },
+  "js_working": { "ko": "처리하는 중…", "en": "Working…", "ja": "処理中…", "zh": "正在处理…" },
+  "js_num_required": { "ko": "값을 입력해 주세요.", "en": "Enter a value.", "ja": "値を入力してください。", "zh": "请输入数值。" },
+  "js_num_invalid": { "ko": "숫자만 입력해 주세요.", "en": "Enter a number.", "ja": "数値を入力してください。", "zh": "请输入数字。" },
+  "js_num_min": { "ko": "{min} 이상으로 입력해 주세요.", "en": "Enter {min} or more.", "ja": "{min} 以上の値を入力してください。", "zh": "请输入不小于 {min} 的数值。" },
+  "js_num_max": { "ko": "{max} 이하로 입력해 주세요.", "en": "Enter {max} or less.", "ja": "{max} 以下の値を入力してください。", "zh": "请输入不大于 {max} 的数值。" },
+  "js_unit_h": { "ko": "시간", "en": "h", "ja": "時間", "zh": "小时" },
+  "js_unit_m": { "ko": "분", "en": "m", "ja": "分", "zh": "分钟" },
+  "js_unit_s": { "ko": "초", "en": "s", "ja": "秒", "zh": "秒" }
+}

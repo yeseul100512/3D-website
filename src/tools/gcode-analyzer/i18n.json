@@ -1,0 +1,299 @@
+{
+  "name": { "ko": "G-code 분석기", "en": "G-code Analyzer", "ja": "G-code 解析", "zh": "G-code 分析器" },
+  "card": {
+    "ko": "G-code에서 출력 시간과 필라멘트 사용량을 읽어 기능별, 필라멘트별로 나누어 보여 줍니다.",
+    "en": "Read print time and filament use from G-code, broken down by feature and by filament.",
+    "ja": "G-code から造形時間とフィラメント使用量を読み取り、フィーチャー別・フィラメント別の内訳を表示します。",
+    "zh": "从 G-code 中读取打印时间和耗材用量，并按特征类型和耗材分别统计。"
+  },
+  "formats": ".gcode · .gcode.3mf",
+  "title": {
+    "ko": "G-code 분석기 – 출력 시간, 필라멘트 사용량, 기능별 내역",
+    "en": "G-code Analyzer – print time, filament use and per-feature breakdown",
+    "ja": "G-code 解析 – 造形時間、フィラメント使用量、フィーチャー別内訳",
+    "zh": "G-code 分析器 – 打印时间、耗材用量与分项统计"
+  },
+  "description": {
+    "ko": "G-code나 .gcode.3mf 파일에서 예상 출력 시간, 필라멘트 길이·무게, 레이어 수를 읽고 벽·채움·서포트별 사용량을 보여 줍니다. 가입 없이 브라우저에서 무료로 쓰며 파일은 서버로 전송되지 않습니다.",
+    "en": "Open a .gcode or .gcode.3mf file to see the slicer's print time, filament length and weight, layer count and how much filament goes into walls, infill and supports. Free, in your browser, nothing is uploaded.",
+    "ja": "G-code や .gcode.3mf から、予想造形時間、フィラメントの長さと重量、レイヤー数、壁・インフィル・サポートごとの使用量を確認できます。登録不要・無料で、ファイルはサーバーに送信されません。",
+    "zh": "打开 .gcode 或 .gcode.3mf 文件，查看切片软件给出的打印时间、耗材长度与重量、层数，以及外墙、填充、支撑各用了多少耗材。免费、无需注册，文件不会上传。"
+  },
+  "h1": { "ko": "G-code 분석기", "en": "G-code Analyzer", "ja": "G-code 解析", "zh": "G-code 分析器" },
+  "intro": {
+    "ko": "슬라이스한 파일을 넣으면 출력 시간과 필라멘트 사용량을 읽고, 압출 이동을 직접 더해 헤더 값이 맞는지 확인해 줍니다.",
+    "en": "Drop a sliced file to read its print time and filament use. The tool also adds up every extrusion move to check the numbers in the header.",
+    "ja": "スライス済みのファイルを読み込むと、造形時間とフィラメント使用量を表示します。押し出し量を実際に合計し、ヘッダーの値が正しいかも確認します。",
+    "zh": "放入切片后的文件，即可读取打印时间和耗材用量；工具还会把所有挤出动作逐一累加，核对文件头里的数值。"
+  },
+  "what_1": {
+    "ko": "슬라이서가 만든 G-code(.gcode, .gco, .g)나 Bambu Studio·OrcaSlicer의 .gcode.3mf 파일을 열어, 슬라이서가 파일에 적어 둔 예상 출력 시간, 필라멘트 길이·부피·무게, 레이어 수와 높이, 노즐·베드 온도, 필라멘트 교체 횟수를 한 화면에 정리합니다.",
+    "en": "It opens G-code written by a slicer (.gcode, .gco, .g) or a .gcode.3mf from Bambu Studio or OrcaSlicer and lists what the slicer recorded in the file: estimated print time, filament length, volume and weight, layer count and height, nozzle and bed temperatures, and the number of filament changes.",
+    "ja": "スライサーが出力した G-code（.gcode、.gco、.g）や、Bambu Studio・OrcaSlicer の .gcode.3mf を開き、ファイルに記録されている予想造形時間、フィラメントの長さ・体積・重量、レイヤー数と積層ピッチ、ノズル・ベッド温度、フィラメント交換回数をまとめて表示します。",
+    "zh": "打开切片软件生成的 G-code（.gcode、.gco、.g），或 Bambu Studio、OrcaSlicer 导出的 .gcode.3mf，把文件里记录的信息集中列出：预计打印时间，耗材的长度、体积和重量，层数与层高，喷嘴和热床温度，以及换料次数。"
+  },
+  "what_2": {
+    "ko": "헤더만 믿지 않고 모든 압출(E) 이동을 직접 더해 필라멘트 길이를 다시 계산하고, 외벽·내벽·채움·서포트 같은 기능별로 필라멘트가 어디에 쓰였는지 보여 줍니다. 헤더 값과 차이가 크거나 헤더가 채워지지 않은 파일은 경고합니다.",
+    "en": "It does not rely on the header alone. Every extrusion (E) move is added up to recompute the filament length and to show where the filament goes: outer walls, inner walls, infill, supports and so on. You get a warning when the header disagrees with the moves or was never filled in.",
+    "ja": "ヘッダーの値だけに頼らず、すべての押し出し（E）移動を合計してフィラメントの長さを計算し直し、外壁・内壁・インフィル・サポートなど、どこにどれだけ使われたかを表示します。ヘッダーの値と大きく食い違う場合や、ヘッダーが未記入の場合は警告します。",
+    "zh": "它不会只看文件头：工具会把每一次挤出（E）动作累加起来，重新算出耗材长度，并显示耗材分别用在了外墙、内墙、填充、支撑等哪些部分。如果文件头与实际挤出量相差较大，或文件头根本没有填写，会给出警告。"
+  },
+  "what_3": {
+    "ko": "여러 파일이나 여러 플레이트를 함께 넣으면 합계를 내고, 결과를 복사하거나 CSV·xlsx로 저장하거나 비용 계산기로 넘길 수 있습니다.",
+    "en": "Add several files or plates at once to get a combined total. Results can be copied, saved as CSV or xlsx, or sent to the cost calculator.",
+    "ja": "複数のファイルやプレートをまとめて読み込むと合計も表示します。結果はコピーしたり、CSV・xlsx で保存したり、コスト計算ツールに引き継いだりできます。",
+    "zh": "一次放入多个文件或多个打印板时会给出合计。结果可以复制、保存为 CSV 或 xlsx，也可以直接带到成本计算器。"
+  },
+  "how_1": {
+    "ko": "슬라이서에서 G-code 또는 .gcode.3mf로 내보낸 파일을 위 영역에 끌어다 놓거나, 영역을 눌러서 선택합니다. 여러 개를 한 번에 선택할 수 있습니다.",
+    "en": "Export G-code or a .gcode.3mf from your slicer, then drop it on the area above or click the area to choose it. You can select several files at once.",
+    "ja": "スライサーから G-code または .gcode.3mf を書き出し、上のエリアにドラッグ＆ドロップするか、エリアをクリックして選択します。複数のファイルを一度に選べます。",
+    "zh": "在切片软件中导出 G-code 或 .gcode.3mf，把文件拖到上方区域，或点击该区域选择文件。可以一次选择多个。"
+  },
+  "how_2": {
+    "ko": "파일마다 요약, 필라멘트별 표, 기능별 표가 나타납니다. 확인이 필요한 점이 있으면 표 위에 경고로 표시됩니다.",
+    "en": "Each file gets a summary, a table per filament and a table per feature. Anything that needs your attention appears as a warning above the tables.",
+    "ja": "ファイルごとに、概要、フィラメント別の表、フィーチャー別の表が表示されます。確認が必要な点は表の上に警告として表示されます。",
+    "zh": "每个文件都会显示摘要、按耗材统计的表格和按特征统计的表格。需要留意的问题会以警告的形式显示在表格上方。"
+  },
+  "how_3": {
+    "ko": "아래 버튼으로 결과를 복사하거나 CSV·xlsx로 저장합니다. ‘이 수치로 비용 계산’을 누르면 무게와 시간이 비용 계산기에 채워집니다.",
+    "en": "Use the buttons below to copy the results or save them as CSV or xlsx. “Calculate cost with these numbers” opens the cost calculator with the weight and time filled in.",
+    "ja": "下のボタンで結果をコピーしたり、CSV・xlsx として保存したりできます。「この数値でコストを計算」を押すと、重量と時間が入力された状態でコスト計算ツールが開きます。",
+    "zh": "用下方的按钮复制结果，或保存为 CSV、xlsx。点击“用这些数值计算成本”，会打开成本计算器并自动填入重量和时间。"
+  },
+  "limit_1": {
+    "ko": "출력 시간은 슬라이서가 파일에 적은 값을 그대로 보여 줍니다. 이 도구가 따로 예측하지는 않습니다. 실제 시간은 필라멘트 교체에 걸리는 시간, 프린터의 가속도 한계, 예열·베드 레벨링 같은 펌웨어 동작에 따라 슬라이서 값과 달라집니다.",
+    "en": "Print time is the number the slicer wrote into the file; this tool does not make its own prediction. Real prints differ from it because of filament changes, the printer's acceleration limits and what the firmware does before and during the print (heating, bed levelling, calibration).",
+    "ja": "造形時間は、スライサーがファイルに書き込んだ値をそのまま表示しています。このツールが独自に予測しているわけではありません。実際の時間は、フィラメント交換にかかる時間、プリンターの加速度の上限、予熱やベッドレベリングといったファームウェアの動作によって、スライサーの値とは変わります。",
+    "zh": "打印时间是切片软件写入文件的数值，本工具不会另行预测。实际耗时会因换料所需时间、打印机的加速度上限，以及预热、热床调平等固件动作而与切片软件给出的数值不同。"
+  },
+  "limit_2": {
+    "ko": "무게는 파일에 무게나 밀도가 적혀 있을 때만 표시합니다. Cura처럼 길이만 적는 슬라이서의 파일은 길이와 부피만 나오며, 필라멘트 지름이 파일에 없으면 1.75 mm로 가정합니다.",
+    "en": "Weight is shown only when the file states a weight or a density. Files from slicers that record length only, such as Cura, give length and volume; if the filament diameter is missing, 1.75 mm is assumed.",
+    "ja": "重量は、ファイルに重量または密度が記録されている場合にのみ表示します。Cura のように長さしか記録しないスライサーのファイルでは、長さと体積のみの表示になります。フィラメント径の記録がない場合は 1.75 mm と仮定します。",
+    "zh": "只有文件中写明了重量或密度时才会显示重量。像 Cura 这样只记录长度的切片软件，其文件只能得到长度和体积；文件中没有线径时，按 1.75 mm 计算。"
+  },
+  "limit_3": {
+    "ko": "기능별 내역은 ;TYPE: 또는 ; FEATURE: 주석이 있는 파일(Bambu Studio, OrcaSlicer, PrusaSlicer, Cura 등)에서만 나옵니다. 시작 G-code의 퍼지 라인은 슬라이서 헤더에 들어가지 않는 경우가 많아, 합산 값이 헤더보다 조금 클 수 있습니다.",
+    "en": "The per-feature table needs ;TYPE: or ; FEATURE: comments, which Bambu Studio, OrcaSlicer, PrusaSlicer and Cura write. The purge line in the start G-code is usually not counted in the slicer's header, so the summed length can be slightly higher.",
+    "ja": "フィーチャー別の内訳は、;TYPE: または ; FEATURE: コメントがあるファイル（Bambu Studio、OrcaSlicer、PrusaSlicer、Cura など）でのみ表示されます。開始 G-code のパージラインはスライサーのヘッダーに含まれないことが多いため、合計値がヘッダーよりわずかに大きくなる場合があります。",
+    "zh": "只有带 ;TYPE: 或 ; FEATURE: 注释的文件（Bambu Studio、OrcaSlicer、PrusaSlicer、Cura 等）才能按特征统计。起始 G-code 中的擦料线通常不计入切片软件的文件头，因此累加值可能略高于文件头。"
+  },
+  "limit_4": {
+    "ko": "PrusaSlicer의 바이너리 G-code(.bgcode)는 읽지 못합니다. 슬라이서에서 일반 G-code로 내보내 주세요. 펌웨어 리트랙션(G10/G11)이나 부피 단위 압출(M200)을 쓰는 파일은 합산 길이가 맞지 않을 수 있습니다.",
+    "en": "PrusaSlicer's binary G-code (.bgcode) cannot be read; export plain G-code instead. For files that use firmware retraction (G10/G11) or volumetric extrusion (M200), the summed length may be off.",
+    "ja": "PrusaSlicer のバイナリ G-code（.bgcode）は読み込めません。スライサーで通常の G-code として書き出してください。ファームウェアリトラクション（G10/G11）や体積押し出し（M200）を使うファイルでは、合計した長さが正しくならないことがあります。",
+    "zh": "无法读取 PrusaSlicer 的二进制 G-code（.bgcode），请在切片软件中导出普通 G-code。使用固件回抽（G10/G11）或体积挤出（M200）的文件，累加出的长度可能不准。"
+  },
+  "limit_5": {
+    "ko": "일반 G-code는 조각 단위로 읽으므로 수십 MB 파일도 화면이 멈추지 않습니다. .gcode.3mf는 압축을 풀어 메모리에 올리기 때문에 아주 큰 파일은 휴대폰에서 열리지 않을 수 있습니다.",
+    "en": "Plain G-code is read in pieces, so files of tens of megabytes do not freeze the page. A .gcode.3mf has to be unpacked in memory, so a very large one may not open on a phone.",
+    "ja": "通常の G-code は少しずつ読み込むため、数十 MB のファイルでも画面が固まりません。.gcode.3mf は展開してメモリに読み込むため、非常に大きなファイルはスマートフォンでは開けないことがあります。",
+    "zh": "普通 G-code 是分块读取的，几十 MB 的文件也不会让页面卡住。.gcode.3mf 需要先解压到内存，特别大的文件在手机上可能打不开。"
+  },
+  "faq_1_q": {
+    "ko": "슬라이서가 알려 준 시간과 실제 출력 시간이 왜 다른가요?",
+    "en": "Why does the real print take longer or shorter than the slicer said?",
+    "ja": "スライサーの予想時間と実際の造形時間が違うのはなぜですか？",
+    "zh": "为什么实际打印时间和切片软件给出的不一样？"
+  },
+  "faq_1_a": {
+    "ko": "슬라이서는 가속과 감속을 가정해 이동 시간을 추정하지만, 프린터 펌웨어가 실제로 움직이는 방식과 완전히 같지는 않습니다. 예열, 베드 레벨링, 필라멘트 교체와 퍼지에 걸리는 시간도 기기와 상황에 따라 달라집니다. 이 도구는 슬라이서보다 정확하게 예측한다고 주장하지 않으며, 슬라이서가 적은 값을 그대로 보여 줍니다.",
+    "en": "A slicer estimates travel time from an acceleration model that never matches the printer's firmware exactly. Heating, bed levelling, filament changes and purging also take a different amount of time on each machine. This tool does not claim to predict better than the slicer; it shows the slicer's own number.",
+    "ja": "スライサーは加減速を仮定して移動時間を見積もりますが、プリンターのファームウェアの実際の動きと完全には一致しません。予熱、ベッドレベリング、フィラメント交換やパージにかかる時間も、機種や状況によって変わります。このツールはスライサーより正確に予測できるとは考えておらず、スライサーが記録した値をそのまま表示します。",
+    "zh": "切片软件是按一套加减速模型估算移动时间的，和打印机固件的实际动作不可能完全一致。预热、热床调平、换料和冲刷所需的时间也因机器和具体情况而异。本工具并不声称比切片软件预测得更准，只是如实显示切片软件写下的数值。"
+  },
+  "faq_2_q": {
+    "ko": "헤더 값과 ‘E 이동 합산’이 조금 다른 이유는 무엇인가요?",
+    "en": "Why is “Summed from E moves” slightly different from the header?",
+    "ja": "ヘッダーの値と「E 移動の合計」が少し違うのはなぜですか？",
+    "zh": "为什么“E 轴累加值”和文件头的数值略有出入？"
+  },
+  "faq_2_a": {
+    "ko": "헤더는 슬라이서가 계산해 적은 값이고, 합산은 파일에 실제로 들어 있는 압출 명령을 더한 값입니다. 시작 G-code의 퍼지 라인이나 반올림 때문에 보통 1% 안쪽으로 차이가 납니다. 5% 넘게 다르면 파일이 편집되었거나 중간에 잘렸을 수 있어 경고를 표시합니다.",
+    "en": "The header is what the slicer calculated; the sum is what the extrusion commands in the file actually add up to. Purge lines in the start G-code and rounding usually cause a difference of under 1%. If the two differ by more than 5%, the file may have been edited or cut off, and a warning is shown.",
+    "ja": "ヘッダーはスライサーが計算して書き込んだ値で、合計はファイルに実際に含まれる押し出し命令を足し合わせた値です。開始 G-code のパージラインや丸め誤差のため、通常は 1% 未満の差が出ます。5% を超えて違う場合は、ファイルが編集されたか途中で切れている可能性があるため、警告を表示します。",
+    "zh": "文件头是切片软件算出来写入的数值，累加值则是把文件中实际的挤出指令加起来的结果。由于起始 G-code 的擦料线和四舍五入，两者通常相差不到 1%。如果相差超过 5%，文件可能被修改过或不完整，工具会给出警告。"
+  },
+  "faq_3_q": {
+    "ko": "여러 플레이트의 합계를 낼 수 있나요?",
+    "en": "Can I get a total for several plates?",
+    "ja": "複数プレートの合計は出せますか？",
+    "zh": "可以统计多个打印板的合计吗？"
+  },
+  "faq_3_a": {
+    "ko": "네. 플레이트별 G-code 파일을 한꺼번에 선택하거나, 여러 플레이트가 들어 있는 .gcode.3mf를 넣으면 플레이트마다 결과가 나오고 맨 아래에 시간과 필라멘트 합계가 표시됩니다.",
+    "en": "Yes. Select the G-code files of all plates together, or drop a .gcode.3mf that contains several plates. Each plate gets its own result, and the total time and filament appear at the bottom.",
+    "ja": "はい。プレートごとの G-code ファイルをまとめて選択するか、複数プレートを含む .gcode.3mf を読み込むと、プレートごとの結果に加えて、時間とフィラメントの合計がいちばん下に表示されます。",
+    "zh": "可以。同时选择各个打印板的 G-code 文件，或放入包含多个打印板的 .gcode.3mf，每个打印板都会单独显示结果，最下方会显示时间和耗材的合计。"
+  },
+  "faq_4_q": {
+    "ko": "파일이 서버로 전송되나요?",
+    "en": "Is my file uploaded anywhere?",
+    "ja": "ファイルはサーバーに送信されますか？",
+    "zh": "文件会被上传吗？"
+  },
+  "faq_4_a": {
+    "ko": "아니요. 파일은 이 브라우저 안에서만 읽고 계산하며, 네트워크로 보내지 않습니다. 비용 계산기로 넘길 때도 무게와 시간 숫자만 주소의 # 뒤에 붙여 전달하므로 서버에는 전달되지 않습니다.",
+    "en": "No. The file is read and processed inside this browser only. When you continue to the cost calculator, just the weight and time are passed after the # in the address, which browsers do not send to a server.",
+    "ja": "いいえ。ファイルはこのブラウザー内でのみ読み込み、計算します。コスト計算ツールに引き継ぐときも、重量と時間の数値を URL の # 以降に付けて渡すだけなので、サーバーには送信されません。",
+    "zh": "不会。文件只在当前浏览器内读取和计算。跳转到成本计算器时，也只是把重量和时间两个数字放在网址的 # 之后传递，浏览器不会把这部分发送给服务器。"
+  },
+
+  "drop_title": {
+    "ko": "G-code 파일을 끌어다 놓거나 눌러서 선택해 주세요",
+    "en": "Drop G-code files here, or click to choose",
+    "ja": "G-code ファイルをここにドロップ、またはクリックして選択",
+    "zh": "将 G-code 文件拖到此处，或点击选择"
+  },
+  "drop_hint": {
+    "ko": ".gcode · .gco · .g · .gcode.3mf, 여러 개 선택 가능",
+    "en": ".gcode · .gco · .g · .gcode.3mf, several at once",
+    "ja": ".gcode · .gco · .g · .gcode.3mf（複数選択可）",
+    "zh": ".gcode · .gco · .g · .gcode.3mf，可多选"
+  },
+  "actions_title": { "ko": "합계와 내보내기", "en": "Totals and export", "ja": "合計とエクスポート", "zh": "合计与导出" },
+  "btn_cost": { "ko": "이 수치로 비용 계산", "en": "Calculate cost with these numbers", "ja": "この数値でコストを計算", "zh": "用这些数值计算成本" },
+  "btn_copy": { "ko": "결과 복사", "en": "Copy results", "ja": "結果をコピー", "zh": "复制结果" },
+  "btn_csv": { "ko": "CSV 저장", "en": "Save CSV", "ja": "CSV で保存", "zh": "保存为 CSV" },
+  "btn_xlsx": { "ko": "xlsx 저장", "en": "Save xlsx", "ja": "xlsx で保存", "zh": "保存为 xlsx" },
+
+  "js_status": {
+    "ko": "{name} 분석 중… {percent}% ({i}/{n})",
+    "en": "Analysing {name}… {percent}% ({i} of {n})",
+    "ja": "{name} を解析中… {percent}%（{i}/{n}）",
+    "zh": "正在分析 {name}… {percent}%（{i}/{n}）"
+  },
+  "js_err_not_text": {
+    "ko": "{name}: G-code 텍스트 파일이 아닙니다. 슬라이서에서 G-code로 내보낸 파일인지 확인해 주세요.",
+    "en": "{name} is not a G-code text file. Check that it was exported as G-code from a slicer.",
+    "ja": "{name} は G-code のテキストファイルではありません。スライサーから G-code として書き出したファイルかご確認ください。",
+    "zh": "{name} 不是 G-code 文本文件。请确认它是从切片软件导出的 G-code。"
+  },
+  "js_err_bgcode": {
+    "ko": "{name}: 바이너리 G-code(.bgcode)는 읽을 수 없습니다. 슬라이서에서 일반 G-code(.gcode)로 내보내 주세요.",
+    "en": "{name} is binary G-code (.bgcode), which cannot be read. Export plain G-code (.gcode) from your slicer.",
+    "ja": "{name} はバイナリ G-code（.bgcode）のため読み込めません。スライサーで通常の G-code（.gcode）として書き出してください。",
+    "zh": "{name} 是二进制 G-code（.bgcode），无法读取。请在切片软件中导出普通 G-code（.gcode）。"
+  },
+  "js_err_no_moves": {
+    "ko": "{name}: 이동 명령(G0/G1)이 하나도 없습니다. G-code 파일이 아닌 것 같습니다.",
+    "en": "{name} contains no move commands (G0/G1). It does not look like G-code.",
+    "ja": "{name} には移動命令（G0/G1）が 1 つもありません。G-code ファイルではないようです。",
+    "zh": "{name} 中没有任何移动指令（G0/G1），看起来不是 G-code 文件。"
+  },
+  "js_err_no_plate": {
+    "ko": "{name}: 이 3MF에는 슬라이스된 G-code가 없습니다. 슬라이서에서 ‘플레이트 슬라이스 파일 내보내기’(.gcode.3mf)로 저장한 파일을 넣어 주세요.",
+    "en": "{name} is a 3MF without sliced G-code. Use the file your slicer saves with “Export plate sliced file” (.gcode.3mf).",
+    "ja": "{name} にはスライス済みの G-code が含まれていません。スライサーの「スライス済みプレートをエクスポート」で保存した .gcode.3mf を読み込んでください。",
+    "zh": "{name} 是不含切片结果的 3MF。请使用切片软件通过“导出单盘切片文件”保存的 .gcode.3mf。"
+  },
+  "js_err_not_mesh": {
+    "ko": "{name}: 파일이 손상되었거나 중간에 잘려 있어 열 수 없습니다.",
+    "en": "{name} is damaged or cut off and cannot be opened.",
+    "ja": "{name} は破損しているか途中で切れているため、開けません。",
+    "zh": "{name} 已损坏或不完整，无法打开。"
+  },
+  "js_plate": { "ko": "플레이트 {n}", "en": "plate {n}", "ja": "プレート {n}", "zh": "打印板 {n}" },
+  "js_summary": { "ko": "요약", "en": "Summary", "ja": "概要", "zh": "摘要" },
+  "js_unknown": { "ko": "파일에 없음", "en": "not in the file", "ja": "ファイルに記録なし", "zh": "文件中未记录" },
+  "js_slicer": { "ko": "슬라이서", "en": "Slicer", "ja": "スライサー", "zh": "切片软件" },
+  "js_printer": { "ko": "프린터", "en": "Printer", "ja": "プリンター", "zh": "打印机" },
+  "js_time": { "ko": "예상 출력 시간(슬라이서)", "en": "Print time (slicer's estimate)", "ja": "予想造形時間（スライサー）", "zh": "预计打印时间（切片软件）" },
+  "js_time_model": { "ko": "모델 출력만 {t}", "en": "model only {t}", "ja": "モデルのみ {t}", "zh": "仅模型 {t}" },
+  "js_filament": { "ko": "필라멘트 사용량", "en": "Filament used", "ja": "フィラメント使用量", "zh": "耗材用量" },
+  "js_esum": { "ko": "E 이동 합산", "en": "Summed from E moves", "ja": "E 移動の合計", "zh": "E 轴累加值" },
+  "js_esum_diff": { "ko": "헤더 대비 {diff}%", "en": "{diff}% vs header", "ja": "ヘッダー比 {diff}%", "zh": "与文件头相差 {diff}%" },
+  "js_layers": { "ko": "레이어 수", "en": "Layers", "ja": "レイヤー数", "zh": "层数" },
+  "js_layers_z": { "ko": "Z 높이 변화로 센 값", "en": "counted from Z changes", "ja": "Z 高さの変化から算出", "zh": "按 Z 高度变化统计" },
+  "js_layer_height": { "ko": "레이어 높이", "en": "Layer height", "ja": "積層ピッチ", "zh": "层高" },
+  "js_max_z": { "ko": "최대 출력 높이(Z)", "en": "Highest printed Z", "ja": "最大造形高さ（Z）", "zh": "最大打印高度（Z）" },
+  "js_nozzle": { "ko": "노즐 온도", "en": "Nozzle temperature", "ja": "ノズル温度", "zh": "喷嘴温度" },
+  "js_bed": { "ko": "베드 온도", "en": "Bed temperature", "ja": "ベッド温度", "zh": "热床温度" },
+  "js_changes": { "ko": "필라멘트 교체 횟수", "en": "Filament changes", "ja": "フィラメント交換回数", "zh": "换料次数" },
+  "js_slice_info": { "ko": "3MF 안의 slice_info.config", "en": "slice_info.config in the 3MF", "ja": "3MF 内の slice_info.config", "zh": "3MF 内的 slice_info.config" },
+  "js_fil_caption": { "ko": "필라멘트별", "en": "By filament", "ja": "フィラメント別", "zh": "按耗材" },
+  "js_slot": { "ko": "슬롯", "en": "Slot", "ja": "スロット", "zh": "槽位" },
+  "js_type": { "ko": "종류", "en": "Type", "ja": "種類", "zh": "类型" },
+  "js_colour": { "ko": "색", "en": "Colour", "ja": "色", "zh": "颜色" },
+  "js_length": { "ko": "길이", "en": "Length", "ja": "長さ", "zh": "长度" },
+  "js_volume": { "ko": "부피", "en": "Volume", "ja": "体積", "zh": "体积" },
+  "js_weight": { "ko": "무게", "en": "Weight", "ja": "重量", "zh": "重量" },
+  "js_feat_caption": { "ko": "기능별(E 이동 합산 기준)", "en": "By feature (summed from E moves)", "ja": "フィーチャー別（E 移動の合計）", "zh": "按特征（E 轴累加）" },
+  "js_feature": { "ko": "기능", "en": "Feature", "ja": "フィーチャー", "zh": "特征" },
+  "js_share": { "ko": "비율", "en": "Share", "ja": "割合", "zh": "占比" },
+  "js_feat_outer_wall": { "ko": "외벽", "en": "Outer wall", "ja": "外壁", "zh": "外墙" },
+  "js_feat_inner_wall": { "ko": "내벽", "en": "Inner wall", "ja": "内壁", "zh": "内墙" },
+  "js_feat_overhang_wall": { "ko": "오버행 벽", "en": "Overhang wall", "ja": "オーバーハング壁", "zh": "悬垂墙" },
+  "js_feat_sparse_infill": { "ko": "내부 채움", "en": "Sparse infill", "ja": "インフィル", "zh": "稀疏填充" },
+  "js_feat_solid_infill": { "ko": "내부 솔리드 채움", "en": "Internal solid infill", "ja": "内部ソリッドインフィル", "zh": "内部实心填充" },
+  "js_feat_top_surface": { "ko": "윗면", "en": "Top surface", "ja": "トップ面", "zh": "顶面" },
+  "js_feat_bottom_surface": { "ko": "바닥면", "en": "Bottom surface", "ja": "ボトム面", "zh": "底面" },
+  "js_feat_skin": { "ko": "윗면·바닥면(스킨)", "en": "Top/bottom skin", "ja": "トップ・ボトム面（スキン）", "zh": "顶面／底面（表皮）" },
+  "js_feat_bridge": { "ko": "브리지", "en": "Bridge", "ja": "ブリッジ", "zh": "搭桥" },
+  "js_feat_gap_infill": { "ko": "틈새 채움", "en": "Gap infill", "ja": "ギャップフィル", "zh": "缝隙填充" },
+  "js_feat_support": { "ko": "서포트", "en": "Support", "ja": "サポート", "zh": "支撑" },
+  "js_feat_support_interface": { "ko": "서포트 접촉면", "en": "Support interface", "ja": "サポート接触面", "zh": "支撑接触面" },
+  "js_feat_skirt_brim": { "ko": "스커트·브림", "en": "Skirt/brim", "ja": "スカート・ブリム", "zh": "裙边／帽檐" },
+  "js_feat_prime_tower": { "ko": "프라임 타워", "en": "Prime tower", "ja": "プライムタワー", "zh": "擦料塔" },
+  "js_feat_ironing": { "ko": "아이어닝", "en": "Ironing", "ja": "アイロニング", "zh": "熨烫" },
+  "js_feat_custom": { "ko": "시작·종료 G-code", "en": "Start/end G-code", "ja": "開始・終了 G-code", "zh": "起始／结束 G-code" },
+  "js_feat_unlabelled": { "ko": "구분 없음", "en": "Unlabelled", "ja": "分類なし", "zh": "未标注" },
+  "js_warn_time_placeholder": {
+    "ko": "헤더의 출력 시간(;TIME:{value})은 슬라이서가 채우지 않은 자리표시 값으로 보여 사용하지 않았습니다. 파일에 ;TIME_ELAPSED가 있으면 그 마지막 값을 표시합니다.",
+    "en": "The print time in the header (;TIME:{value}) looks like a placeholder the slicer never filled in, so it was ignored. If the file has ;TIME_ELAPSED lines, the last one is shown instead.",
+    "ja": "ヘッダーの造形時間（;TIME:{value}）は、スライサーが記入していない仮の値と思われるため使用していません。ファイルに ;TIME_ELAPSED がある場合は、その最後の値を表示します。",
+    "zh": "文件头中的打印时间（;TIME:{value}）看起来是切片软件未填写的占位值，因此未采用。如果文件中有 ;TIME_ELAPSED，则显示其最后一个值。"
+  },
+  "js_warn_filament_placeholder": {
+    "ko": "헤더에는 필라멘트 사용량이 0으로 적혀 있습니다. 표시한 수치는 E 이동을 직접 합산한 값입니다.",
+    "en": "The header says 0 filament used. The figures shown were summed from the E moves instead.",
+    "ja": "ヘッダーのフィラメント使用量が 0 になっています。表示している数値は E 移動を合計した値です。",
+    "zh": "文件头中的耗材用量为 0。这里显示的是由 E 轴动作累加得到的数值。"
+  },
+  "js_warn_mismatch": {
+    "ko": "헤더의 필라멘트 길이({header})와 E 이동 합산({measured})이 5% 넘게 다릅니다. 파일이 편집되었거나 중간에 잘렸을 수 있습니다.",
+    "en": "The filament length in the header ({header}) and the sum of the E moves ({measured}) differ by more than 5%. The file may have been edited or cut off.",
+    "ja": "ヘッダーのフィラメント長（{header}）と E 移動の合計（{measured}）が 5% を超えて食い違っています。ファイルが編集されたか、途中で切れている可能性があります。",
+    "zh": "文件头中的耗材长度（{header}）与 E 轴累加值（{measured}）相差超过 5%。文件可能被修改过或不完整。"
+  },
+  "js_warn_no_time": {
+    "ko": "이 파일에는 슬라이서가 적은 예상 출력 시간이 없습니다.",
+    "en": "This file has no print time estimate from a slicer.",
+    "ja": "このファイルには、スライサーによる予想造形時間が記録されていません。",
+    "zh": "此文件中没有切片软件给出的预计打印时间。"
+  },
+  "js_warn_no_density": {
+    "ko": "파일에 필라멘트 밀도가 없어 무게는 계산하지 않았습니다. 비용 계산기로 넘겨 재료를 고르면 무게가 계산됩니다.",
+    "en": "The file gives no filament density, so no weight was calculated. Continue to the cost calculator and pick a material to get the weight.",
+    "ja": "ファイルにフィラメントの密度が記録されていないため、重量は計算していません。コスト計算ツールに引き継いで材料を選ぶと、重量が計算されます。",
+    "zh": "文件中没有耗材密度，因此未计算重量。带到成本计算器并选择材料后即可算出重量。"
+  },
+  "js_warn_no_features": {
+    "ko": "기능 구분 주석(;TYPE: 또는 ; FEATURE:)이 없어 기능별 내역은 나눌 수 없습니다.",
+    "en": "There are no feature comments (;TYPE: or ; FEATURE:), so no per-feature breakdown is possible.",
+    "ja": "フィーチャーを示すコメント（;TYPE: または ; FEATURE:）がないため、フィーチャー別の内訳は表示できません。",
+    "zh": "文件中没有特征注释（;TYPE: 或 ; FEATURE:），无法按特征统计。"
+  },
+  "js_total_caption": { "ko": "전체 합계({n}개)", "en": "Total of {n} results", "ja": "合計（{n} 件）", "zh": "合计（共 {n} 项）" },
+  "js_total_partial": {
+    "ko": "시간이 없는 파일이 있어 합산하지 않았습니다",
+    "en": "not added up: some files have no time",
+    "ja": "時間の記録がないファイルがあるため、合計していません",
+    "zh": "部分文件没有时间，未合计"
+  },
+  "js_file": { "ko": "파일", "en": "File", "ja": "ファイル", "zh": "文件" },
+  "js_copied": {
+    "ko": "결과를 클립보드에 복사했습니다. 스프레드시트에 바로 붙여 넣을 수 있습니다.",
+    "en": "Results copied to the clipboard. You can paste them straight into a spreadsheet.",
+    "ja": "結果をクリップボードにコピーしました。表計算ソフトにそのまま貼り付けられます。",
+    "zh": "结果已复制到剪贴板，可以直接粘贴到电子表格中。"
+  },
+  "js_copy_failed": {
+    "ko": "브라우저가 클립보드 접근을 막아 복사하지 못했습니다. CSV 저장을 이용해 주세요.",
+    "en": "The browser blocked clipboard access, so nothing was copied. Use Save CSV instead.",
+    "ja": "ブラウザーがクリップボードへのアクセスを許可しなかったため、コピーできませんでした。CSV で保存をご利用ください。",
+    "zh": "浏览器阻止了剪贴板访问，未能复制。请改用“保存为 CSV”。"
+  }
+}

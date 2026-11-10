@@ -1,0 +1,21 @@
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".gcode,.gco,.g,.bgcode,.3mf" multiple>
+<strong>{{drop_title}}</strong>
+<span>{{drop_hint}}</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errors" style="white-space:pre-line" hidden></p>
+</div>
+<div id="out" style="display:grid;gap:16px;margin-top:16px"></div>
+<div class="panel" id="actions" style="margin-top:16px" hidden>
+<h2>{{actions_title}}</h2>
+<div id="totals"></div>
+<p style="display:flex;flex-wrap:wrap;gap:8px">
+<a class="button" id="cost" href="../print-cost-calculator/">{{btn_cost}}</a>
+<button type="button" class="button secondary" id="copy">{{btn_copy}}</button>
+<button type="button" class="button secondary" id="csv">{{btn_csv}}</button>
+<button type="button" class="button secondary" id="xlsx">{{btn_xlsx}}</button>
+</p>
+<p class="notice" id="copied" hidden></p>
+</div>

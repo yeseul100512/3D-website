@@ -1,0 +1,190 @@
+<style>
+#viewer canvas { touch-action: none; cursor: grab; }
+#view-reset { position: absolute; right: 8px; bottom: 8px; background: var(--surface); }
+#viewer-msg { margin: 0; padding: 16px; }
+@media (min-width: 900px) { #viewer { position: sticky; top: 8px; } }
+#msg, #errs { white-space: pre-line; }
+#p-files { margin-top: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.row .field { flex: 1 1 120px; }
+.hint { color: var(--muted); font-size: .92rem; }
+.notice.good { color: var(--ok); border-color: var(--ok); }
+.probs, #hole-list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.probs li { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.prob-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; min-height: 44px; }
+.prob-head span { font-weight: 600; }
+.prob-head strong { margin-right: auto; color: var(--warn); font-variant-numeric: tabular-nums; }
+.probs li.none strong { color: var(--ok); font-weight: 500; }
+.probs li.none p, .probs li.none button { display: none; }
+.probs p { margin: 0 0 8px; color: var(--muted); font-size: .92rem; }
+[aria-pressed="true"].button { color: var(--bg); background: var(--warn); border-color: var(--warn); }
+#p-summary details summary, #p-repair summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--link); }
+#p-summary details > * + * { margin-top: 8px; }
+fieldset { margin: 0; padding: 12px; min-width: 0; border: 1px solid var(--line); border-radius: 8px; display: grid; gap: 10px; }
+fieldset > * { margin: 0; min-width: 0; }
+legend { padding: 0 6px; font-weight: 600; }
+#hole-list { max-height: 320px; overflow-y: auto; }
+#hole-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+#files button.name { min-height: 44px; padding: 0; font: inherit; color: var(--link); background: none; border: 0; cursor: pointer; text-align: left; text-decoration: underline; }
+#files tr[aria-current="true"] button.name { color: var(--text); font-weight: 600; text-decoration: none; }
+#files td.err { color: var(--danger); }
+</style>
+<div class="tool-grid">
+<div class="viewer" id="viewer">
+<canvas id="canvas" tabindex="0" role="application" aria-label="{{viewer_label}}" hidden></canvas>
+<p id="viewer-msg">{{js_viewer_empty}}</p>
+<button class="button secondary" id="view-reset" type="button" hidden>{{view_reset}}</button>
+</div>
+<div class="controls">
+
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.obj,.3mf" multiple>
+<strong>{{drop_title}}</strong>
+<span>{{drop_hint}}</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<p class="notice error" id="errs" hidden></p>
+</div>
+
+<div class="panel" id="p-summary" hidden>
+<h2 id="s-name"></h2>
+<p class="notice" id="s-verdict"></p>
+<table class="result">
+<tbody>
+<tr><th scope="row">{{row_size}}</th><td id="s-size"></td></tr>
+<tr><th scope="row">{{js_row_triangles}}</th><td id="s-tris"></td></tr>
+<tr><th scope="row">{{js_row_volume}}</th><td id="s-volume"></td></tr>
+<tr><th scope="row">{{row_area}}</th><td id="s-area"></td></tr>
+<tr><th scope="row">{{js_row_shells}}</th><td id="s-shells"></td></tr>
+<tr><th scope="row">{{row_format}}</th><td id="s-format"></td></tr>
+</tbody>
+</table>
+<p class="notice warn" id="s-unit" hidden></p>
+<details id="s-scale">
+<summary>{{scale_title}}</summary>
+<p class="hint">{{scale_hint}}</p>
+<div class="row">
+<button class="button secondary act" type="button" data-scale="25.4">× 25.4 ({{scale_inch}})</button>
+<button class="button secondary act" type="button" data-scale="1000">× 1000 ({{scale_m}})</button>
+<button class="button secondary act" type="button" data-scale="0.001">× 0.001</button>
+</div>
+<p class="hint" id="s-scaled" hidden></p>
+</details>
+</div>
+
+<div class="panel" id="p-bed" hidden>
+<h2>{{bed_title}}</h2>
+<div class="field">
+<label for="bed">{{bed_label}}</label>
+<select id="bed">
+<option value="180,180,180">180 × 180 × 180 – Bambu Lab A1 mini, Prusa MINI+</option>
+<option value="220,220,250">220 × 220 × 250 – Creality Ender-3, K1, Anycubic Kobra 2</option>
+<option value="225,225,265">225 × 225 × 265 – Elegoo Neptune 4</option>
+<option value="250,210,220">250 × 210 × 220 – Prusa MK4S, MK3S+</option>
+<option value="250,220,270">250 × 220 × 270 – Prusa CORE One</option>
+<option value="256,256,256" selected>256 × 256 × 256 – Bambu Lab A1, P1, X1</option>
+<option value="300,300,300">300 × 300 × 300 – Creality K1 Max, Voron 2.4 (300)</option>
+<option value="350,320,325">350 × 320 × 325 – Bambu Lab H2D</option>
+<option value="350,350,350">350 × 350 × 350 – Creality K2 Plus, Voron 2.4 (350)</option>
+<option value="360,360,360">360 × 360 × 360 – Prusa XL</option>
+<option value="420,420,480">420 × 420 × 480 – Elegoo Neptune 4 Max</option>
+<option value="custom">{{bed_custom}}</option>
+</select>
+</div>
+<div class="fields" id="bed-custom" hidden>
+<div class="field"><label for="bed-x">X (mm)</label><input type="number" id="bed-x" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-y">Y (mm)</label><input type="number" id="bed-y" value="220" min="1" max="5000" step="any" required inputmode="decimal"></div>
+<div class="field"><label for="bed-z">Z (mm)</label><input type="number" id="bed-z" value="250" min="1" max="5000" step="any" required inputmode="decimal"></div>
+</div>
+<p class="notice" id="bed-result" hidden></p>
+<p id="bed-cut" hidden><a class="button secondary" href="../stl-cutter/">{{bed_cut_link}}</a></p>
+</div>
+
+<div class="panel" id="p-problems" hidden>
+<h2>{{prob_title}}</h2>
+<p class="notice warn" id="view-note" hidden></p>
+<ul class="probs">
+<li id="pr-open"><div class="prob-head"><span>{{js_prob_open}}</span><strong></strong><button class="button secondary" type="button" data-hl="open" aria-pressed="false">{{js_show}}</button></div><p>{{why_open}}</p></li>
+<li id="pr-nonManifold"><div class="prob-head"><span>{{js_prob_nonmanifold}}</span><strong></strong><button class="button secondary" type="button" data-hl="nonManifold" aria-pressed="false">{{js_show}}</button></div><p>{{why_nonmanifold}}</p></li>
+<li id="pr-flipped"><div class="prob-head"><span>{{js_prob_flipped}}</span><strong></strong><button class="button secondary" type="button" data-hl="flipped" aria-pressed="false">{{js_show}}</button></div><p>{{why_flipped}}</p></li>
+<li id="pr-degenerate"><div class="prob-head"><span>{{js_prob_degenerate}}</span><strong></strong><button class="button secondary" type="button" data-hl="degenerate" aria-pressed="false">{{js_show}}</button></div><p>{{why_degenerate}}</p></li>
+<li id="pr-duplicate"><div class="prob-head"><span>{{js_prob_duplicate}}</span><strong></strong><button class="button secondary" type="button" data-hl="duplicate" aria-pressed="false">{{js_show}}</button></div><p>{{why_duplicate}}</p></li>
+<li id="pr-bad"><div class="prob-head"><span>{{js_prob_bad}}</span><strong></strong></div><p>{{why_bad}}</p></li>
+<li id="pr-truncated"><div class="prob-head"><span>{{js_prob_truncated}}</span><strong></strong></div><p>{{why_truncated}}</p></li>
+</ul>
+</div>
+
+<div class="panel" id="p-thin" hidden>
+<h2>{{thin_title}}</h2>
+<p class="hint">{{thin_hint}}</p>
+<div class="row">
+<div class="field"><label for="nozzle">{{thin_nozzle}}</label><input type="number" id="nozzle" value="0.4" min="0.1" max="2" step="0.05" required inputmode="decimal"></div>
+<button class="button secondary act" type="button" id="thin-run">{{thin_run}}</button>
+</div>
+<p class="notice" id="thin-result" hidden></p>
+<button class="button secondary" type="button" id="thin-show" data-hl="thin" aria-pressed="false" hidden>{{js_show}}</button>
+</div>
+
+<div class="panel" id="p-repair" hidden>
+<h2>{{rep_title}}</h2>
+<p class="hint">{{rep_hint}}</p>
+<label class="check"><input type="checkbox" id="rep-weld"> {{rep_weld}}</label>
+<div class="field"><label for="rep-tol">{{rep_tol}}</label><input type="number" id="rep-tol" value="0.001" min="0.0001" max="0.1" step="any" required inputmode="decimal"><small>{{rep_tol_hint}}</small></div>
+<label class="check"><input type="checkbox" id="rep-clean"> {{rep_clean}}</label>
+<label class="check"><input type="checkbox" id="rep-normals"> {{rep_normals}}</label>
+<fieldset>
+<legend>{{rep_holes}}</legend>
+<p class="hint" id="holes-info"></p>
+<div id="holes-tools" hidden>
+<div class="row">
+<div class="field"><label for="hole-max">{{rep_hole_max}}</label><input type="number" id="hole-max" value="5" min="0" max="100000" step="any" required inputmode="decimal"></div>
+<button class="button secondary" type="button" id="hole-pick">{{rep_hole_pick}}</button>
+<button class="button secondary" type="button" id="hole-clear">{{rep_hole_clear}}</button>
+</div>
+</div>
+<ul id="hole-list"></ul>
+</fieldset>
+<div class="row">
+<button class="button act" type="button" id="rep-apply">{{rep_apply}}</button>
+<button class="button secondary act" type="button" id="rep-undo" hidden>{{rep_undo}}</button>
+</div>
+<p class="notice" id="rep-msg" hidden></p>
+<p class="notice" id="rep-proof" hidden></p>
+<div class="table-scroll">
+<table class="result" id="rep-table" hidden>
+<caption>{{rep_table}}</caption>
+<thead><tr><th scope="col">{{rep_col_item}}</th><th scope="col" class="num">{{rep_col_before}}</th><th scope="col" class="num">{{rep_col_after}}</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+
+<div class="panel" id="p-export" hidden>
+<h2>{{exp_title}}</h2>
+<p class="hint" id="exp-what"></p>
+<div class="row">
+<button class="button act" type="button" data-export="stl">STL</button>
+<button class="button secondary act" type="button" data-export="3mf">3MF</button>
+<button class="button secondary act" type="button" data-export="obj">OBJ</button>
+</div>
+<p class="notice" id="exp-msg" hidden></p>
+</div>
+
+</div>
+</div>
+
+<div class="panel" id="p-files" hidden>
+<h2>{{files_title}}</h2>
+<p class="hint">{{files_hint}}</p>
+<div class="table-scroll">
+<table class="result" id="files">
+<thead><tr><th scope="col">{{js_col_name}}</th><th scope="col" class="num">X (mm)</th><th scope="col" class="num">Y (mm)</th><th scope="col" class="num">Z (mm)</th><th scope="col" class="num">{{js_col_volume}}</th><th scope="col" class="num">{{js_col_triangles}}</th><th scope="col">{{js_col_issues}}</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<div class="row">
+<button class="button secondary" type="button" id="dl-xlsx">{{files_xlsx}}</button>
+<button class="button secondary" type="button" id="dl-csv">{{files_csv}}</button>
+</div>
+</div>

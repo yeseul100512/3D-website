@@ -1,0 +1,82 @@
+<link rel="stylesheet" href="{{root}}assets/tools/stl-cutter/cutter.css">
+<div class="tool-grid">
+<div class="viewer" id="viewer"><p id="viewer-empty">{{viewer_empty}}</p></div>
+<div class="controls">
+<div class="panel">
+<label class="dropzone" id="drop">
+<input type="file" id="file" accept=".stl,.3mf,.obj">
+<strong>{{drop_title}}</strong>
+<span>{{drop_hint}}</span>
+</label>
+<p class="notice" id="msg" hidden></p>
+<button class="button secondary" id="partial" type="button" hidden>{{js_load_partial}}</button>
+<p id="info" hidden></p>
+<p class="notice warn" id="open" hidden><span id="open-text"></span> <a href="../stl-inspector/">{{inspector_link}}</a></p>
+</div>
+<form class="panel" id="form" novalidate>
+<fieldset class="cut-set">
+<legend>{{bed_legend}}</legend>
+<div class="fields">
+<div class="field"><label for="bed-x">{{bed_x}}</label><input id="bed-x" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+<div class="field"><label for="bed-y">{{bed_y}}</label><input id="bed-y" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+<div class="field"><label for="bed-z">{{bed_z}}</label><input id="bed-z" type="number" inputmode="decimal" value="200" min="1" max="10000" step="any" required></div>
+</div>
+<div class="field"><label for="margin">{{margin}}</label><input id="margin" type="number" inputmode="decimal" value="2" min="0" max="1000" step="any" required><small>{{margin_hint}}</small></div>
+</fieldset>
+<fieldset class="cut-set">
+<legend>{{orient_legend}}</legend>
+<label class="check"><input type="radio" name="orient" value="keep" checked> {{orient_keep}}</label>
+<label class="check"><input type="radio" name="orient" value="auto"> {{orient_auto}}</label>
+<small>{{orient_hint}}</small>
+</fieldset>
+<fieldset class="cut-set">
+<legend>{{count_legend}}</legend>
+<label class="check"><input type="radio" name="count" value="auto" checked> {{count_auto}}</label>
+<label class="check"><input type="radio" name="count" value="manual"> {{count_manual}}</label>
+<div class="fields" id="manual" hidden>
+<div class="field"><label for="n-x">{{n_x}}</label><input id="n-x" type="number" inputmode="numeric" value="2" min="1" max="20" step="1" required></div>
+<div class="field"><label for="n-y">{{n_y}}</label><input id="n-y" type="number" inputmode="numeric" value="1" min="1" max="20" step="1" required></div>
+<div class="field"><label for="n-z">{{n_z}}</label><input id="n-z" type="number" inputmode="numeric" value="1" min="1" max="20" step="1" required></div>
+</div>
+</fieldset>
+<fieldset class="cut-set">
+<legend>{{joint_legend}}</legend>
+<label class="check"><input type="radio" name="joint" value="teeth" checked> {{joint_teeth}}</label>
+<label class="check"><input type="radio" name="joint" value="flat"> {{joint_flat}}</label>
+<div id="teeth" class="cut-set">
+<div class="fields">
+<div class="field"><label for="tooth-w">{{tooth_w}}</label><input id="tooth-w" type="number" inputmode="decimal" value="15" min="0" max="500" step="any" required></div>
+<div class="field"><label for="tooth-d">{{tooth_d}}</label><input id="tooth-d" type="number" inputmode="decimal" value="4" min="0.5" max="50" step="any" required></div>
+<div class="field"><label for="tooth-gap">{{tooth_gap}}</label><input id="tooth-gap" type="number" inputmode="decimal" value="0.3" min="0" max="2" step="any" required></div>
+</div>
+<small>{{tooth_hint}}</small>
+</div>
+</fieldset>
+<div class="cut-actions">
+<button class="button" id="run" type="submit" disabled>{{run}}</button>
+<button class="button secondary" id="cancel" type="button" hidden>{{cancel}}</button>
+</div>
+<p class="notice" id="status" hidden></p>
+</form>
+</div>
+</div>
+<div class="panel cut-out" id="out" hidden>
+<h2>{{out_heading}}</h2>
+<p id="summary"></p>
+<p class="notice warn" id="warn" hidden></p>
+<label class="check" id="explode-row"><input type="checkbox" id="explode"> {{explode}}</label>
+<h3>{{map_heading}}</h3>
+<p class="lead">{{map_hint}}</p>
+<div class="cut-map" id="map"></div>
+<div class="table-scroll">
+<table class="result">
+<caption>{{table_caption}}</caption>
+<thead><tr><th scope="col">{{col_piece}}</th><th scope="col">{{col_size}}</th><th scope="col">{{col_fit}}</th><th scope="col">{{col_file}}</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+<div class="cut-actions">
+<button class="button" id="zip" type="button">{{zip}}</button>
+<button class="button secondary" id="map-save" type="button">{{map_save}}</button>
+</div>
+</div>

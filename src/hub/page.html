@@ -1,0 +1,29 @@
+<h1>{{h1}}</h1>
+<p class="lead">{{intro}}</p>
+<p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>{{privacy_note}}</p>
+<div class="field search" id="search" hidden>
+<label for="q">{{search_label}}</label>
+<input type="search" id="q" placeholder="{{search_placeholder}}" autocomplete="off">
+</div>
+<ul class="cards" id="cards">
+{{cards}}
+</ul>
+<p class="notice" id="none" role="status" hidden>{{no_results}}</p>
+<script>
+// Without JavaScript the search box stays hidden and the list is simply complete.
+(function () {
+  var q = document.getElementById('q');
+  var items = document.querySelectorAll('#cards > li');
+  document.getElementById('search').hidden = false;
+  q.addEventListener('input', function () {
+    var words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    var shown = 0;
+    items.forEach(function (li) {
+      var text = li.textContent.toLowerCase();
+      li.hidden = !words.every(function (w) { return text.indexOf(w) >= 0; });
+      if (!li.hidden) shown++;
+    });
+    document.getElementById('none').hidden = shown > 0;
+  });
+})();
+</script>

@@ -1,0 +1,473 @@
+{
+  "name": { "ko": "채움(인필) 설정 추천", "en": "Infill Recommender", "ja": "インフィル設定おすすめ", "zh": "填充设置推荐" },
+  "card": {
+    "ko": "출력물의 용도와 하중에 맞춰 Bambu Studio의 채움 패턴, 채움 밀도, 벽 수, 윗면·아랫면 층 수를 추천합니다.",
+    "en": "Answer a few questions and get a Bambu Studio infill pattern, density, wall loops and top/bottom layers for your part.",
+    "ja": "造形物の用途と荷重に合わせて、Bambu Studio の充填パターン・充填密度・壁面層数・トップ面/底面層数をおすすめします。",
+    "zh": "根据打印件的用途和受力情况，推荐 Bambu Studio 的填充图案、填充密度、墙层数和顶部/底部层数。"
+  },
+  "formats": { "ko": "파일 불필요", "en": "No file needed", "ja": "ファイル不要", "zh": "无需文件" },
+  "title": {
+    "ko": "Bambu Studio 채움 설정 추천 – 패턴, 밀도, 벽 수",
+    "en": "Bambu Studio Infill Recommender – pattern, density and walls",
+    "ja": "Bambu Studio インフィル設定おすすめ – パターン・密度・壁面層数",
+    "zh": "Bambu Studio 填充设置推荐 – 图案、密度与墙层数"
+  },
+  "description": {
+    "ko": "출력물의 용도, 하중 방향, 재료를 고르면 Bambu Studio의 내부채움 패턴, 밀도, 벽 수, 윗면·아랫면 층 수와 그 이유를 바로 알려 드립니다. 가입 없이 브라우저에서 무료로 쓸 수 있습니다.",
+    "en": "Pick what the part is for, how it is loaded and the material, and get a Bambu Studio sparse infill pattern, density, wall loops and shell layers with the reason for each. Free, no sign-up, runs in your browser.",
+    "ja": "用途・荷重の向き・材料を選ぶだけで、Bambu Studio の充填パターン、密度、壁面層数、トップ面/底面層数とその理由がすぐに分かります。登録不要、ブラウザーだけで無料で使えます。",
+    "zh": "选择打印件的用途、受力方向和材料，即可得到 Bambu Studio 的稀疏填充图案、密度、墙层数、顶部/底部层数以及每项的理由。免费、无需注册，在浏览器中运行。"
+  },
+  "h1": { "ko": "채움(인필) 설정 추천", "en": "Infill Recommender", "ja": "インフィル設定おすすめ", "zh": "填充设置推荐" },
+  "intro": {
+    "ko": "질문 몇 가지에 답하면 Bambu Studio에 바로 입력할 수 있는 채움 패턴, 밀도, 벽 수, 윗면·아랫면 층 수를 이유와 함께 알려 드립니다. 측정값이 아니라 경험칙이며, 강도는 대개 채움 밀도보다 벽 수를 늘리는 쪽이 더 잘 올라갑니다.",
+    "en": "Answer a few questions and get an infill pattern, density, wall loops and top/bottom layers you can type straight into Bambu Studio, each with its reason. These are rules of thumb, not measurements, and more walls usually add more strength than more infill.",
+    "ja": "いくつかの質問に答えると、Bambu Studio にそのまま入力できる充填パターン、密度、壁面層数、トップ面/底面層数を理由つきで表示します。実測値ではなく経験則で、強度はたいてい充填密度より壁面層数を増やすほうがよく上がります。",
+    "zh": "回答几个问题，即可得到能直接填入 Bambu Studio 的填充图案、密度、墙层数和顶部/底部层数，并附上每项的理由。这些是经验法则而非实测数据；想提高强度，增加墙层数通常比提高填充密度更有效。"
+  },
+
+  "what_1": {
+    "ko": "출력물이 무엇에 쓰이는지, 어느 방향으로 어떤 힘을 받는지, 재료와 우선순위가 무엇인지에 따라 Bambu Studio의 내부채움 패턴 하나와 대안 하나, 내부채움 밀도, 벽 수, 윗면·아랫면 층 수를 추천합니다. 항목마다 그렇게 고른 이유와, 결과가 마음에 들지 않을 때 무엇부터 바꿔야 하는지도 함께 보여 줍니다.",
+    "en": "Based on what the part is for, which way it is loaded, the material and your priority, the tool recommends one Bambu Studio sparse infill pattern plus an alternative, a sparse infill density, wall loops and top/bottom shell layers. Every value comes with its reason and with what to change first if the print does not turn out well.",
+    "ja": "造形物の用途、力のかかる向きと種類、材料、優先したいことに応じて、Bambu Studio の充填パターンを 1 つと代替案を 1 つ、充填密度、壁面層数、トップ面/底面層数をおすすめします。それぞれの値を選んだ理由と、うまくいかなかったときに最初に変えるべき設定もあわせて表示します。",
+    "zh": "工具会根据打印件的用途、受力的方向和类型、材料以及您的优先目标，推荐一种 Bambu Studio 稀疏填充图案和一种备选图案，以及稀疏填充密度、墙层数和顶部/底部壳体层数。每一项都附有理由，并说明打印效果不理想时应先改哪一项。"
+  },
+  "what_2": {
+    "ko": "패턴의 특성은 Bambu Lab 위키의 채움 패턴 소개 문서를 근거로 삼았고, 밀도·벽 수·층 수는 0.4 mm 노즐과 0.2 mm 레이어에서 널리 쓰이는 출발값입니다. 패턴과 설정 이름은 Bambu Studio의 한국어 화면에 나오는 표기에 영어 이름을 함께 적었습니다.",
+    "en": "Pattern characteristics follow the Bambu Lab wiki page on fill patterns. The density, wall and layer numbers are widely used starting points for a 0.4 mm nozzle and 0.2 mm layers. Pattern and setting names are the ones shown in the Bambu Studio interface.",
+    "ja": "パターンの特徴は Bambu Lab Wiki の充填パターン紹介ページに基づいています。密度・壁面層数・層数は、0.4 mm ノズルと積層ピッチ 0.2 mm で広く使われている出発点の値です。パターン名と設定名は Bambu Studio の日本語画面の表記に英語名を添えています。",
+    "zh": "图案特性依据 Bambu Lab Wiki 的《填充图案介绍》；密度、墙层数和层数则是 0.4 mm 喷嘴、0.2 mm 层高下常用的起始值。图案和设置名称采用 Bambu Studio 中文界面的写法，并附上英文名称。"
+  },
+  "how_1": {
+    "ko": "출력물의 용도를 고릅니다. 전시용인지, 생활용품인지, 힘을 받는 기능 부품인지에 따라 밀도와 벽 수의 범위가 정해집니다.",
+    "en": "Choose what the part is for. Display piece, household item or load-bearing part: this sets the range for density and walls.",
+    "ja": "造形物の用途を選びます。展示用か、日用品か、力のかかる機能部品かによって、密度と壁面層数の範囲が決まります。",
+    "zh": "选择打印件的用途。展示件、日用品还是受力的功能件，决定了密度和墙层数的范围。"
+  },
+  "how_2": {
+    "ko": "힘을 받는 방향과 종류를 고릅니다. 방향은 출력할 때 놓는 자세를 기준으로 하며, 잘 모르겠으면 '여러 방향'을 고르면 됩니다.",
+    "en": "Choose the direction and kind of load, relative to how the part sits on the build plate. If you are not sure, pick \"several directions\".",
+    "ja": "力のかかる向きと種類を選びます。向きは造形時の置き方が基準です。分からないときは「いろいろな方向」を選んでください。",
+    "zh": "选择受力的方向和类型，方向以打印时的摆放姿态为准。不确定时请选“多个方向”。"
+  },
+  "how_3": {
+    "ko": "재료, 우선순위, 크기를 고르고, 윗면이 매끄러워야 하면 체크합니다. 고를 때마다 추천이 바로 바뀝니다.",
+    "en": "Choose the material, your priority and the size, and tick the box if the top surface must look smooth. The recommendation updates with every change.",
+    "ja": "材料、優先したいこと、大きさを選び、上面をきれいに仕上げたい場合はチェックを入れます。選ぶたびにおすすめがすぐ更新されます。",
+    "zh": "选择材料、优先目标和尺寸；如果顶面需要平滑，请勾选对应选项。每次更改后推荐结果都会立即更新。"
+  },
+  "how_4": {
+    "ko": "표의 값을 Bambu Studio의 프로세스 → 강도 탭에 입력합니다. '결과 복사'를 누르면 이유와 주의할 점까지 글자로 복사됩니다.",
+    "en": "Enter the values under Process → Strength in Bambu Studio. \"Copy result\" copies everything, reasons and cautions included, as plain text.",
+    "ja": "表の値を Bambu Studio の「プロセス → 強度」タブに入力します。「結果をコピー」を押すと、理由と注意点も含めてテキストでコピーされます。",
+    "zh": "把表中的数值填入 Bambu Studio 的“工艺 → 强度”选项卡。点击“复制结果”可将理由和注意事项一并复制为纯文本。"
+  },
+  "limit_1": {
+    "ko": "Bambu Studio를 기준으로 한 경험칙이며 강도를 계산하거나 보증하지 않습니다. 어느 패턴이 몇 퍼센트 더 강한지 같은 수치는 근거가 없어 제시하지 않습니다. 정확한 비교가 필요하면 같은 조건으로 시편을 출력해 직접 시험해 주세요.",
+    "en": "These are rules of thumb for Bambu Studio. Nothing here calculates or guarantees strength, and we give no \"X % stronger\" figures because we have no data to back them. If an exact comparison matters, print test pieces under the same conditions and test them.",
+    "ja": "Bambu Studio を前提にした経験則であり、強度を計算したり保証したりするものではありません。「どのパターンが何 % 強い」といった数値は根拠がないため示していません。正確な比較が必要な場合は、同じ条件で試験片を造形して確かめてください。",
+    "zh": "这些是针对 Bambu Studio 的经验法则，不计算也不保证强度。由于没有数据支持，这里不给出“某图案强百分之几”之类的数字。如需精确比较，请在相同条件下打印试样并实际测试。"
+  },
+  "limit_2": {
+    "ko": "강도는 대개 채움 밀도보다 벽 수와 출력 방향의 영향이 더 큽니다. 하중이 층을 가로질러 당기는 방향이면 어떤 채움 설정으로도 해결되지 않으므로 출력 방향부터 바꿔야 합니다.",
+    "en": "Strength usually depends more on wall loops and print orientation than on infill density. If the load pulls the layers apart, no infill setting will fix it: change the orientation first.",
+    "ja": "強度はたいてい充填密度よりも壁面層数と造形の向きに左右されます。積層を引きはがす方向に力がかかる場合、どの充填設定でも解決できないため、まず造形の向きを変える必要があります。",
+    "zh": "强度通常更多取决于墙层数和打印方向，而不是填充密度。如果受力方向会把层与层拉开，任何填充设置都无法解决，必须先调整打印方向。"
+  },
+  "limit_3": {
+    "ko": "밀도·벽 수·층 수는 Bambu 위키에 나온 값이 아니라 FDM 출력에서 널리 쓰이는 출발값이며, 0.4 mm 노즐과 0.2 mm 레이어를 기준으로 합니다. 레이어 높이가 다르면 층 수 대신 윗면 두께 약 0.8~1.2 mm를 기준으로 환산해 주세요.",
+    "en": "The density, wall and layer numbers are not from the Bambu wiki; they are common FDM starting points for a 0.4 mm nozzle and 0.2 mm layers. With another layer height, aim for a top thickness of roughly 0.8–1.2 mm instead of a layer count.",
+    "ja": "密度・壁面層数・層数は Bambu Wiki に載っている値ではなく、FDM で広く使われている出発点で、0.4 mm ノズルと積層ピッチ 0.2 mm を前提にしています。積層ピッチが違う場合は、層数ではなく上面の厚さ約 0.8～1.2 mm を目安に換算してください。",
+    "zh": "密度、墙层数和层数并非出自 Bambu Wiki，而是 FDM 打印中常用的起始值，以 0.4 mm 喷嘴和 0.2 mm 层高为前提。层高不同时，请按顶面厚度约 0.8～1.2 mm 来换算，而不是照搬层数。"
+  },
+  "limit_4": {
+    "ko": "패턴 특성의 출처는 Bambu Lab 위키의 <a href=\"https://wiki.bambulab.com/en/software/bambu-studio/fill-patterns\" rel=\"noopener\">Fill Pattern Introduction</a>(영어)과 <a href=\"https://wiki.bambulab.com/zh/software/bambu-studio/fill-patterns\" rel=\"noopener\">填充图案介绍</a>(중국어)입니다. 어떤 용도에 어떤 패턴을 고를지는 그 내용을 바탕으로 정리한 의견이며 Bambu Lab의 공식 추천이 아닙니다.",
+    "en": "Pattern characteristics come from the Bambu Lab wiki page <a href=\"https://wiki.bambulab.com/en/software/bambu-studio/fill-patterns\" rel=\"noopener\">Fill Pattern Introduction</a> (also read in its <a href=\"https://wiki.bambulab.com/zh/software/bambu-studio/fill-patterns\" rel=\"noopener\">Chinese edition</a>). Which pattern suits which use is our reading of that page, not an official Bambu Lab recommendation.",
+    "ja": "パターンの特徴の出典は、Bambu Lab Wiki の <a href=\"https://wiki.bambulab.com/en/software/bambu-studio/fill-patterns\" rel=\"noopener\">Fill Pattern Introduction</a>（英語）と <a href=\"https://wiki.bambulab.com/zh/software/bambu-studio/fill-patterns\" rel=\"noopener\">填充图案介绍</a>（中国語）です。どの用途にどのパターンを選ぶかは、その内容をもとにまとめた見解であり、Bambu Lab の公式な推奨ではありません。",
+    "zh": "图案特性出自 Bambu Lab Wiki 的<a href=\"https://wiki.bambulab.com/zh/software/bambu-studio/fill-patterns\" rel=\"noopener\">《填充图案介绍》</a>（另参考了<a href=\"https://wiki.bambulab.com/en/software/bambu-studio/fill-patterns\" rel=\"noopener\">英文版</a>）。哪种用途选哪种图案，是依据该页面内容整理出的看法，并非 Bambu Lab 的官方推荐。",
+    "html": true
+  },
+  "limit_5": {
+    "ko": "패턴과 설정 이름은 Bambu Studio 02.08.02.61의 한국어 번역 파일에서 확인했습니다. 버전에 따라 표기가 다를 수 있어 영어 이름을 함께 적었습니다. PETG나 TPU 같은 다른 재료와 다른 슬라이서에 대한 주의사항은 다루지 않습니다.",
+    "en": "Pattern and setting names were checked against Bambu Studio 02.08.02.61. Names can differ between versions. Material notes cover PLA, ABS/ASA and carbon-fibre filaments only, and other slicers are not covered.",
+    "ja": "パターン名と設定名は Bambu Studio 02.08.02.61 の日本語翻訳ファイルで確認しました。バージョンによって表記が異なることがあるため、英語名を併記しています。PETG や TPU などほかの材料や、ほかのスライサーについての注意点は扱っていません。",
+    "zh": "图案和设置名称已对照 Bambu Studio 02.08.02.61 的简体中文翻译文件核实。不同版本的写法可能不同，因此同时标注了英文名称。PETG、TPU 等其他材料以及其他切片软件的注意事项不在本工具范围内。"
+  },
+
+  "faq_1_q": {
+    "ko": "채움 밀도를 올리면 더 튼튼해지나요?",
+    "en": "Does a higher infill density make the part stronger?",
+    "ja": "充填密度を上げれば丈夫になりますか？",
+    "zh": "提高填充密度就能更结实吗？"
+  },
+  "faq_1_a": {
+    "ko": "어느 정도는 그렇지만, 같은 재료를 쓴다면 벽 수를 먼저 늘리는 편이 대개 효과가 큽니다. 그래서 이 도구는 밀도를 범위의 낮은 쪽에서 시작하고, 강도가 부족하면 벽 수부터 늘리도록 안내합니다.",
+    "en": "Somewhat, but for the same amount of filament, adding wall loops first usually does more. That is why this tool starts density at the low end of its range and tells you to add walls first when the part is too weak.",
+    "ja": "ある程度は丈夫になりますが、同じ量の材料を使うなら、先に壁面層数を増やすほうがたいてい効果的です。そのためこのツールでは、密度は範囲の低いほうから始め、強度が足りなければまず壁面層数を増やすよう案内しています。",
+    "zh": "有一定作用，但在耗材用量相同的情况下，先增加墙层数通常更有效。因此本工具让密度从范围的低端起步，强度不够时建议先加墙层数。"
+  },
+  "faq_2_q": {
+    "ko": "100%로 꽉 채우고 싶으면 어떻게 하나요?",
+    "en": "What if I want 100 % infill?",
+    "ja": "100 % で完全に埋めたい場合は？",
+    "zh": "想用 100% 填充怎么办？"
+  },
+  "faq_2_a": {
+    "ko": "Bambu 위키에 따르면 100% 밀도는 동심(Concentric), 직선(Rectilinear), 정렬된 직선(Aligned Rectilinear), 힐베르트 곡선(Hilbert Curve), 아르키메데스 코드(Archimedean Chords), 옥타그램 나선형(Octagram Spiral)의 여섯 가지 패턴만 지원합니다. 다만 실제로는 100%로 채우는 것보다 벽 수를 크게 늘리는 편이 대부분 낫습니다.",
+    "en": "According to the Bambu wiki, only six patterns support 100 % density: Concentric, Rectilinear, Aligned Rectilinear, Hilbert Curve, Archimedean Chords and Octagram Spiral. In practice, a large number of wall loops is usually the better choice.",
+    "ja": "Bambu Wiki によると、密度 100 % に対応しているのは、同心（Concentric）、直線（Rectilinear）、整列直線（Aligned Rectilinear）、ヒルベルト曲線（Hilbert Curve）、アルキメデス螺旋（Archimedean Chords）、オクタグラムスパイラル（Octagram Spiral）の 6 種類だけです。ただし実際には、100 % で埋めるより壁面層数を大きく増やすほうがよい場合がほとんどです。",
+    "zh": "根据 Bambu Wiki，只有六种图案支持 100% 密度：同心（Concentric）、直线（Rectilinear）、直线排列（Aligned Rectilinear）、希尔伯特曲线（Hilbert Curve）、阿基米德螺旋（Archimedean Chords）和八角螺旋（Octagram Spiral）。不过实际打印中，大幅增加墙层数通常比 100% 填充更好。"
+  },
+  "faq_3_q": {
+    "ko": "추천된 패턴이 Bambu Studio 목록에 없습니다.",
+    "en": "The recommended pattern is not in my Bambu Studio list.",
+    "ja": "おすすめされたパターンが Bambu Studio の一覧にありません。",
+    "zh": "推荐的图案在我的 Bambu Studio 列表里找不到。"
+  },
+  "faq_3_a": {
+    "ko": "2D 격자(2D Lattice)와 잠긴 재그(Locked Zag)는 비교적 최근 버전에 추가된 패턴입니다. Bambu Studio를 최신 버전으로 업데이트하거나, 함께 표시되는 대안 패턴을 사용해 주세요.",
+    "en": "2D Lattice and Locked Zag were added in fairly recent versions. Update Bambu Studio, or use the alternative pattern shown with the result.",
+    "ja": "2Dラティス（2D Lattice）とロックされたザグ（Locked Zag）は比較的新しいバージョンで追加されたパターンです。Bambu Studio を最新版に更新するか、あわせて表示される代替パターンをお使いください。",
+    "zh": "二维晶格（2D Lattice）和 Locked Zag 是较新版本才加入的图案。请将 Bambu Studio 更新到最新版本，或使用结果中给出的备选图案。"
+  },
+  "faq_4_q": {
+    "ko": "어느 패턴이 가장 강한가요?",
+    "en": "Which pattern is the strongest?",
+    "ja": "いちばん強いパターンはどれですか？",
+    "zh": "哪种图案最结实？"
+  },
+  "faq_4_a": {
+    "ko": "하중 방향에 따라 다릅니다. 옆에서 미는 힘에는 삼육각형(Tri-hexagon), 위에서 누르는 힘에는 각도를 작게 잡은 2D 격자(2D Lattice), 여러 방향의 힘에는 자이로이드(Gyroid)나 큐빅(Cubic)이 맞습니다. 패턴끼리 몇 퍼센트 차이가 나는지는 근거 자료가 없어 제시하지 않습니다.",
+    "en": "It depends on the load. Tri-hexagon suits side shear, 2D Lattice with a small angle suits compression from above, and Gyroid or Cubic suit loads from several directions. We do not give percentage differences between patterns because we have no data for them.",
+    "ja": "力のかかる向きによって変わります。横からのせん断には六角形（Tri-hexagon）、上からの圧縮には角度を小さくした 2Dラティス（2D Lattice）、いろいろな方向からの力にはジャイロイド（Gyroid）やキュービック（Cubic）が向いています。パターン同士で何 % 差があるかは、根拠となるデータがないため示していません。",
+    "zh": "要看受力方向。侧向剪切适合内六边形（Tri-hexagon），自上而下的压缩适合小角度的二维晶格（2D Lattice），多个方向受力则适合螺旋体（Gyroid）或立方体（Cubic）。各图案之间相差百分之几，因为没有数据依据，这里不提供。"
+  },
+
+  "q_heading": { "ko": "출력물에 대해 알려 주세요", "en": "Tell us about the part", "ja": "造形物について教えてください", "zh": "请描述您的打印件" },
+  "q_use": { "ko": "용도", "en": "What is it for?", "ja": "用途", "zh": "用途" },
+  "use_display": { "ko": "전시·장식용", "en": "Display or decoration", "ja": "展示・装飾用", "zh": "展示、装饰" },
+  "use_visible": { "ko": "투명 재료이거나 채움이 겉으로 보임", "en": "Transparent, or infill left visible", "ja": "透明材料、または充填を見せる", "zh": "透明材料或填充外露" },
+  "use_household": { "ko": "일반 생활용품", "en": "Everyday household item", "ja": "一般的な日用品", "zh": "普通日用品" },
+  "use_functional": { "ko": "힘을 받는 기능 부품", "en": "Functional, load-bearing part", "ja": "力のかかる機能部品", "zh": "受力的功能件" },
+  "use_heavy": { "ko": "고하중 부품·나사 체결부", "en": "Heavy load or screw joints", "ja": "高荷重部品・ねじ締結部", "zh": "高负载件、螺丝连接处" },
+  "q_load": { "ko": "받는 힘", "en": "Load", "ja": "かかる力", "zh": "受力情况" },
+  "load_none": { "ko": "거의 받지 않음", "en": "Hardly any", "ja": "ほとんどかからない", "zh": "几乎不受力" },
+  "load_all": { "ko": "여러 방향, 또는 잘 모름", "en": "Several directions, or not sure", "ja": "いろいろな方向、または不明", "zh": "多个方向，或不确定" },
+  "load_side": { "ko": "옆에서 밀거나 당김(전단)", "en": "Pushed or pulled sideways (shear)", "ja": "横から押す・引く（せん断）", "zh": "侧向推拉（剪切）" },
+  "load_top": { "ko": "위에서 누름(압축)", "en": "Pressed from above (compression)", "ja": "上から押さえる（圧縮）", "zh": "自上而下受压（压缩）" },
+  "load_impact": { "ko": "충격, 또는 휘지 않아야 함", "en": "Impact, or must stay stiff", "ja": "衝撃、またはたわませたくない", "zh": "冲击，或要求不易变形" },
+  "load_z": { "ko": "층을 떼어 내는 방향으로 당김", "en": "Pulled so the layers separate", "ja": "積層をはがす方向に引っ張る", "zh": "沿层间分离方向拉扯" },
+  "load_hint": {
+    "ko": "방향은 출력할 때 놓는 자세가 기준입니다. '위'는 층이 쌓이는 방향입니다.",
+    "en": "Directions are relative to how the part sits on the plate; \"above\" is the direction the layers stack.",
+    "ja": "向きは造形時の置き方が基準です。「上」は層が積み重なる方向です。",
+    "zh": "方向以打印时的摆放姿态为准，“上”指层叠加的方向。"
+  },
+  "q_material": { "ko": "재료", "en": "Material", "ja": "材料", "zh": "材料" },
+  "mat_cf": { "ko": "CF(탄소 섬유) 강화 계열", "en": "Carbon-fibre reinforced (CF)", "ja": "CF（カーボンファイバー）強化系", "zh": "CF（碳纤维）增强类" },
+  "mat_other": { "ko": "그 밖의 재료", "en": "Something else", "ja": "その他の材料", "zh": "其他材料" },
+  "q_priority": { "ko": "가장 중요한 것", "en": "Top priority", "ja": "いちばん重視すること", "zh": "最看重的一点" },
+  "pri_strength": { "ko": "강도", "en": "Strength", "ja": "強度", "zh": "强度" },
+  "pri_speed": { "ko": "출력 시간", "en": "Print time", "ja": "造形時間", "zh": "打印时间" },
+  "pri_weight": { "ko": "무게·재료 절약", "en": "Low weight, less filament", "ja": "軽さ・材料の節約", "zh": "轻量、节省耗材" },
+  "pri_surface": { "ko": "표면 품질", "en": "Surface quality", "ja": "表面の仕上がり", "zh": "表面质量" },
+  "q_size": { "ko": "크기와 형상", "en": "Size and shape", "ja": "大きさと形", "zh": "尺寸与形状" },
+  "size_normal": { "ko": "작거나 보통", "en": "Small or medium", "ja": "小さめ～ふつう", "zh": "较小或中等" },
+  "size_large": { "ko": "큼(속이 넓음)", "en": "Large, with a lot of interior", "ja": "大きい（内部が広い）", "zh": "较大（内部空间大）" },
+  "size_flat": { "ko": "크고 윗면이 넓고 평평함", "en": "Large with a wide, flat top", "ja": "大きく、上面が広くて平ら", "zh": "较大且顶面宽而平" },
+  "q_top": { "ko": "윗면이 매끄러워야 합니다", "en": "The top surface must look smooth", "ja": "上面をきれいに仕上げたい", "zh": "顶面需要平滑美观" },
+
+  "r_heading": { "ko": "추천 설정", "en": "Recommended settings", "ja": "おすすめ設定", "zh": "推荐设置" },
+  "th_setting": { "ko": "Bambu Studio 설정", "en": "Bambu Studio setting", "ja": "Bambu Studio の設定", "zh": "Bambu Studio 设置" },
+  "th_value": { "ko": "추천값과 이유", "en": "Value and reason", "ja": "おすすめの値と理由", "zh": "推荐值与理由" },
+  "row_pattern": { "ko": "내부채움 패턴 (Sparse infill pattern)", "en": "Sparse infill pattern", "ja": "充填パターン (Sparse infill pattern)", "zh": "稀疏填充图案 (Sparse infill pattern)" },
+  "row_density": { "ko": "내부채움 밀도 (Sparse infill density)", "en": "Sparse infill density", "ja": "充填密度 (Sparse infill density)", "zh": "稀疏填充密度 (Sparse infill density)" },
+  "row_walls": { "ko": "벽 수 (Wall loops)", "en": "Wall loops", "ja": "壁面層数 (Wall loops)", "zh": "墙层数 (Wall loops)" },
+  "row_top": { "ko": "상단 레이어 (Top shell layers)", "en": "Top shell layers", "ja": "トップ面層数 (Top shell layers)", "zh": "顶部壳体层数 (Top shell layers)" },
+  "row_bottom": { "ko": "하단 쉘 레이어 (Bottom shell layers)", "en": "Bottom shell layers", "ja": "底面層数 (Bottom shell layers)", "zh": "底部壳体层数 (Bottom shell layers)" },
+  "row_toppattern": { "ko": "상단 표면 패턴 (Top surface pattern)", "en": "Top surface pattern", "ja": "トップ面パターン (Top surface pattern)", "zh": "顶面图案 (Top surface pattern)" },
+  "path_note": {
+    "ko": "설정 위치: Bambu Studio의 프로세스 → 강도 (Process → Strength)",
+    "en": "Where to find them: Process → Strength in Bambu Studio",
+    "ja": "設定の場所: Bambu Studio の「プロセス → 強度」(Process → Strength)",
+    "zh": "设置位置：Bambu Studio 的“工艺 → 强度”(Process → Strength)"
+  },
+  "notes_heading": { "ko": "주의할 점", "en": "Cautions", "ja": "注意点", "zh": "注意事项" },
+  "fixes_heading": { "ko": "결과가 좋지 않을 때 바꿀 것", "en": "If it does not work out", "ja": "うまくいかないときに変える設定", "zh": "效果不理想时该改什么" },
+  "basis_note": {
+    "ko": "측정값이 아니라 Bambu Studio용 경험칙입니다. 0.4 mm 노즐과 0.2 mm 레이어를 기준으로 하며, 강도는 대개 채움 밀도보다 벽 수를 늘리는 쪽이 더 잘 올라갑니다.",
+    "en": "Rules of thumb for Bambu Studio, not measurements. They assume a 0.4 mm nozzle and 0.2 mm layers, and more walls usually add more strength than more infill.",
+    "ja": "実測値ではなく、Bambu Studio 向けの経験則です。0.4 mm ノズルと積層ピッチ 0.2 mm を前提にしており、強度はたいてい充填密度より壁面層数を増やすほうがよく上がります。",
+    "zh": "这些是针对 Bambu Studio 的经验法则，并非实测数据。以 0.4 mm 喷嘴和 0.2 mm 层高为前提；想提高强度，增加墙层数通常比提高填充密度更有效。"
+  },
+  "copy_btn": { "ko": "결과 복사", "en": "Copy result", "ja": "結果をコピー", "zh": "复制结果" },
+
+  "js_copy_title": { "ko": "Bambu Studio 채움 추천 설정", "en": "Recommended Bambu Studio infill settings", "ja": "Bambu Studio インフィルおすすめ設定", "zh": "Bambu Studio 填充推荐设置" },
+  "js_copied": { "ko": "결과를 복사했습니다.", "en": "Result copied.", "ja": "結果をコピーしました。", "zh": "结果已复制。" },
+  "js_copy_failed": {
+    "ko": "복사하지 못했습니다. 결과를 직접 선택해서 복사해 주세요.",
+    "en": "Could not copy. Please select the result and copy it yourself.",
+    "ja": "コピーできませんでした。結果を選択して手動でコピーしてください。",
+    "zh": "复制失败，请手动选中结果后复制。"
+  },
+  "js_start": { "ko": "{v}에서 시작", "en": "start at {v}", "ja": "まずは {v} から", "zh": "先从 {v} 开始" },
+  "js_alt": { "ko": "대안: {name}. {why}", "en": "Alternative: {name}. {why}", "ja": "代替案: {name}。{why}", "zh": "备选：{name}。{why}" },
+  "js_monotonic": { "ko": "모노토닉 (Monotonic)", "en": "Monotonic", "ja": "単調 (Monotonic)", "zh": "单调 (Monotonic)" },
+  "js_default": { "ko": "기본값 그대로", "en": "Leave the default", "ja": "既定値のまま", "zh": "保持默认" },
+  "js_r_monotonic": {
+    "ko": "한 방향으로만 고르게 출력해 넓고 평평한 윗면이 직선 패턴보다 매끄럽게 나옵니다.",
+    "en": "Printed with even lines in one direction, so a large flat top comes out smoother than with Rectilinear.",
+    "ja": "一方向に均一な線で造形するため、広く平らな上面が直線パターンよりなめらかに仕上がります。",
+    "zh": "以均匀的线条单向打印，宽而平的顶面比直线图案更平滑。"
+  },
+  "js_r_default": {
+    "ko": "윗면 품질이 중요하지 않다면 바꿀 필요가 없습니다.",
+    "en": "No need to change it when the look of the top surface does not matter.",
+    "ja": "上面の仕上がりを重視しないなら、変更する必要はありません。",
+    "zh": "如果不在意顶面效果，无需更改。"
+  },
+  "js_r_density": {
+    "ko": "이 용도에서 널리 쓰이는 출발값입니다. 낮은 쪽에서 시작해 주세요.",
+    "en": "A common starting range for this kind of part. Begin at the low end.",
+    "ja": "この用途で広く使われている出発点です。低いほうから始めてください。",
+    "zh": "这是此类用途常用的起始范围，请从低端开始。"
+  },
+  "js_r_walls": {
+    "ko": "이 용도에서 널리 쓰이는 출발값입니다. 강도는 대개 채움 밀도보다 벽 수의 영향이 큽니다.",
+    "en": "A common starting range for this kind of part. Walls usually matter more for strength than infill density.",
+    "ja": "この用途で広く使われている出発点です。強度はたいてい充填密度より壁面層数の影響が大きくなります。",
+    "zh": "这是此类用途常用的起始范围。对强度而言，墙层数的影响通常大于填充密度。"
+  },
+  "js_r_walls_strength": {
+    "ko": "강도가 우선이므로 범위의 위쪽에서 시작합니다. 채움 밀도보다 벽 수를 늘리는 편이 재료 대비 효과가 큽니다.",
+    "en": "Strength comes first, so start at the top of the range. Adding walls gives more strength per gram than adding infill.",
+    "ja": "強度を優先するため、範囲の上限から始めます。充填密度を上げるより壁面層数を増やすほうが、材料あたりの効果が大きくなります。",
+    "zh": "以强度为先，因此从范围的上限开始。与提高填充密度相比，增加墙层数在同样耗材下效果更好。"
+  },
+  "js_r_top": {
+    "ko": "0.2 mm 레이어 기준입니다. 레이어 높이가 다르면 윗면 두께 약 0.8~1.2 mm에 맞춰 환산해 주세요.",
+    "en": "For 0.2 mm layers. With another layer height, aim for a top thickness of roughly 0.8–1.2 mm.",
+    "ja": "積層ピッチ 0.2 mm が前提です。積層ピッチが違う場合は、上面の厚さ約 0.8～1.2 mm を目安に換算してください。",
+    "zh": "以 0.2 mm 层高为前提。层高不同时，请按顶面厚度约 0.8～1.2 mm 换算。"
+  },
+  "js_r_top_extra": {
+    "ko": "채움이 성겨 윗면 아래를 받쳐 주는 선이 적으므로 1~2층을 더했습니다. 0.2 mm 레이어 기준입니다.",
+    "en": "Includes 1–2 extra layers because the sparse infill gives the top little support. For 0.2 mm layers.",
+    "ja": "充填がまばらで上面を支える線が少ないため、1～2 層多くしています。積層ピッチ 0.2 mm が前提です。",
+    "zh": "填充稀疏，对顶面的支撑较少，因此多加了 1～2 层。以 0.2 mm 层高为前提。"
+  },
+  "js_r_bottom": {
+    "ko": "이 용도에서 널리 쓰이는 출발값입니다. 0.2 mm 레이어 기준입니다.",
+    "en": "A common starting value for this kind of part. For 0.2 mm layers.",
+    "ja": "この用途で広く使われている出発点です。積層ピッチ 0.2 mm が前提です。",
+    "zh": "这是此类用途常用的起始值。以 0.2 mm 层高为前提。"
+  },
+
+  "js_p_gyroid": { "ko": "자이로이드 (Gyroid)", "en": "Gyroid", "ja": "ジャイロイド (Gyroid)", "zh": "螺旋体 (Gyroid)" },
+  "js_p_cubic": { "ko": "큐빅 (Cubic)", "en": "Cubic", "ja": "キュービック (Cubic)", "zh": "立方体 (Cubic)" },
+  "js_p_adaptivecubic": { "ko": "어댑티브 큐빅 (Adaptive Cubic)", "en": "Adaptive Cubic", "ja": "アダプティブ キュービック (Adaptive Cubic)", "zh": "自适应立方体 (Adaptive Cubic)" },
+  "js_p_lightning": { "ko": "번개 (Lightning)", "en": "Lightning", "ja": "ライトニング (Lightning)", "zh": "闪电 (Lightning)" },
+  "js_p_concentric": { "ko": "동심 (Concentric)", "en": "Concentric", "ja": "同心 (Concentric)", "zh": "同心 (Concentric)" },
+  "js_p_lockedzag": { "ko": "잠긴 재그 (Locked Zag)", "en": "Locked Zag", "ja": "ロックされたザグ (Locked Zag)", "zh": "Locked Zag" },
+  "js_p_grid": { "ko": "그리드 (Grid)", "en": "Grid", "ja": "グリッド (Grid)", "zh": "网格 (Grid)" },
+  "js_p_crosshatch": { "ko": "크로스 해치 (Cross Hatch)", "en": "Cross Hatch", "ja": "クロスハッチ (Cross Hatch)", "zh": "交叉层叠 (Cross Hatch)" },
+  "js_p_trihexagon": { "ko": "삼육각형 (Tri-hexagon)", "en": "Tri-hexagon", "ja": "六角形 (Tri-hexagon)", "zh": "内六边形 (Tri-hexagon)" },
+  "js_p_lattice_small": {
+    "ko": "2D 격자 (2D Lattice), 격자 각도 1·2는 0~45°",
+    "en": "2D Lattice, lattice angles 1 and 2 at 0–45°",
+    "ja": "2Dラティス (2D Lattice)、ラティス角度 1・2 は 0～45°",
+    "zh": "二维晶格 (2D Lattice)，晶格角度 1、2 取 0～45°"
+  },
+  "js_p_lattice_large": {
+    "ko": "2D 격자 (2D Lattice), 격자 각도 1·2는 45~75°",
+    "en": "2D Lattice, lattice angles 1 and 2 at 45–75°",
+    "ja": "2Dラティス (2D Lattice)、ラティス角度 1・2 は 45～75°",
+    "zh": "二维晶格 (2D Lattice)，晶格角度 1、2 取 45～75°"
+  },
+  "js_p_honeycomb": { "ko": "벌집 (Honeycomb)", "en": "Honeycomb", "ja": "ハニカム (Honeycomb)", "zh": "蜂窝 (Honeycomb)" },
+  "js_p_honeycomb3d": { "ko": "3D 허니컴 (3D Honeycomb)", "en": "3D Honeycomb", "ja": "3D ハニカム (3D Honeycomb)", "zh": "3D 蜂窝 (3D Honeycomb)" },
+
+  "js_why_gyroid": {
+    "ko": "모든 방향을 고르게 받쳐 주고, 한 층 안에서 선이 교차하지 않아 비교적 빠르게 출력됩니다. 대신 슬라이싱이 오래 걸리고 G코드 파일이 커집니다.",
+    "en": "Supports the part well in every direction, and with no crossing lines inside a layer it prints fairly fast. Slicing takes longer and the G-code file is larger.",
+    "ja": "あらゆる方向をしっかり支え、同じ層の中で線が交差しないため比較的速く造形できます。そのかわりスライスに時間がかかり、G コードのファイルが大きくなります。",
+    "zh": "各个方向都有良好支撑，同一层内线条不交叉，打印速度较快；但切片时间更长，G-code 文件也更大。"
+  },
+  "js_why_cubic": {
+    "ko": "X·Y·Z 세 방향의 강도가 고르고, 강도와 출력 효율의 균형이 좋습니다.",
+    "en": "Gives fairly even strength along X, Y and Z, with a good balance between strength and print efficiency.",
+    "ja": "X・Y・Z の 3 方向で強度が均一に近く、強度と造形効率のバランスに優れています。",
+    "zh": "X、Y、Z 三个方向的强度较为均匀，在强度和打印效率之间取得了良好平衡。"
+  },
+  "js_why_adaptivecubic": {
+    "ko": "큐빅과 비슷하지만 벽에서 먼 안쪽은 밀도를 자동으로 낮춥니다. 재료와 시간을 아끼면서도 윗면 아래는 받쳐 주어 윗면이 꺼지지 않게 합니다.",
+    "en": "Like Cubic, but it lowers the density automatically away from the walls. It saves filament and time while still supporting the top so it does not sag.",
+    "ja": "キュービックに似ていますが、壁から離れた内側ほど密度を自動的に下げます。材料と時間を節約しながら上面の下はしっかり支え、上面の落ち込みを防ぎます。",
+    "zh": "与立方体类似，但会自动降低远离外墙区域的密度。既节省耗材和时间，又能稳定支撑顶面，避免顶面塌陷。"
+  },
+  "js_why_lightning": {
+    "ko": "윗면을 받치는 데 필요한 만큼만 채워 시간과 재료를 크게 아낍니다. 설정한 밀도는 윗면 바로 아래층에만 적용됩니다.",
+    "en": "Fills only what is needed to hold up the top surface, saving a lot of time and filament. The density you set applies only to the layer just below the top.",
+    "ja": "上面を支えるのに必要な分だけを充填するため、時間と材料を大きく節約できます。設定した密度は上面のすぐ下の層にだけ適用されます。",
+    "zh": "只填充支撑顶面所需的部分，可大幅节省时间和耗材。所设密度仅作用于顶面正下方的那一层。"
+  },
+  "js_why_concentric": {
+    "ko": "벽을 안쪽으로 줄여 가며 고리 모양으로 채우기 때문에 투명 재료에서 보기 좋습니다. 수평 방향 하중에는 약합니다.",
+    "en": "Fills with loops that follow the walls inward, which looks good in transparent filament. It is weak against horizontal loads.",
+    "ja": "壁を内側へ縮めた輪の形で充填するため、透明材料できれいに見えます。水平方向の荷重には弱くなります。",
+    "zh": "以外墙向内收缩形成的环状线条填充，用透明材料打印时效果美观；但对水平方向的受力较弱。"
+  },
+  "js_why_lockedzag": {
+    "ko": "채움을 겉면으로 드러내는 경우를 위해 만든 무늬로, 외관과 구조 강도를 함께 고려한 패턴입니다.",
+    "en": "A texture designed for prints where the infill is the outer surface; it balances appearance and structural strength.",
+    "ja": "充填を外側の面として見せる場合のために作られた模様で、見た目と構造強度の両方を考慮したパターンです。",
+    "zh": "专为把填充当作外表面的场景设计的纹理图案，兼顾外观和结构强度。"
+  },
+  "js_why_grid": {
+    "ko": "가장 단순하고 빠른 패턴 가운데 하나입니다. 다만 교차점에 재료가 조금 쌓입니다.",
+    "en": "One of the simplest and fastest patterns, though a little material builds up where the lines cross.",
+    "ja": "もっとも単純で速いパターンのひとつです。ただし交点に材料が少したまります。",
+    "zh": "最简单、最快的图案之一，不过交叉点处会有少量材料堆积。"
+  },
+  "js_why_crosshatch": {
+    "ko": "일정 높이 동안 같은 방향을 유지해 방향 전환이 적고 출력이 빠릅니다. 힘을 받지 않는 부품과 빠른 출력에 맞습니다.",
+    "en": "Keeps the same direction over a range of layers, so there are fewer direction changes and the print is quick. Suited to non-load-bearing parts and fast prints.",
+    "ja": "一定の高さのあいだ同じ向きを保つため、方向転換が少なく速く造形できます。力のかからない部品や手早い造形に向いています。",
+    "zh": "在一定层高范围内保持同一填充方向，减少换向，打印更快。适合非承重零件和快速打印。"
+  },
+  "js_why_trihexagon": {
+    "ko": "세 방향의 평행선이 교차해 어느 수평 방향으로도 전단에 잘 버팁니다. 벽과 이어지는 선이 짧아 냉각 부족으로 생기는 휨도 줄여 줍니다.",
+    "en": "Three sets of crossing lines resist shear very well in every horizontal direction, and the short lines to the walls reduce warping from poor cooling.",
+    "ja": "3 方向の平行線が交差し、水平のどの方向のせん断にもよく耐えます。壁につながる線が短いため、冷却不足による反りも抑えられます。",
+    "zh": "三组平行线相互交叉，在各个水平方向上都有出色的抗剪能力；与外墙相连的线段较短，也能减少冷却不足引起的翘曲。"
+  },
+  "js_why_lattice_small": {
+    "ko": "격자 각도를 작게 잡으면 내부 구조가 수직에 가깝게 서서, 위에서 누르는 힘에 잘 버팁니다.",
+    "en": "Small lattice angles make the internal structure stand more upright, which resists weight pressing down from above.",
+    "ja": "ラティス角度を小さくすると内部構造が垂直に近くなり、上から押さえる力によく耐えます。",
+    "zh": "晶格角度取小值时，内部结构更接近直立，更能承受自上而下的压力。"
+  },
+  "js_why_lattice_large": {
+    "ko": "격자 각도를 크게 잡으면 내부 구조가 납작하게 누워, 옆에서 밀거나 당기는 힘에 잘 버팁니다.",
+    "en": "Large lattice angles make the internal structure flatter, which resists being pushed or pulled from the side.",
+    "ja": "ラティス角度を大きくすると内部構造が寝た形になり、横から押したり引いたりする力によく耐えます。",
+    "zh": "晶格角度取大值时，内部结构更趋扁平，更能抵抗侧向的推拉。"
+  },
+  "js_why_honeycomb": {
+    "ko": "육각형 칸으로 교차 없이 채워 강성과 충격 저항을 크게 높입니다. 다른 패턴보다 재료가 약 25% 더 들고 시간도 늘어납니다.",
+    "en": "Hexagonal cells without crossings greatly improve rigidity and impact resistance. It uses about 25 % more material than other patterns and takes longer.",
+    "ja": "六角形のセルを交差なしで並べ、剛性と耐衝撃性を大きく高めます。ほかのパターンより材料が約 25 % 多く必要で、時間も長くなります。",
+    "zh": "以无交叉的六边形单元填充，可显著提高刚性和抗冲击性；但耗材比其他图案多约 25%，耗时也更长。"
+  },
+  "js_why_honeycomb3d": {
+    "ko": "벌집보다 밀도가 낮아 더 빨리 출력되고, Z 방향으로 경로를 바꿔 가며 쌓아 층간 연결이 좋습니다.",
+    "en": "Less dense than Honeycomb, so it prints faster, and its path shifts along Z, which improves the bond between layers.",
+    "ja": "ハニカムより密度が低いぶん速く造形でき、Z 方向に経路を変えながら積むため層間のつながりがよくなります。",
+    "zh": "密度低于蜂窝，打印更快；路径沿 Z 轴不断变化，层间连接更好。"
+  },
+
+  "js_n_z": {
+    "ko": "층을 떼어 내는 방향으로 걸리는 힘은 채움 설정으로 해결되지 않습니다. 힘이 층과 나란히 걸리도록 출력 방향부터 바꿔 주세요.",
+    "en": "Infill cannot fix a load that pulls the layers apart. Reorient the part first so the force runs along the layers.",
+    "ja": "積層をはがす方向の力は、充填の設定では解決できません。力が層に沿ってかかるよう、まず造形の向きを変えてください。",
+    "zh": "会把层与层拉开的受力无法靠填充设置解决。请先调整打印方向，让受力沿着层的方向。"
+  },
+  "js_n_concentric_weak": {
+    "ko": "동심(Concentric)은 수평 방향 하중에 약하므로, 힘을 받는 출력물에는 대안으로만 두었습니다.",
+    "en": "Concentric is weak against horizontal loads, so it is listed only as the alternative for a loaded part.",
+    "ja": "同心（Concentric）は水平方向の荷重に弱いため、力のかかる造形物では代替案にとどめています。",
+    "zh": "同心（Concentric）对水平方向受力较弱，因此对受力的打印件只作为备选。"
+  },
+  "js_n_lightning_weak": {
+    "ko": "번개(Lightning)는 강도가 사실상 없습니다. 조금이라도 힘을 받는다면 어댑티브 큐빅(Adaptive Cubic)을 써 주세요.",
+    "en": "Lightning has practically no strength. If the part takes any force at all, use Adaptive Cubic.",
+    "ja": "ライトニング（Lightning）には強度がほとんどありません。少しでも力がかかるなら、アダプティブ キュービック（Adaptive Cubic）を使ってください。",
+    "zh": "闪电（Lightning）几乎没有强度。只要打印件会受到一点力，就请改用自适应立方体（Adaptive Cubic）。"
+  },
+  "js_n_honeycomb_cost": {
+    "ko": "벌집(Honeycomb)은 재료가 약 25% 더 들고 출력 시간도 늘어납니다. 가볍게 만들려면 3D 허니컴(3D Honeycomb)이 대안입니다.",
+    "en": "Honeycomb uses about 25 % more material and takes longer to print. 3D Honeycomb is the lighter alternative.",
+    "ja": "ハニカム（Honeycomb）は材料が約 25 % 多く必要で、造形時間も長くなります。軽くしたい場合は 3D ハニカム（3D Honeycomb）が代替案です。",
+    "zh": "蜂窝（Honeycomb）耗材多约 25%，打印时间也更长。想更轻便，可改用 3D 蜂窝（3D Honeycomb）。"
+  },
+  "js_n_new_pattern": {
+    "ko": "2D 격자(2D Lattice)와 잠긴 재그(Locked Zag)는 비교적 최근 버전에 추가된 패턴입니다. 목록에 없으면 Bambu Studio를 업데이트해 주세요.",
+    "en": "2D Lattice and Locked Zag were added in fairly recent versions. If they are missing from the list, update Bambu Studio.",
+    "ja": "2Dラティス（2D Lattice）とロックされたザグ（Locked Zag）は比較的新しいバージョンで追加されたパターンです。一覧にない場合は Bambu Studio を更新してください。",
+    "zh": "二维晶格（2D Lattice）和 Locked Zag 是较新版本才加入的图案。如果列表中没有，请更新 Bambu Studio。"
+  },
+  "js_n_modifier": {
+    "ko": "나사 구멍이나 인서트 주변처럼 힘이 몰리는 곳은 전체 밀도를 올리지 말고, 수정자(Modifier)로 그 부분만 벽 수나 채움 밀도를 높여 주세요. 진동이나 반복 체결이 있으면 열 압입 인서트도 권합니다.",
+    "en": "Where force concentrates, such as around screw holes and inserts, do not raise the density of the whole part: use a modifier to add walls or infill there only. With vibration or repeated fastening, heat-set inserts are worth using too.",
+    "ja": "ねじ穴やインサートの周囲など力が集中する場所は、全体の密度を上げるのではなく、モディファイア（Modifier）でその部分だけ壁面層数や充填密度を上げてください。振動や繰り返しの締結がある場合は、熱圧入インサートもおすすめです。",
+    "zh": "螺丝孔、嵌件周围等受力集中的部位，不要提高整体密度，而应使用修改器（Modifier）只增加该处的墙层数或填充密度。若存在振动或需要反复拆装，建议同时使用热熔螺母。"
+  },
+  "js_n_abs": {
+    "ko": "ABS·ASA는 잘 휘는 재료입니다. 개방형 프린터에서는 휨과 층 갈라짐 위험이 커지므로 밀폐형 프린터를 권합니다. 선이 교차하지 않는 자이로이드(Gyroid)는 휜 채움 끝에 노즐이 걸리는 일을 줄여 줍니다.",
+    "en": "ABS and ASA warp easily. An open-frame printer raises the risk of warping and layer splitting, so an enclosed printer is recommended. Gyroid has no crossings, which makes the nozzle less likely to catch on curled infill.",
+    "ja": "ABS・ASA は反りやすい材料です。開放型のプリンターでは反りや層割れの危険が大きくなるため、密閉型のプリンターをおすすめします。線が交差しないジャイロイド（Gyroid）なら、反った充填の端にノズルが引っかかりにくくなります。",
+    "zh": "ABS、ASA 容易翘曲。开放式打印机上翘曲和层间开裂的风险更高，建议使用封闭式打印机。螺旋体（Gyroid）线条不交叉，可减少喷嘴刮到翘起填充的情况。"
+  },
+  "js_n_abs_flat": {
+    "ko": "크고 평평한 ABS·ASA 부품은 채움 밀도를 과하게 올리면 내부 수축 응력이 커질 수 있습니다. 밀도는 낮게 두고 벽 수로 강도를 확보해 주세요.",
+    "en": "On a large, flat ABS or ASA part, too much infill can increase internal shrinkage stress. Keep the density low and get the strength from walls.",
+    "ja": "大きく平らな ABS・ASA の部品では、充填密度を上げすぎると内部の収縮応力が大きくなることがあります。密度は低めにして、壁面層数で強度を確保してください。",
+    "zh": "又大又平的 ABS、ASA 零件，填充密度过高可能使内部收缩应力增大。请保持较低密度，靠墙层数来保证强度。"
+  },
+  "js_n_cf": {
+    "ko": "CF 강화 필라멘트는 노즐을 마모시키므로 경화강 노즐을 쓰고 있는지 확인해 주세요. 층간 결합이 상대적으로 약하니, 하중이 층을 가로지르지 않도록 출력 방향을 먼저 점검해 주세요.",
+    "en": "Carbon-fibre filament is abrasive: check that you are using a hardened steel nozzle. Its layer bonding is relatively weak, so check the orientation first and keep the load from crossing the layers.",
+    "ja": "CF 強化フィラメントはノズルを摩耗させるため、焼入れ鋼ノズルを使っているか確認してください。層間の結合が比較的弱いので、荷重が層を横切らないよう、まず造形の向きを見直してください。",
+    "zh": "CF 增强耗材会磨损喷嘴，请确认使用的是硬化钢喷嘴。其层间结合相对较弱，请先检查打印方向，避免受力横穿各层。"
+  },
+  "js_n_gyroid_vibration": {
+    "ko": "자이로이드(Gyroid)는 밀도가 높고 속도가 빠르면 진동이 커질 수 있습니다.",
+    "en": "Gyroid can cause strong vibration at high density and high speed.",
+    "ja": "ジャイロイド（Gyroid）は、密度が高く速度が速いと振動が大きくなることがあります。",
+    "zh": "螺旋体（Gyroid）在高密度、高速打印时可能产生明显振动。"
+  },
+  "js_n_grid_scrape": {
+    "ko": "그리드(Grid)는 교차점에 재료가 쌓여, 고속 출력에서 노즐이 긁히는 소리가 날 수 있습니다.",
+    "en": "Grid builds up material at its crossings, so the nozzle may scrape and make noise at high speed.",
+    "ja": "グリッド（Grid）は交点に材料がたまるため、高速造形ではノズルがこすれる音がすることがあります。",
+    "zh": "网格（Grid）的交叉点会堆积材料，高速打印时喷嘴可能刮擦并发出异响。"
+  },
+
+  "js_f_weak": {
+    "ko": "강도가 부족하면 채움 밀도보다 벽 수를 먼저 늘려 주세요. 그래도 부족하면 밀도를 범위의 위쪽으로 올립니다.",
+    "en": "Too weak: add wall loops before infill. If that is still not enough, raise the density toward the top of its range.",
+    "ja": "強度が足りない場合は、充填密度より先に壁面層数を増やしてください。それでも足りなければ、密度を範囲の上限に近づけます。",
+    "zh": "强度不够：先增加墙层数，而不是填充密度。仍然不够时，再把密度调向范围的上限。"
+  },
+  "js_f_display_force": {
+    "ko": "출력물이 눌리거나 부서지면 패턴을 어댑티브 큐빅(Adaptive Cubic)으로 바꿔 주세요.",
+    "en": "The part dents or breaks: switch the pattern to Adaptive Cubic.",
+    "ja": "造形物がへこんだり割れたりする場合は、パターンをアダプティブ キュービック（Adaptive Cubic）に変えてください。",
+    "zh": "打印件被压凹或碎裂：请把图案改为自适应立方体（Adaptive Cubic）。"
+  },
+  "js_f_top_sag": {
+    "ko": "윗면이 꺼지거나 구멍이 보이면 윗면 층을 1~2층 늘려 주세요.",
+    "en": "The top surface sags or shows holes: add 1–2 top shell layers.",
+    "ja": "上面が落ち込んだり穴が見えたりする場合は、トップ面層数を 1～2 層増やしてください。",
+    "zh": "顶面塌陷或出现孔洞：将顶部壳体层数增加 1～2 层。"
+  },
+  "js_f_noise": {
+    "ko": "진동이나 긁히는 소리가 나면 다른 설정보다 먼저 내부채움 속도만 낮춰 보세요(속도 탭의 내부채움).",
+    "en": "Vibration or scraping noise: lower only the sparse infill speed first (Speed tab, Sparse infill).",
+    "ja": "振動やこすれる音がする場合は、ほかの設定より先に充填の速度だけを下げてみてください（「速度」タブの「スパース インフィル」）。",
+    "zh": "出现振动或刮擦声：先只降低稀疏填充的速度（“速度”选项卡中的“稀疏填充”）。"
+  },
+  "js_f_warp": {
+    "ko": "모서리가 들뜨거나 층이 갈라지면 밀폐형 프린터에서 출력하고, 채움 밀도는 낮추고 벽 수로 강도를 확보해 주세요.",
+    "en": "Corners lift or layers split: print in an enclosed printer, lower the infill density and get the strength from walls.",
+    "ja": "角が浮いたり層が割れたりする場合は、密閉型のプリンターで造形し、充填密度を下げて壁面層数で強度を確保してください。",
+    "zh": "边角翘起或层间开裂：请在封闭式打印机中打印，降低填充密度，并靠墙层数保证强度。"
+  },
+  "js_f_layer_split": {
+    "ko": "층을 따라 쪼개지면 채움 설정이 아니라 출력 방향을 바꿔야 합니다.",
+    "en": "The part splits along the layers: change the print orientation, not the infill.",
+    "ja": "層に沿って割れる場合は、充填の設定ではなく造形の向きを変える必要があります。",
+    "zh": "沿层间裂开：需要调整的是打印方向，而不是填充设置。"
+  }
+}

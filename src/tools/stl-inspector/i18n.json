@@ -1,0 +1,833 @@
+{
+  "formats": "STL · 3MF · OBJ",
+  "name": {
+    "ko": "STL/3MF 검사·수리",
+    "en": "STL/3MF Check & Repair",
+    "ja": "STL/3MF チェック・修復",
+    "zh": "STL/3MF 检查与修复"
+  },
+  "card": {
+    "ko": "구멍이나 뒤집힌 면 같은 메시 문제를 찾아 위치를 보여 주고, 고를 것만 골라 고칩니다. 크기와 베드 적합 여부를 확인하고 다른 형식이나 엑셀로 저장할 수 있습니다.",
+    "en": "Find holes, flipped faces and other mesh problems, see where they are, and fix only what you choose. Also checks size and bed fit and saves to another format or to Excel.",
+    "ja": "穴や裏返った面などメッシュの問題を見つけて場所を表示し、選んだものだけを修復します。サイズやベッドに収まるかも確認でき、別形式や Excel に保存できます。",
+    "zh": "找出孔洞、翻转面等网格问题并显示位置，只修复您选中的部分；还能检查尺寸、确认打印机能否放下，并另存为其他格式或 Excel。"
+  },
+  "title": {
+    "ko": "STL·3MF 검사 및 수리 – 메시 오류, 크기, 베드 적합 확인",
+    "en": "STL & 3MF Checker and Repair – mesh errors, size and bed fit",
+    "ja": "STL・3MF チェック＆修復 – メッシュエラー、サイズ、ベッド適合の確認",
+    "zh": "STL / 3MF 检查与修复 – 网格错误、尺寸与打印范围"
+  },
+  "description": {
+    "ko": "STL, 3MF, OBJ 파일의 구멍, 비다양체 모서리, 뒤집힌 면을 찾아 3D로 위치를 보여 주고, 고를 것만 골라 수리합니다. 크기와 베드 적합 여부 확인, 형식 변환, 엑셀 저장까지 가입 없이 브라우저에서 무료로 쓸 수 있으며 파일은 서버로 전송되지 않습니다.",
+    "en": "Find holes, non-manifold edges and flipped faces in STL, 3MF and OBJ files, see them in 3D and repair only what you choose. Checks size and bed fit, converts formats and exports to Excel. Free, in your browser, no upload.",
+    "ja": "STL・3MF・OBJ ファイルの穴、非多様体エッジ、裏返った面を見つけて 3D で場所を表示し、選んだものだけを修復します。サイズとベッド適合の確認、形式変換、Excel 保存まで、登録不要・無料でブラウザーだけで使え、ファイルは送信されません。",
+    "zh": "找出 STL、3MF、OBJ 文件中的孔洞、非流形边和翻转面，在 3D 视图中显示位置，只修复您选中的部分。还可检查尺寸与打印范围、转换格式、导出 Excel。免费、无需注册，在浏览器中运行，文件不会上传。"
+  },
+  "h1": {
+    "ko": "STL/3MF 검사·수리",
+    "en": "STL/3MF Check & Repair",
+    "ja": "STL/3MF チェック・修復",
+    "zh": "STL/3MF 检查与修复"
+  },
+  "intro": {
+    "ko": "STL, 3MF, OBJ 파일을 넣으면 메시의 어디에 어떤 문제가 있는지(구멍, 비다양체 모서리, 뒤집힌 면) 먼저 보여 드립니다. 그다음 원하는 항목만 골라 고치고, 크기가 변하지 않았다는 것까지 확인할 수 있습니다.",
+    "en": "Drop STL, 3MF or OBJ files to see exactly what is wrong with a mesh and where: holes, non-manifold edges, flipped faces. Then fix only what you choose, with proof that the size did not change.",
+    "ja": "STL・3MF・OBJ ファイルを読み込むと、メッシュのどこにどんな問題があるか（穴、非多様体エッジ、裏返った面）をまず表示します。そのうえで直したい項目だけを選んで修復し、サイズが変わっていないことまで確認できます。",
+    "zh": "放入 STL、3MF 或 OBJ 文件，先看清网格哪里有什么问题（孔洞、非流形边、翻转面），再只修复您选中的项目，并确认尺寸没有改变。"
+  },
+  "what_1": {
+    "ko": "STL, 3MF, OBJ 파일을 읽어 크기(mm), 삼각형 수, 표면적, 부피, 분리된 셸 수를 알려 드립니다. 고른 프린터의 출력 범위에 그대로 들어가는지, 눕혀야 들어가는지, 얼마나 넘치는지 확인하고, 크기가 인치나 미터 단위로 저장된 것처럼 보이면 알려 드립니다.",
+    "en": "This tool reads STL, 3MF and OBJ files and reports their size in millimetres, triangle count, surface area, volume and number of separate shells. It checks whether the part fits your printer's build volume as it is, only when laid on another side, or by how much it is too big, and warns when the size looks like it was saved in inches or metres.",
+    "ja": "STL・3MF・OBJ ファイルを読み込み、サイズ（mm）、三角形数、表面積、体積、分離したシェルの数を表示します。選んだプリンターの造形範囲にそのまま収まるか、向きを変えれば収まるか、どれだけはみ出すかを確認し、インチやメートルで保存されたように見えるサイズのときはお知らせします。",
+    "zh": "本工具读取 STL、3MF 和 OBJ 文件，给出尺寸（毫米）、三角形数量、表面积、体积和独立壳体数量。它会检查零件能否直接放进所选打印机的成型范围、是否需要换个方向摆放，或者超出多少；如果尺寸看起来像是按英寸或米保存的，也会提醒您。"
+  },
+  "what_2": {
+    "ko": "이어서 슬라이서가 실패하거나 임의로 추측하게 만드는 문제를 찾습니다. 구멍 단위로 묶은 열린 모서리, 면이 셋 이상 만나는 모서리, 방향이 뒤집힌 면, 넓이가 0인 삼각형과 중복된 면, 읽을 수 없는 좌표, 중간에 잘린 파일입니다. 문제마다 개수와 출력에 미치는 영향을 쉬운 말로 설명하고, 버튼을 누르면 3D 화면에서 바로 그 부분을 강조해 확대합니다.",
+    "en": "It then looks for the problems that make slicers fail or guess: open edges grouped into holes, edges shared by more than two faces, faces pointing the wrong way, zero-area and duplicate triangles, unreadable coordinates and files that were cut off. Each one comes with a count, a short explanation of what it means for printing, and a button that highlights exactly those places in the 3D view and zooms to them.",
+    "ja": "続いて、スライサーが失敗したり勝手に推測したりする原因になる問題を探します。穴ごとにまとめた開いたエッジ、3 つ以上の面が共有するエッジ、向きが裏返った面、面積ゼロの三角形や重複した面、読み取れない座標、途中で切れたファイルです。問題ごとに件数と造形への影響をやさしい言葉で説明し、ボタンを押すと 3D ビューでその箇所だけを強調して拡大します。",
+    "zh": "接着查找会让切片软件出错或自行猜测的问题：按孔洞归组的开放边、被三个以上面共用的边、朝向翻转的面、面积为零的三角形和重复面、无法读取的坐标，以及被截断的文件。每种问题都给出数量和它对打印的影响说明，点一下按钮即可在 3D 视图中高亮并放大到对应位置。"
+  },
+  "what_3": {
+    "ko": "수리는 모두 선택 사항이며 항목별로 따로 적용합니다. 거의 같은 위치의 꼭짓점 합치기, 망가진 삼각형 제거, 면 방향을 바깥쪽으로 통일하기, 그리고 구멍을 하나씩 골라 막기입니다. 그래서 일부러 뚫어 둔 구멍은 그대로 둘 수 있습니다. 수리 후에는 다시 검사해 전후 수치를 비교하고, 바운딩 박스가 0.001 mm 이내로 그대로인지 보여 드립니다. 결과는 STL, 3MF, OBJ로 저장할 수 있어 형식 변환기로도 쓸 수 있고, 불러온 파일 전체의 표는 엑셀이나 CSV로 저장할 수 있습니다.",
+    "en": "Repairs are optional and separate: merge near-identical vertices, remove broken triangles, make faces point outward, and close holes one by one so that intended openings stay open. After a repair the check runs again and shows before and after counts, plus the bounding box compared to 0.001 mm. The result can be saved as STL, 3MF or OBJ, which also makes this a format converter, and the table of all loaded files can be saved as Excel or CSV.",
+    "ja": "修復はすべて任意で、項目ごとに個別に適用します。ほぼ同じ位置の頂点の結合、壊れた三角形の削除、面の向きを外向きにそろえる処理、そして穴を 1 つずつ選んでふさぐ処理です。意図して開けた穴はそのまま残せます。修復後は再チェックして前後の件数を比較し、バウンディングボックスが 0.001 mm 以内で変わっていないことを表示します。結果は STL・3MF・OBJ で保存できるので形式変換にも使え、読み込んだ全ファイルの一覧は Excel や CSV で保存できます。",
+    "zh": "所有修复都是可选的，并且逐项单独应用：合并几乎重合的顶点、删除损坏的三角形、把面的朝向统一为向外，以及逐个选择要封闭的孔洞，这样有意留出的开口可以保持不变。修复后会重新检查并对比前后数量，同时显示包围盒在 0.001 mm 精度内是否保持不变。结果可保存为 STL、3MF 或 OBJ，因此也可以当作格式转换器使用；所有已加载文件的表格可以保存为 Excel 或 CSV。"
+  },
+  "how_1": {
+    "ko": "STL, 3MF, OBJ 파일을 하나 또는 여러 개 끌어다 놓거나, 상자를 눌러 선택합니다.",
+    "en": "Drop one or more STL, 3MF or OBJ files on the box, or click it to choose them.",
+    "ja": "STL・3MF・OBJ ファイルを 1 つまたは複数、枠にドロップするか、クリックして選択します。",
+    "zh": "把一个或多个 STL、3MF、OBJ 文件拖到方框里，或点击方框选择文件。"
+  },
+  "how_2": {
+    "ko": "판정 문구와 크기를 확인합니다. 크기가 25.4배나 1000배쯤 어긋나 보이면 ‘단위 바꾸기’를 열어 한 번에 다시 맞춥니다.",
+    "en": "Read the verdict and the size. If the size looks wrong by a factor of 25.4 or 1000, open “Change units” and rescale with one click.",
+    "ja": "判定とサイズを確認します。サイズが 25.4 倍や 1000 倍ほどずれて見える場合は「単位を変更」を開き、ワンクリックで直します。",
+    "zh": "查看判定结果和尺寸。如果尺寸看起来差了 25.4 倍或 1000 倍，展开“更改单位”，一键重新缩放。"
+  },
+  "how_3": {
+    "ko": "프린터를 고르거나 출력 범위를 직접 입력해 들어가는지 확인합니다.",
+    "en": "Choose your printer, or enter a custom build volume, to see whether the part fits.",
+    "ja": "プリンターを選ぶか造形範囲を直接入力して、収まるかどうかを確認します。",
+    "zh": "选择打印机或手动输入成型范围，查看零件能否放下。"
+  },
+  "how_4": {
+    "ko": "‘발견된 문제’에서 항목 옆의 ‘보기’를 누르면 3D 화면에서 해당 부분이 강조되고 확대됩니다.",
+    "en": "In “Problems found”, press Show next to a problem to highlight it and zoom to it in the 3D view.",
+    "ja": "「見つかった問題」で項目の横にある「表示」を押すと、3D ビューでその箇所が強調され、拡大されます。",
+    "zh": "在“发现的问题”中点击某项旁边的“显示”，3D 视图会高亮并放大到该位置。"
+  },
+  "how_5": {
+    "ko": "수리하려면 원하는 항목과 막을 구멍만 선택하고 ‘선택한 수리 적용’을 누릅니다. 전후 비교 표를 확인하고, 마음에 들지 않으면 ‘수리 모두 취소’로 불러온 상태로 되돌립니다.",
+    "en": "To repair, tick only the fixes you want and the holes that should be closed, then press Apply. Compare the before and after table; Undo brings back the file as loaded.",
+    "ja": "修復するには、必要な項目とふさぎたい穴だけにチェックを入れて「選択した修復を適用」を押します。前後の比較表を確認し、気に入らなければ「修復をすべて取り消す」で読み込み時の状態に戻せます。",
+    "zh": "需要修复时，只勾选想要的修复项和要封闭的孔洞，然后点击“应用所选修复”。对照前后对比表，不满意可以用“撤销全部修复”恢复到加载时的状态。"
+  },
+  "how_6": {
+    "ko": "메시를 STL, 3MF, OBJ로 저장하거나, 전체 파일 표를 엑셀 또는 CSV로 저장합니다.",
+    "en": "Save the mesh as STL, 3MF or OBJ, or save the table of all files as Excel or CSV.",
+    "ja": "メッシュを STL・3MF・OBJ で保存するか、全ファイルの一覧を Excel または CSV で保存します。",
+    "zh": "把网格保存为 STL、3MF 或 OBJ，或把全部文件的表格保存为 Excel 或 CSV。"
+  },
+  "limit_1": {
+    "ko": "자기 교차(표면끼리 서로 뚫고 지나가는 부분), 두께가 없는 벽, 처음부터 잘못 설계된 모델은 고치지 못합니다. 이런 문제는 CAD나 모델링 프로그램에서 고쳐야 합니다.",
+    "en": "It cannot fix self-intersections (parts of the surface passing through each other), walls with no thickness, or a model that was designed wrong. Those have to be fixed in the CAD or sculpting program.",
+    "ja": "自己交差（表面どうしが突き抜けている部分）、厚みのない壁、設計そのものに誤りがあるモデルは修復できません。これらは CAD やモデリングソフトで直す必要があります。",
+    "zh": "无法修复自相交（表面互相穿过）、没有厚度的壁，以及本身设计有误的模型。这些问题需要回到 CAD 或建模软件中解决。"
+  },
+  "limit_2": {
+    "ko": "구멍은 그 구멍 테두리의 점만 사용해 평평한 면으로 막습니다. 작은 틈이나 평평한 구멍에는 잘 맞지만, 곡면에 난 구멍은 원래 곡면이 아니라 평평한 뚜껑으로 막힙니다. 모서리가 2,000개를 넘는 구멍과 닫히지 않는 테두리는 표시만 하고 막지 않습니다.",
+    "en": "Holes are closed with a flat patch made only from the hole's own edge points. That works for small gaps and flat openings; a hole in a curved surface gets a flat lid, not the missing curve. Holes with more than 2,000 edges and outlines that do not form a closed loop are reported but not closed.",
+    "ja": "穴は、その穴の縁の点だけを使った平らな面でふさぎます。小さなすき間や平らな開口には適していますが、曲面の穴は元の曲面ではなく平らなふたでふさがれます。エッジが 2,000 を超える穴と、閉じた輪にならない縁は、表示するだけでふさぎません。",
+    "zh": "孔洞只用其边缘上的点生成平面补片来封闭。这适合小缝隙和平面开口；曲面上的孔会被平盖封住，而不是还原原来的曲面。超过 2,000 条边的孔洞和不成闭合环的边界只会报告，不会封闭。"
+  },
+  "limit_3": {
+    "ko": "꼭짓점 합치기는 꼭짓점을 허용 오차만큼까지 움직일 수 있고, 허용 오차보다 작은 삼각형은 찌그러져 없어집니다. 허용 오차는 작게 유지해 주세요(기본값 0.001 mm).",
+    "en": "Merging vertices can move a vertex by up to the tolerance, and triangles smaller than the tolerance collapse, so keep the tolerance small (default 0.001 mm).",
+    "ja": "頂点の結合では、頂点が許容差の分まで動くことがあり、許容差より小さい三角形はつぶれてなくなります。許容差は小さく保ってください（初期値 0.001 mm）。",
+    "zh": "合并顶点时，顶点最多可能移动一个容差的距离，比容差更小的三角形会被压扁消失，因此请保持较小的容差（默认 0.001 mm）。"
+  },
+  "limit_4": {
+    "ko": "얇은 벽 수치는 표면에 고르게 뿌린 2만 개 표본으로 계산한 추정치이며 모든 벽을 잰 값이 아닙니다. 표본 사이의 얇은 부분은 놓칠 수 있고, 쐐기처럼 뾰족한 모서리 끝은 항상 얇게 나옵니다.",
+    "en": "The thin-wall figure is an estimate from 20,000 sample points, not a measurement of every wall. Thin spots between sample points can be missed, and the tips of sharp, wedge-shaped edges always count as thin.",
+    "ja": "薄い壁の数値は、表面に均等にまいた 2 万点のサンプルによる推定で、すべての壁を測った値ではありません。サンプルの間にある薄い箇所は見落とすことがあり、くさび状にとがったエッジの先端は必ず薄いと判定されます。",
+    "zh": "薄壁数值是根据表面上均匀分布的 2 万个采样点估算的，并非对每一处壁厚的测量。采样点之间的薄处可能被漏掉，而楔形尖锐边缘的尖端总会被判为过薄。"
+  },
+  "limit_5": {
+    "ko": "부피는 메시가 완전히 닫혀 있을 때만 믿을 수 있습니다. 그렇지 않으면 신뢰할 수 없다고 표시합니다.",
+    "en": "Volume is only reliable when the mesh is watertight; otherwise it is marked as not reliable.",
+    "ja": "体積は、メッシュが完全に閉じている場合にのみ信頼できます。そうでない場合は「信頼できない」と表示します。",
+    "zh": "只有网格完全封闭时体积才可靠，否则会标注为不可靠。"
+  },
+  "limit_6": {
+    "ko": "베드 적합 여부는 바운딩 박스를 축에 맞춰 눕히거나 세운 경우만 비교합니다. 대각선으로 놓는 경우는 계산하지 않으며, 브림·스커트·퍼지 영역도 고려하지 않습니다.",
+    "en": "Bed fit compares the bounding box in axis-aligned orientations only. It does not try diagonal placement and ignores brims, skirts and purge areas.",
+    "ja": "ベッド適合の判定は、バウンディングボックスを軸に沿って置いた向きだけで比較します。斜めに置く場合は計算せず、ブリム、スカート、パージ領域も考慮しません。",
+    "zh": "打印范围判断只比较包围盒沿坐标轴摆放的各个方向，不考虑斜放，也不考虑裙边、Brim 和擦料区域。"
+  },
+  "limit_7": {
+    "ko": "삼각형이 약 500만개를 넘으면 3D 화면을 끄고 수치만 보여 드리며, 얇은 벽 검사는 약 400만개를 넘으면 건너뜁니다. 얼마나 큰 파일까지 열리는지는 기기의 메모리에 따라 다릅니다.",
+    "en": "Above about 5 million triangles the 3D view is switched off and only the numbers are shown; the thin-wall check is skipped above about 4 million triangles. How large a file opens at all depends on your device's memory.",
+    "ja": "三角形が約 500 万個を超えると 3D ビューをオフにして数値のみを表示し、薄い壁のチェックは約 400 万個を超えるとスキップします。どこまで大きなファイルを開けるかは、端末のメモリによります。",
+    "zh": "三角形超过约 500 万个时会关闭 3D 视图，只显示数值；超过约 400 万个时跳过薄壁检查。能打开多大的文件取决于设备内存。"
+  },
+  "limit_8": {
+    "ko": "3MF는 형상만 읽습니다. 색상, 재질, 출력 설정, 플레이트 배치는 저장할 때 유지되지 않으며, 파일 안의 여러 오브젝트는 하나로 합쳐서 검사합니다.",
+    "en": "3MF: only the geometry is read. Colours, materials, print settings and plate layout are not kept when you save, and all objects in the file are checked together as one mesh.",
+    "ja": "3MF は形状だけを読み込みます。色、材料、印刷設定、プレート配置は保存時に引き継がれず、ファイル内の複数のオブジェクトは 1 つのメッシュとしてまとめてチェックします。",
+    "zh": "3MF 只读取几何形状。保存时不会保留颜色、材料、打印设置和盘面布局，文件中的多个对象会合并成一个网格一起检查。"
+  },
+  "faq_1_q": {
+    "ko": "파일이 서버로 업로드되나요?",
+    "en": "Is my file uploaded to a server?",
+    "ja": "ファイルはサーバーにアップロードされますか？",
+    "zh": "文件会上传到服务器吗？"
+  },
+  "faq_1_a": {
+    "ko": "아니요. 파일은 이 브라우저 안에서만 읽고 계산하며 어디로도 전송하지 않습니다. 대기열이나 시간 제한도 없습니다.",
+    "en": "No. The file is read and processed only inside your browser and is not sent anywhere. There is no queue and no time limit.",
+    "ja": "いいえ。ファイルはこのブラウザー内でのみ読み込んで処理し、どこにも送信しません。順番待ちや時間制限もありません。",
+    "zh": "不会。文件只在您的浏览器中读取和处理，不会发送到任何地方，也没有排队和时间限制。"
+  },
+  "faq_2_q": {
+    "ko": "슬라이서의 자동 수리와 무엇이 다른가요?",
+    "en": "Why not just use the slicer's automatic repair?",
+    "ja": "スライサーの自動修復と何が違いますか？",
+    "zh": "和切片软件的自动修复有什么不同？"
+  },
+  "faq_2_a": {
+    "ko": "자동 수리는 모든 것을 한꺼번에 고치고 무엇을 바꿨는지 알려 주지 않아서, 일부러 뚫어 둔 구멍이 막히거나 모양이 바뀌어도 알기 어렵습니다. 이 도구는 문제가 어디에 있는지 먼저 보여 주고, 고칠 항목을 직접 고르게 하며, 수리 후에는 전후 수치와 바운딩 박스 비교를 보여 드립니다.",
+    "en": "Automatic repair fixes everything at once and does not say what it changed, so intended openings can get filled and shapes can change without notice. Here you first see where each problem is, then choose the fixes yourself, and afterwards get the before and after counts and a bounding-box comparison.",
+    "ja": "自動修復はすべてを一度に直し、何を変えたかを教えてくれないため、意図して開けた穴がふさがれたり形が変わったりしても気づきにくくなります。このツールでは、まず問題の場所を確認し、直す項目を自分で選び、修復後に前後の件数とバウンディングボックスの比較を確認できます。",
+    "zh": "自动修复会一次性修掉所有问题，却不告诉您改了什么，有意留出的开口可能被填上，形状也可能在不知不觉中改变。本工具先让您看到每个问题的位置，再由您自己选择要修复的项目，修复后给出前后数量和包围盒的对比。"
+  },
+  "faq_3_q": {
+    "ko": "‘비다양체(non-manifold)’가 무슨 뜻인가요?",
+    "en": "What does “non-manifold” mean?",
+    "ja": "「非多様体（non-manifold）」とは何ですか？",
+    "zh": "“非流形（non-manifold）”是什么意思？"
+  },
+  "faq_3_a": {
+    "ko": "모서리 하나를 면이 셋 이상 함께 쓰는 상태입니다. 모서리에 얇은 날개가 붙어 있거나 두 물체가 모서리 하나로만 붙어 있을 때 생깁니다. 실제 입체는 모든 모서리에 면이 정확히 둘씩 만나므로, 슬라이서는 그 자리에서 어디가 안이고 밖인지 판단하지 못합니다.",
+    "en": "An edge shared by three or more faces, such as a fin attached to an edge or two bodies joined along a single edge. A real solid has exactly two faces on every edge, so the slicer cannot tell inside from outside at that spot.",
+    "ja": "1 本のエッジを 3 つ以上の面が共有している状態です。エッジに薄い羽根のような面が付いている場合や、2 つの立体が 1 本のエッジだけでつながっている場合に起こります。実際の立体ではどのエッジにも面がちょうど 2 つ接するため、スライサーはその場所で内側と外側を判断できません。",
+    "zh": "指一条边被三个或更多的面共用，例如边上多出一片薄片，或两个实体只沿一条边相连。真实的实体每条边恰好连接两个面，所以切片软件在这种位置无法分辨内外。"
+  },
+  "faq_4_q": {
+    "ko": "열린 모서리가 있다고 나오는데 출력은 잘 됩니다. 문제인가요?",
+    "en": "My model shows open edges but prints fine. Is that a problem?",
+    "ja": "開いたエッジがあると表示されますが、問題なく印刷できています。大丈夫ですか？",
+    "zh": "显示有开放边，但打印一直正常，这算问题吗？"
+  },
+  "faq_4_a": {
+    "ko": "대개는 아닙니다. 슬라이서가 작은 틈은 알아서 메우기 때문에, 가벼운 문제에는 ‘슬라이서가 자동으로 고칠 가능성이 높습니다’라고 판정합니다. 큰 구멍과 비다양체 모서리는 레이어가 빠지거나 구멍이 막히는 원인이 되므로, 그 부분은 슬라이스 미리보기를 확인해 주세요.",
+    "en": "Often not. Slicers close small gaps on their own, which is why minor issues get the verdict “a slicer will probably fix these”. Large holes and non-manifold edges are what cause missing layers or filled openings, so check the sliced preview at those spots.",
+    "ja": "多くの場合は問題ありません。スライサーは小さなすき間を自動でふさぐため、軽い問題は「スライサーが自動で直す可能性が高い」と判定します。大きな穴や非多様体エッジは層の欠けや開口のふさがりの原因になるので、その箇所はスライス後のプレビューで確認してください。",
+    "zh": "通常不算。切片软件会自行封闭小缝隙，所以轻微问题的判定是“切片软件很可能会自动修复”。大孔洞和非流形边才容易造成缺层或开口被填，请在切片预览中检查这些位置。"
+  },
+  "faq_5_q": {
+    "ko": "STL을 3MF나 OBJ로 변환할 수 있나요?",
+    "en": "Can it convert STL to 3MF or OBJ?",
+    "ja": "STL を 3MF や OBJ に変換できますか？",
+    "zh": "能把 STL 转成 3MF 或 OBJ 吗？"
+  },
+  "faq_5_a": {
+    "ko": "네. 파일을 불러온 뒤 ‘메시 저장’에서 원하는 형식을 누르면 됩니다. 수리를 적용하지 않아도 되며, 단위는 밀리미터입니다.",
+    "en": "Yes. Load the file and pick the other format under “Save mesh”. No repair has to be applied. Units are millimetres.",
+    "ja": "はい。ファイルを読み込み、「メッシュを保存」で保存したい形式を押すだけです。修復を適用する必要はなく、単位はミリメートルです。",
+    "zh": "可以。加载文件后，在“保存网格”中点击想要的格式即可，不必应用任何修复，单位为毫米。"
+  },
+  "faq_6_q": {
+    "ko": "크기가 25.4배(또는 1000배) 작게 나옵니다. 왜 그런가요?",
+    "en": "The size is 25.4 times (or 1,000 times) too small. Why?",
+    "ja": "サイズが 25.4 倍（または 1000 倍）小さく表示されます。なぜですか？",
+    "zh": "尺寸小了 25.4 倍（或 1000 倍），为什么？"
+  },
+  "faq_6_a": {
+    "ko": "STL 파일에는 단위 정보가 없습니다. 인치나 미터로 내보낸 파일도 밀리미터로 읽기 때문에 작게 나옵니다. ‘단위 바꾸기’에서 25.4나 1000을 곱한 뒤 다시 저장해 주세요.",
+    "en": "STL files carry no unit. A file exported in inches or metres is read as millimetres and comes out too small. Use “Change units” to multiply by 25.4 or 1,000, then save it again.",
+    "ja": "STL ファイルには単位の情報がありません。インチやメートルで書き出したファイルもミリメートルとして読み込まれるため、小さく表示されます。「単位を変更」で 25.4 または 1000 を掛けてから、保存し直してください。",
+    "zh": "STL 文件不带单位信息。按英寸或米导出的文件也会被当作毫米读取，所以显得很小。请在“更改单位”中乘以 25.4 或 1000，然后重新保存。"
+  },
+  "faq_7_q": {
+    "ko": "얼마나 큰 파일까지 열 수 있나요?",
+    "en": "How big a file can it open?",
+    "ja": "どのくらい大きなファイルまで開けますか？",
+    "zh": "最大能打开多大的文件？"
+  },
+  "faq_7_a": {
+    "ko": "150MB 바이너리 STL(삼각형 300만 개)은 일반 노트북에서 몇 초 안에 검사하고 3D로도 보여 드립니다. 500MB(삼각형 1,000만 개) 파일도 메모리가 넉넉한 데스크톱에서는 검사할 수 있지만 3D 화면 없이 수치만 표시합니다.",
+    "en": "A 150 MB binary STL (3 million triangles) is checked in a few seconds on an ordinary laptop, with the 3D view. A 500 MB file (10 million triangles) can be checked on a desktop with enough memory, but only with numbers, without the 3D view.",
+    "ja": "150 MB のバイナリ STL（三角形 300 万個）なら、一般的なノートパソコンで数秒でチェックでき、3D でも表示します。500 MB（三角形 1,000 万個）のファイルも、メモリに余裕のあるデスクトップならチェックできますが、3D ビューなしで数値のみの表示になります。",
+    "zh": "150 MB 的二进制 STL（300 万个三角形）在普通笔记本上几秒钟就能检查完，并显示 3D 视图。500 MB（1000 万个三角形）的文件在内存充足的台式机上也能检查，但只显示数值，不显示 3D 视图。"
+  },
+  "drop_title": {
+    "ko": "STL, 3MF, OBJ 파일을 끌어다 놓거나 눌러서 선택해 주세요",
+    "en": "Drop STL, 3MF or OBJ files here, or click to choose",
+    "ja": "STL・3MF・OBJ ファイルをドロップ、またはクリックして選択",
+    "zh": "将 STL、3MF 或 OBJ 文件拖到此处，或点击选择"
+  },
+  "drop_hint": {
+    "ko": "여러 파일을 한 번에 넣을 수 있습니다. 파일은 이 브라우저 안에서만 처리됩니다.",
+    "en": "Several files at once are fine. They stay in your browser.",
+    "ja": "複数のファイルをまとめて読み込めます。ファイルはブラウザー内だけで処理されます。",
+    "zh": "可以一次放入多个文件，文件只在浏览器中处理。"
+  },
+  "viewer_label": {
+    "ko": "모델 3D 화면. 끌어서 회전, Shift를 누른 채 끌어서 이동, 휠로 확대·축소합니다. 화살표 키로 회전, 더하기·빼기 키로 확대·축소, 0 키로 처음 시점으로 돌아갑니다.",
+    "en": "3D view of the model. Drag to rotate, Shift-drag to pan, scroll to zoom. Arrow keys rotate, plus and minus zoom, 0 resets the view.",
+    "ja": "モデルの 3D ビュー。ドラッグで回転、Shift を押しながらドラッグで移動、ホイールで拡大縮小します。矢印キーで回転、プラス・マイナスキーで拡大縮小、0 キーで視点をリセットします。",
+    "zh": "模型 3D 视图。拖动旋转，按住 Shift 拖动平移，滚轮缩放；方向键旋转，加号和减号键缩放，0 键重置视角。"
+  },
+  "view_reset": {
+    "ko": "시점 초기화",
+    "en": "Reset view",
+    "ja": "視点をリセット",
+    "zh": "重置视角"
+  },
+  "js_viewer_empty": {
+    "ko": "파일을 불러오면 여기에 모델이 표시됩니다.",
+    "en": "The model appears here once a file is loaded.",
+    "ja": "ファイルを読み込むと、ここにモデルが表示されます。",
+    "zh": "加载文件后，模型会显示在这里。"
+  },
+  "row_size": {
+    "ko": "크기 (X × Y × Z)",
+    "en": "Size (X × Y × Z)",
+    "ja": "サイズ (X × Y × Z)",
+    "zh": "尺寸 (X × Y × Z)"
+  },
+  "row_area": {
+    "ko": "표면적",
+    "en": "Surface area",
+    "ja": "表面積",
+    "zh": "表面积"
+  },
+  "row_format": {
+    "ko": "형식",
+    "en": "Format",
+    "ja": "形式",
+    "zh": "格式"
+  },
+  "js_row_triangles": {
+    "ko": "삼각형 수",
+    "en": "Triangles",
+    "ja": "三角形数",
+    "zh": "三角形数量"
+  },
+  "js_row_volume": {
+    "ko": "부피",
+    "en": "Volume",
+    "ja": "体積",
+    "zh": "体积"
+  },
+  "js_row_shells": {
+    "ko": "분리된 셸 수",
+    "en": "Separate shells",
+    "ja": "分離したシェル数",
+    "zh": "独立壳体数"
+  },
+  "js_row_holes": {
+    "ko": "구멍 수",
+    "en": "Holes",
+    "ja": "穴の数",
+    "zh": "孔洞数"
+  },
+  "js_volume_unreliable": {
+    "ko": "메시가 닫혀 있지 않아 신뢰할 수 없음",
+    "en": "not reliable: the mesh is not closed",
+    "ja": "メッシュが閉じていないため信頼できません",
+    "zh": "网格未封闭，数值不可靠"
+  },
+  "js_fmt_stl_binary": {
+    "ko": "STL (바이너리)",
+    "en": "STL (binary)",
+    "ja": "STL（バイナリ）",
+    "zh": "STL（二进制）"
+  },
+  "js_fmt_stl_ascii": {
+    "ko": "STL (ASCII)",
+    "en": "STL (ASCII)",
+    "ja": "STL（ASCII）",
+    "zh": "STL（ASCII）"
+  },
+  "js_fmt_obj": "OBJ",
+  "js_fmt_3mf": "3MF",
+  "js_analyzing": {
+    "ko": "{name} 검사 중…",
+    "en": "Checking {name}…",
+    "ja": "{name} をチェック中…",
+    "zh": "正在检查 {name}…"
+  },
+  "js_verdict_ok": {
+    "ko": "그대로 출력할 수 있습니다. 표면이 닫혀 있고 문제가 발견되지 않았습니다.",
+    "en": "Printable as it is: the surface is closed and no problems were found.",
+    "ja": "このまま印刷できます。表面は閉じており、問題は見つかりませんでした。",
+    "zh": "可以直接打印：表面封闭，未发现问题。"
+  },
+  "js_verdict_auto": {
+    "ko": "가벼운 문제가 있습니다. 슬라이서가 자동으로 고칠 가능성이 높지만, 슬라이스 미리보기를 확인해 주세요.",
+    "en": "Minor problems: a slicer will probably fix these automatically. Check the sliced preview.",
+    "ja": "軽い問題があります。スライサーが自動で直す可能性が高いですが、スライス後のプレビューを確認してください。",
+    "zh": "有轻微问题：切片软件很可能会自动修复，但请检查切片预览。"
+  },
+  "js_verdict_attention": {
+    "ko": "확인이 필요합니다. 출력하기 전에 아래 문제를 살펴봐 주세요.",
+    "en": "Needs attention: look at the problems below before printing.",
+    "ja": "確認が必要です。印刷する前に下の問題を確認してください。",
+    "zh": "需要注意：打印前请先查看下面的问题。"
+  },
+  "scale_title": {
+    "ko": "단위 바꾸기 (크기 다시 맞추기)",
+    "en": "Change units (rescale)",
+    "ja": "単位を変更（スケールし直す）",
+    "zh": "更改单位（重新缩放）"
+  },
+  "scale_hint": {
+    "ko": "STL 파일에는 단위 정보가 없습니다. 크기가 일정한 배수로 어긋나 있으면 모든 좌표에 값을 곱해 맞출 수 있습니다.",
+    "en": "STL files carry no unit. If the size is off by a fixed factor, multiply every coordinate:",
+    "ja": "STL ファイルには単位の情報がありません。サイズが一定の倍率でずれている場合は、すべての座標に倍率を掛けて直せます。",
+    "zh": "STL 文件不带单位信息。如果尺寸差了固定倍数，可以把所有坐标乘以相应的系数："
+  },
+  "scale_inch": {
+    "ko": "인치 → mm",
+    "en": "inch → mm",
+    "ja": "インチ → mm",
+    "zh": "英寸 → mm"
+  },
+  "scale_m": {
+    "ko": "m → mm",
+    "en": "m → mm",
+    "ja": "m → mm",
+    "zh": "米 → mm"
+  },
+  "js_scaled": {
+    "ko": "불러온 파일에서 × {factor} 배로 조정한 상태입니다.",
+    "en": "Scaled by × {factor} from the file as loaded.",
+    "ja": "読み込んだファイルから × {factor} 倍に変更しています。",
+    "zh": "已在加载文件的基础上缩放 × {factor} 倍。"
+  },
+  "js_hint_m": {
+    "ko": "가장 긴 변이 {size}밖에 되지 않습니다. 미터 단위로 저장된 파일일 수 있습니다. × 1000(인치라면 × 25.4)을 눌러 보세요.",
+    "en": "The longest side is only {size}. The file may have been saved in metres: try × 1000 (or × 25.4 for inches).",
+    "ja": "最も長い辺が {size} しかありません。メートル単位で保存されたファイルかもしれません。× 1000（インチなら × 25.4）をお試しください。",
+    "zh": "最长边只有 {size}。文件可能是按米保存的：请试试 × 1000（如果是英寸则 × 25.4）。"
+  },
+  "js_hint_inch": {
+    "ko": "가장 긴 변이 {size}밖에 되지 않습니다. 실제로 더 큰 부품이라면 인치 단위로 저장된 파일일 수 있습니다. × 25.4를 눌러 보세요.",
+    "en": "The longest side is only {size}. If the part should be bigger, the file may have been saved in inches: try × 25.4.",
+    "ja": "最も長い辺が {size} しかありません。本来もっと大きい部品なら、インチ単位で保存されたファイルかもしれません。× 25.4 をお試しください。",
+    "zh": "最长边只有 {size}。如果零件本应更大，文件可能是按英寸保存的：请试试 × 25.4。"
+  },
+  "js_hint_big": {
+    "ko": "가장 긴 변이 {size}입니다. 너무 크다면 마이크로미터 단위로 저장된 파일일 수 있습니다. × 0.001을 눌러 보세요.",
+    "en": "The longest side is {size}. If that is too big, the file may have been saved in micrometres: try × 0.001.",
+    "ja": "最も長い辺が {size} あります。大きすぎる場合は、マイクロメートル単位で保存されたファイルかもしれません。× 0.001 をお試しください。",
+    "zh": "最长边为 {size}。如果太大，文件可能是按微米保存的：请试试 × 0.001。"
+  },
+  "bed_title": {
+    "ko": "프린터에 들어가나요?",
+    "en": "Does it fit the printer?",
+    "ja": "プリンターに収まりますか？",
+    "zh": "打印机放得下吗？"
+  },
+  "bed_label": {
+    "ko": "프린터 출력 범위 (X × Y × Z mm)",
+    "en": "Printer build volume (X × Y × Z mm)",
+    "ja": "プリンターの造形範囲 (X × Y × Z mm)",
+    "zh": "打印机成型范围 (X × Y × Z mm)"
+  },
+  "bed_custom": {
+    "ko": "직접 입력…",
+    "en": "Custom size…",
+    "ja": "サイズを直接入力…",
+    "zh": "自定义尺寸…"
+  },
+  "bed_cut_link": {
+    "ko": "STL 분할 도구로 출력 범위에 맞게 나누기",
+    "en": "Cut it into pieces that fit with the STL cutter",
+    "ja": "STL 分割ツールで造形範囲に収まるように分割する",
+    "zh": "用 STL 切割工具把它分成放得下的几块"
+  },
+  "js_bed_fits": {
+    "ko": "그대로 들어갑니다.",
+    "en": "Fits as it is.",
+    "ja": "そのまま収まります。",
+    "zh": "可以直接放下。"
+  },
+  "js_bed_rotated": {
+    "ko": "지금 방향으로는 들어가지 않지만, 다른 면으로 눕히거나 세우면 들어갑니다.",
+    "en": "Does not fit as it is, but fits when laid on another side.",
+    "ja": "この向きでは収まりませんが、別の面を下にして置けば収まります。",
+    "zh": "按当前方向放不下，但换一个面朝下摆放就能放下。"
+  },
+  "js_bed_too_big": {
+    "ko": "어느 방향으로 놓아도 들어가지 않습니다. 지금 방향 기준으로 넘치는 길이: {over}",
+    "en": "Too big in every orientation. As loaded it is over by: {over}",
+    "ja": "どの向きに置いても収まりません。現在の向きでの超過: {over}",
+    "zh": "任何方向都放不下。按当前方向超出：{over}"
+  },
+  "prob_title": {
+    "ko": "발견된 문제",
+    "en": "Problems found",
+    "ja": "見つかった問題",
+    "zh": "发现的问题"
+  },
+  "js_prob_open": {
+    "ko": "열린 모서리(구멍)",
+    "en": "Open edges (holes)",
+    "ja": "開いたエッジ（穴）",
+    "zh": "开放边（孔洞）"
+  },
+  "js_n_open": {
+    "ko": "모서리 {edges}개, 구멍 {holes}개",
+    "en": "{edges} (holes: {holes})",
+    "ja": "エッジ {edges} 本、穴 {holes} 個",
+    "zh": "{edges} 条边，{holes} 个孔洞"
+  },
+  "js_prob_nonmanifold": {
+    "ko": "비다양체 모서리",
+    "en": "Non-manifold edges",
+    "ja": "非多様体エッジ",
+    "zh": "非流形边"
+  },
+  "js_prob_flipped": {
+    "ko": "뒤집힌 면",
+    "en": "Flipped faces",
+    "ja": "裏返った面",
+    "zh": "翻转面"
+  },
+  "js_prob_degenerate": {
+    "ko": "넓이가 0인 삼각형",
+    "en": "Zero-area triangles",
+    "ja": "面積ゼロの三角形",
+    "zh": "零面积三角形"
+  },
+  "js_prob_duplicate": {
+    "ko": "중복된 면",
+    "en": "Duplicate faces",
+    "ja": "重複した面",
+    "zh": "重复面"
+  },
+  "js_prob_bad": {
+    "ko": "읽을 수 없는 삼각형(NaN·Inf)",
+    "en": "Unreadable triangles (NaN / Inf)",
+    "ja": "読み取れない三角形（NaN・Inf）",
+    "zh": "无法读取的三角形（NaN / Inf）"
+  },
+  "js_prob_truncated": {
+    "ko": "잘린 파일",
+    "en": "File cut off",
+    "ja": "途中で切れたファイル",
+    "zh": "文件被截断"
+  },
+  "js_n_truncated": {
+    "ko": "삼각형 {declared}개 중 {present}개만 있음",
+    "en": "{present} of {declared} triangles present",
+    "ja": "三角形 {declared} 個のうち {present} 個のみ",
+    "zh": "{declared} 个三角形中只有 {present} 个"
+  },
+  "js_n_truncated_unknown": {
+    "ko": "온전한 삼각형 {present}개",
+    "en": "{present} complete triangles",
+    "ja": "完全な三角形 {present} 個",
+    "zh": "{present} 个完整的三角形"
+  },
+  "js_none": {
+    "ko": "없음",
+    "en": "None",
+    "ja": "なし",
+    "zh": "无"
+  },
+  "js_show": {
+    "ko": "보기",
+    "en": "Show",
+    "ja": "表示",
+    "zh": "显示"
+  },
+  "why_open": {
+    "ko": "이 부분은 표면이 닫혀 있지 않아 슬라이서가 입체의 경계를 추측해야 합니다. 작은 틈은 대개 자동으로 메워지지만, 큰 구멍은 레이어가 빠지거나 뚫려 있어야 할 곳이 막히는 원인이 됩니다.",
+    "en": "The surface is not closed here, so the slicer has to guess where the solid ends. Small gaps are usually closed automatically; large holes can cause missing layers, or get filled where you wanted an opening.",
+    "ja": "この部分は表面が閉じておらず、スライサーが立体の境界を推測することになります。小さなすき間はたいてい自動でふさがれますが、大きな穴は層が欠けたり、開けておきたい場所がふさがれたりする原因になります。",
+    "zh": "这里的表面没有封闭，切片软件只能猜测实体的边界。小缝隙通常会被自动封闭；大孔洞可能造成缺层，或者把本该留空的地方填上。"
+  },
+  "why_nonmanifold": {
+    "ko": "모서리 하나에 면이 셋 이상 만납니다. 그 자리에서는 안과 밖을 구분할 수 없어 슬라이서가 재료를 빼먹거나 더할 수 있습니다.",
+    "en": "Three or more faces meet at one edge. Inside and outside are ambiguous there, and slicers may drop or add material.",
+    "ja": "1 本のエッジに 3 つ以上の面が接しています。その場所では内側と外側を区別できず、スライサーが材料を抜いたり足したりすることがあります。",
+    "zh": "一条边上连接了三个或更多的面。这里无法分辨内外，切片软件可能少打或多打材料。"
+  },
+  "why_flipped": {
+    "ko": "주변 면은 바깥을 향하는데 이 면들만 안쪽을 향하고 있습니다. 슬라이서가 이 부분을 구멍으로 보거나 안팎을 반대로 처리할 수 있습니다.",
+    "en": "These faces point inward while their neighbours point outward. Slicers can treat the area as a hole or as inside-out material.",
+    "ja": "周りの面は外を向いているのに、これらの面だけが内側を向いています。スライサーがこの部分を穴とみなしたり、内外を逆に処理したりすることがあります。",
+    "zh": "周围的面朝外，而这些面朝内。切片软件可能把这一块当成孔洞，或者把内外弄反。"
+  },
+  "why_degenerate": {
+    "ko": "넓이가 없는 삼각형(선이나 점)입니다. 모양에는 영향이 없지만 수리 알고리즘을 헷갈리게 할 수 있습니다.",
+    "en": "Triangles with no area (a line or a point). They add nothing to the shape and can confuse repair algorithms.",
+    "ja": "面積のない三角形（線や点）です。形には影響しませんが、修復処理を混乱させることがあります。",
+    "zh": "没有面积的三角形（退化成线或点）。它们对形状没有贡献，但可能干扰修复算法。"
+  },
+  "why_duplicate": {
+    "ko": "같은 삼각형이 두 번 이상 저장되어 있습니다. 그 자리의 표면이 이중으로 겹칩니다.",
+    "en": "The same triangle is stored more than once. The surface has a double skin at that spot.",
+    "ja": "同じ三角形が 2 回以上保存されています。その場所の表面が二重になっています。",
+    "zh": "同一个三角形被保存了不止一次，该处表面出现了双层。"
+  },
+  "why_bad": {
+    "ko": "좌표가 숫자가 아닌 삼각형이어서 불러올 때 제외했습니다. 그 자리에 구멍이 생겼을 수 있습니다.",
+    "en": "These triangles had coordinates that are not numbers and were left out when loading, so there may be holes where they were.",
+    "ja": "座標が数値ではない三角形のため、読み込み時に除外しました。その場所に穴ができている可能性があります。",
+    "zh": "这些三角形的坐标不是有效数字，加载时已被排除，原位置可能留下孔洞。"
+  },
+  "why_truncated": {
+    "ko": "파일에 적힌 삼각형 수보다 일찍 끝납니다. 다운로드나 내보내기가 중간에 끊긴 것으로 보이며, 온전한 부분만 표시합니다. 가능하면 파일을 다시 받아 주세요.",
+    "en": "The file ends before all the triangles it announces. The download or export was probably interrupted; only the intact part is shown. Get the file again if you can.",
+    "ja": "ファイルに記録された三角形数より早く終わっています。ダウンロードや書き出しが途中で中断されたと考えられ、読み込めた部分だけを表示しています。可能であればファイルを入手し直してください。",
+    "zh": "文件在声明的三角形全部写完之前就结束了，很可能是下载或导出中断所致，这里只显示完整的部分。如果可以，请重新获取文件。"
+  },
+  "js_view_skipped": {
+    "ko": "삼각형이 {n}개를 넘어 3D 화면을 껐습니다. 수치 확인과 수리는 그대로 사용할 수 있습니다.",
+    "en": "The 3D view is switched off above {n} triangles to keep the page responsive. All numbers and repairs still work.",
+    "ja": "三角形が {n} 個を超えるため、3D ビューをオフにしました。数値の確認と修復はそのまま使えます。",
+    "zh": "三角形超过 {n} 个，已关闭 3D 视图。数值查看和修复功能仍可正常使用。"
+  },
+  "js_view_failed": {
+    "ko": "3D 화면을 시작하지 못했습니다(WebGL을 쓸 수 없거나 3D 라이브러리를 불러오지 못했습니다). 수치 확인과 수리는 그대로 사용할 수 있습니다.",
+    "en": "The 3D view could not be started (WebGL is unavailable or the 3D library could not be loaded). All numbers and repairs still work.",
+    "ja": "3D ビューを開始できませんでした（WebGL が使えないか、3D ライブラリを読み込めませんでした）。数値の確認と修復はそのまま使えます。",
+    "zh": "无法启动 3D 视图（WebGL 不可用，或 3D 库加载失败）。数值查看和修复功能仍可正常使用。"
+  },
+  "thin_title": {
+    "ko": "얇은 벽 (추정)",
+    "en": "Thin walls (estimate)",
+    "ja": "薄い壁（推定）",
+    "zh": "薄壁（估算）"
+  },
+  "thin_hint": {
+    "ko": "표면에 고르게 뿌린 2만 개 지점에서 부품 안쪽으로 광선을 쏘아 반대편 벽까지의 거리를 잽니다. 노즐 지름의 2배보다 얇은 벽은 약하게 출력되거나 아예 출력되지 않는 경우가 많습니다. 정확한 측정이 아니라 추정치입니다.",
+    "en": "Casts a ray into the part from 20,000 points spread over the surface and measures the distance to the opposite wall. Walls thinner than two nozzle widths often print weak or not at all. This is an estimate, not an exact measurement.",
+    "ja": "表面に均等にまいた 2 万点から部品の内側へ光線を飛ばし、反対側の壁までの距離を測ります。ノズル径の 2 倍より薄い壁は、弱くなったり印刷されなかったりすることがよくあります。正確な測定ではなく推定です。",
+    "zh": "从表面上均匀分布的 2 万个点向零件内部投射光线，测量到对面壁的距离。比两倍喷嘴直径还薄的壁往往打印得很脆弱，甚至打不出来。这是估算，不是精确测量。"
+  },
+  "thin_nozzle": {
+    "ko": "노즐 지름 (mm)",
+    "en": "Nozzle diameter (mm)",
+    "ja": "ノズル径 (mm)",
+    "zh": "喷嘴直径 (mm)"
+  },
+  "thin_run": {
+    "ko": "얇은 벽 검사",
+    "en": "Check thin walls",
+    "ja": "薄い壁をチェック",
+    "zh": "检查薄壁"
+  },
+  "js_thin_result": {
+    "ko": "표면의 약 {percent}%에서 뒤쪽 재료 두께가 {limit} mm보다 얇습니다(표본 {samples}개 기준 추정).",
+    "en": "About {percent}% of the surface has less than {limit} mm of material behind it (estimate from {samples} sample points).",
+    "ja": "表面の約 {percent}% で、裏側の材料の厚みが {limit} mm 未満です（サンプル {samples} 点による推定）。",
+    "zh": "约 {percent}% 的表面背后的材料厚度不足 {limit} mm（根据 {samples} 个采样点估算）。"
+  },
+  "js_thin_skipped": {
+    "ko": "삼각형이 {n}개를 넘어 얇은 벽 검사를 건너뜁니다. 시간과 메모리가 너무 많이 필요합니다.",
+    "en": "The thin-wall check is skipped above {n} triangles because it would take too long and too much memory.",
+    "ja": "三角形が {n} 個を超えるため、薄い壁のチェックをスキップします。時間とメモリがかかりすぎるためです。",
+    "zh": "三角形超过 {n} 个，已跳过薄壁检查，因为耗时和内存占用都太大。"
+  },
+  "rep_title": {
+    "ko": "수리 (선택 사항)",
+    "en": "Repair (optional)",
+    "ja": "修復（任意）",
+    "zh": "修复（可选）"
+  },
+  "rep_hint": {
+    "ko": "선택하지 않은 것은 아무것도 바꾸지 않습니다. 항목마다 따로 적용되며 언제든 취소할 수 있습니다.",
+    "en": "Nothing is changed unless you tick it. Each fix is separate, and you can undo.",
+    "ja": "チェックを入れない限り、何も変更しません。項目ごとに個別に適用され、いつでも取り消せます。",
+    "zh": "不勾选就不会做任何改动。每项修复单独应用，并且可以撤销。"
+  },
+  "rep_weld": {
+    "ko": "허용 오차보다 가까운 꼭짓점 합치기",
+    "en": "Merge vertices that are closer than the tolerance",
+    "ja": "許容差より近い頂点を結合する",
+    "zh": "合并距离小于容差的顶点"
+  },
+  "rep_tol": {
+    "ko": "허용 오차 (mm)",
+    "en": "Tolerance (mm)",
+    "ja": "許容差 (mm)",
+    "zh": "容差 (mm)"
+  },
+  "rep_tol_hint": {
+    "ko": "삼각형 사이의 아주 가는 틈을 메웁니다. 꼭짓점은 이 값보다 멀리 움직이지 않습니다.",
+    "en": "Closes hairline gaps between triangles. No vertex moves further than this value.",
+    "ja": "三角形どうしのごく細いすき間をふさぎます。頂点がこの値を超えて動くことはありません。",
+    "zh": "封闭三角形之间的细微缝隙。顶点的移动距离不会超过该值。"
+  },
+  "rep_clean": {
+    "ko": "찌그러진 삼각형(두 꼭짓점이 같은 위치)과 중복된 삼각형 제거",
+    "en": "Remove collapsed triangles (two corners in the same place) and duplicates",
+    "ja": "つぶれた三角形（2 つの頂点が同じ位置）と重複した三角形を削除する",
+    "zh": "删除塌陷的三角形（两个顶点重合）和重复三角形"
+  },
+  "rep_normals": {
+    "ko": "셸마다 면 방향을 일관되게 바깥쪽으로 맞추기",
+    "en": "Make faces consistent and outward-facing, shell by shell",
+    "ja": "シェルごとに面の向きを外向きにそろえる",
+    "zh": "逐个壳体把面的朝向统一为向外"
+  },
+  "rep_holes": {
+    "ko": "구멍 막기",
+    "en": "Close holes",
+    "ja": "穴をふさぐ",
+    "zh": "封闭孔洞"
+  },
+  "js_holes_none": {
+    "ko": "구멍이 없습니다.",
+    "en": "No holes found.",
+    "ja": "穴はありません。",
+    "zh": "没有发现孔洞。"
+  },
+  "js_holes_pick": {
+    "ko": "선택된 구멍이 없습니다. 막아야 할 구멍만 선택하고, 일부러 뚫어 둔 구멍은 그대로 두세요.",
+    "en": "Nothing is selected. Tick only the holes that should be closed; leave intended openings alone.",
+    "ja": "選択されている穴はありません。ふさぐ穴だけにチェックを入れ、意図して開けた穴はそのままにしてください。",
+    "zh": "尚未选择任何孔洞。只勾选需要封闭的孔洞，有意留出的开口请保持不选。"
+  },
+  "js_holes_more": {
+    "ko": "구멍 {total}개 중 가장 큰 것과 가장 작은 것을 합쳐 {shown}개만 표시합니다.",
+    "en": "Showing {shown} of {total} holes: the largest and the smallest.",
+    "ja": "{total} 個の穴のうち、大きいものと小さいものを合わせて {shown} 個を表示しています。",
+    "zh": "共 {total} 个孔洞，仅显示其中最大和最小的 {shown} 个。"
+  },
+  "rep_hole_max": {
+    "ko": "이 크기보다 작은 구멍 (mm)",
+    "en": "Smaller than (mm)",
+    "ja": "この大きさ未満 (mm)",
+    "zh": "小于此尺寸 (mm)"
+  },
+  "rep_hole_pick": {
+    "ko": "작은 구멍 선택",
+    "en": "Select holes below this size",
+    "ja": "小さい穴を選択",
+    "zh": "选择小于该尺寸的孔洞"
+  },
+  "rep_hole_clear": {
+    "ko": "선택 해제",
+    "en": "Clear selection",
+    "ja": "選択を解除",
+    "zh": "清除选择"
+  },
+  "js_hole": {
+    "ko": "구멍 {i}: 모서리 {edges}개, 지름 약 {size}",
+    "en": "Hole {i}: {edges} edges, about {size} across",
+    "ja": "穴 {i}: エッジ {edges} 本、さしわたし約 {size}",
+    "zh": "孔洞 {i}：{edges} 条边，跨度约 {size}"
+  },
+  "js_hole_uncappable": {
+    "ko": "자동으로 막을 수 없음",
+    "en": "cannot be closed automatically",
+    "ja": "自動ではふさげません",
+    "zh": "无法自动封闭"
+  },
+  "rep_apply": {
+    "ko": "선택한 수리 적용",
+    "en": "Apply selected repairs",
+    "ja": "選択した修復を適用",
+    "zh": "应用所选修复"
+  },
+  "rep_undo": {
+    "ko": "수리 모두 취소",
+    "en": "Undo all repairs",
+    "ja": "修復をすべて取り消す",
+    "zh": "撤销全部修复"
+  },
+  "js_rep_nothing": {
+    "ko": "선택한 항목이 없습니다. 수리 항목이나 구멍을 하나 이상 선택해 주세요.",
+    "en": "Nothing is selected. Tick at least one repair or one hole.",
+    "ja": "何も選択されていません。修復項目か穴を 1 つ以上選択してください。",
+    "zh": "尚未选择任何项目。请至少勾选一项修复或一个孔洞。"
+  },
+  "js_rep_done": {
+    "ko": "완료: 구멍 {capped}개 막음, 꼭짓점 {merged}개 합침, 삼각형 {removed}개 제거, 면 {flipped}개 뒤집음.",
+    "en": "Done. Holes closed: {capped} · vertices merged: {merged} · triangles removed: {removed} · faces turned: {flipped}.",
+    "ja": "完了: 穴 {capped} 個をふさぎ、頂点 {merged} 個を結合、三角形 {removed} 個を削除、面 {flipped} 個を反転しました。",
+    "zh": "完成：封闭 {capped} 个孔洞，合并 {merged} 个顶点，删除 {removed} 个三角形，翻转 {flipped} 个面。"
+  },
+  "js_err_rep_empty": {
+    "ko": "이 수리를 적용하면 삼각형이 하나도 남지 않아 적용하지 않았습니다.",
+    "en": "These repairs would leave no triangles at all, so nothing was changed.",
+    "ja": "この修復を適用すると三角形が 1 つも残らないため、適用しませんでした。",
+    "zh": "应用这些修复后将不剩任何三角形，因此未作更改。"
+  },
+  "js_bbox_same": {
+    "ko": "바운딩 박스는 그대로입니다: {size} (최대 차이 {delta} mm, 기준 0.001 mm).",
+    "en": "Bounding box unchanged: still {size} (largest difference {delta} mm, limit 0.001 mm).",
+    "ja": "バウンディングボックスは変わっていません: {size}（最大差 {delta} mm、基準 0.001 mm）。",
+    "zh": "包围盒未改变：仍为 {size}（最大差值 {delta} mm，阈值 0.001 mm）。"
+  },
+  "js_bbox_changed": {
+    "ko": "바운딩 박스가 {delta} mm 달라져 지금은 {size}입니다. 원하지 않는 결과라면 수리를 취소해 주세요.",
+    "en": "The bounding box moved by {delta} mm and is now {size}. Undo if that is not what you want.",
+    "ja": "バウンディングボックスが {delta} mm 変わり、現在は {size} です。意図した結果でなければ修復を取り消してください。",
+    "zh": "包围盒变化了 {delta} mm，现在是 {size}。如果这不是您想要的结果，请撤销修复。"
+  },
+  "rep_table": {
+    "ko": "수리 전후 비교",
+    "en": "Before and after",
+    "ja": "修復前後の比較",
+    "zh": "修复前后对比"
+  },
+  "rep_col_item": {
+    "ko": "항목",
+    "en": "Item",
+    "ja": "項目",
+    "zh": "项目"
+  },
+  "rep_col_before": {
+    "ko": "수리 전",
+    "en": "Before",
+    "ja": "修復前",
+    "zh": "修复前"
+  },
+  "rep_col_after": {
+    "ko": "수리 후",
+    "en": "After",
+    "ja": "修復後",
+    "zh": "修复后"
+  },
+  "exp_title": {
+    "ko": "메시 저장",
+    "en": "Save mesh",
+    "ja": "メッシュを保存",
+    "zh": "保存网格"
+  },
+  "js_exp_original": {
+    "ko": "불러온 그대로의 메시를 밀리미터 단위로 저장합니다(수리 적용 안 됨).",
+    "en": "Saves the mesh as loaded (no repairs applied), in millimetres.",
+    "ja": "読み込んだままのメッシュをミリメートル単位で保存します（修復は適用されていません）。",
+    "zh": "按加载时的原样保存网格（未应用修复），单位为毫米。"
+  },
+  "js_exp_repaired": {
+    "ko": "수리한 메시를 밀리미터 단위로 저장합니다.",
+    "en": "Saves the repaired mesh, in millimetres.",
+    "ja": "修復後のメッシュをミリメートル単位で保存します。",
+    "zh": "保存修复后的网格，单位为毫米。"
+  },
+  "js_exp_done": {
+    "ko": "{name} 파일을 저장했습니다.",
+    "en": "Saved {name}.",
+    "ja": "{name} を保存しました。",
+    "zh": "已保存 {name}。"
+  },
+  "files_title": {
+    "ko": "불러온 파일 전체",
+    "en": "All loaded files",
+    "ja": "読み込んだすべてのファイル",
+    "zh": "全部已加载的文件"
+  },
+  "files_hint": {
+    "ko": "파일 이름을 누르면 그 파일을 자세히 볼 수 있습니다. 다른 파일로 바꾸면 배율 변경과 수리 내용은 사라지므로 먼저 저장해 주세요.",
+    "en": "Click a file name to inspect that file. Scaling and repairs are lost when you switch to another file, so export first.",
+    "ja": "ファイル名を押すと、そのファイルの詳細を確認できます。別のファイルに切り替えると拡大縮小と修復の内容は失われるため、先に保存してください。",
+    "zh": "点击文件名即可查看该文件的详细信息。切换到其他文件后，缩放和修复结果不会保留，请先导出。"
+  },
+  "files_xlsx": {
+    "ko": "표를 엑셀(.xlsx)로 저장",
+    "en": "Save table as Excel (.xlsx)",
+    "ja": "一覧を Excel (.xlsx) で保存",
+    "zh": "将表格保存为 Excel (.xlsx)"
+  },
+  "files_csv": {
+    "ko": "표를 CSV로 저장",
+    "en": "Save table as CSV",
+    "ja": "一覧を CSV で保存",
+    "zh": "将表格保存为 CSV"
+  },
+  "js_col_name": {
+    "ko": "파일",
+    "en": "File",
+    "ja": "ファイル",
+    "zh": "文件"
+  },
+  "js_col_volume": {
+    "ko": "부피 (cm³)",
+    "en": "Volume (cm³)",
+    "ja": "体積 (cm³)",
+    "zh": "体积 (cm³)"
+  },
+  "js_col_triangles": {
+    "ko": "삼각형 수",
+    "en": "Triangles",
+    "ja": "三角形数",
+    "zh": "三角形数量"
+  },
+  "js_col_issues": {
+    "ko": "문제",
+    "en": "Problems",
+    "ja": "問題",
+    "zh": "问题"
+  }
+}
